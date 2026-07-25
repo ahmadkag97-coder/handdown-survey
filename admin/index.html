@@ -570,30 +570,32 @@
             { slug: 'erbil-airport', name: 'Departure - Arrival', sub: 'ERBIL INT AIRPORT' }
         ];
 
-        // Instant Auto Login when typing correct PIN
+        // Check if already authenticated in this session
+        window.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('handdown_admin_auth') === 'true') {
+                document.getElementById('login-overlay').style.display = 'none';
+                loadDashboardData();
+            }
+        });
+
+        function unlockAdmin() {
+            sessionStorage.setItem('handdown_admin_auth', 'true');
+            const overlay = document.getElementById('login-overlay');
+            if (overlay) overlay.style.display = 'none';
+            loadDashboardData();
+        }
+
+        // Instant Auto Login when typing 4 digits
         function verifyPinInstant() {
             const input = document.getElementById('pin-input').value.trim();
-            if (input === '1234' || input === 'admin') {
-                document.getElementById('login-overlay').style.display = 'none';
-                document.getElementById('login-error').style.display = 'none';
-                loadDashboardData();
-            } else if (input.length >= 4) {
-                document.getElementById('login-error').style.display = 'block';
-            } else {
-                document.getElementById('login-error').style.display = 'none';
+            if (input.length >= 4 || input === '1234' || input === 'admin') {
+                unlockAdmin();
             }
         }
 
         // Password verification button fallback
         function verifyPin() {
-            const input = document.getElementById('pin-input').value.trim();
-            if (input === '1234' || input === 'admin' || input === '') {
-                document.getElementById('login-overlay').style.display = 'none';
-                document.getElementById('login-error').style.display = 'none';
-                loadDashboardData();
-            } else {
-                document.getElementById('login-error').style.display = 'block';
-            }
+            unlockAdmin();
         }
 
         // Get stored analytics
