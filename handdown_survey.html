@@ -208,14 +208,14 @@
         .options-grid {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 28px;
+            gap: 10px;
+            margin-bottom: 14px;
         }
 
         .option-label {
             display: flex;
             align-items: center;
-            padding: 16px 18px;
+            padding: 15px 18px;
             border: 1px solid rgba(255, 255, 255, 0.75);
             border-radius: 18px;
             cursor: pointer;
@@ -308,17 +308,24 @@
             font-weight: 700;
         }
 
-        /* Apple Liquid Glass Action Buttons */
+        /* Apple Liquid Glass Action Buttons Row */
+        .actions-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
         .submit-btn {
-            font-size: 1.1rem;
+            flex: 2;
+            font-size: 1.05rem;
             font-weight: 700;
             font-family: inherit;
-            padding: 17px 20px;
-            border-radius: 20px;
+            padding: 16px 18px;
+            border-radius: 18px;
             cursor: pointer;
             transition: var(--transition);
-            width: 100%;
-            margin-top: auto;
             border: 1px solid rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
@@ -358,26 +365,27 @@
         }
 
         .back-btn {
-            background: rgba(255, 255, 255, 0.55);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
+            flex: 1;
+            max-width: 135px;
+            background: rgba(255, 255, 255, 0.58);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.75);
-            padding: 8px 18px;
-            border-radius: 20px;
+            padding: 16px 14px;
+            border-radius: 18px;
             color: var(--text-muted);
             font-family: inherit;
-            font-size: 0.92rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            margin-bottom: 22px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             line-height: 1;
             transition: var(--transition);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-            align-self: flex-start;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03), inset 0 1px 1.5px rgba(255, 255, 255, 0.9);
+            margin-bottom: 0;
         }
 
         .back-btn span {
@@ -398,8 +406,12 @@
             background: rgba(255, 255, 255, 0.85);
             color: var(--primary-dark);
             border-color: rgba(255, 255, 255, 1);
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            transform: translateY(-1.5px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+        }
+
+        .back-btn:active {
+            transform: scale(0.985) translateY(0);
         }
 
         /* Apple Liquid Glass Step Indicator / Page Counter */
@@ -408,18 +420,18 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.7);
-            padding: 5px 14px;
+            padding: 4px 13px;
             border-radius: 12px;
             color: var(--text-muted);
             font-family: inherit;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-            margin-top: 16px;
+            margin-top: 12px;
             align-self: center;
             line-height: 1.2;
             transition: var(--transition);
@@ -468,11 +480,11 @@
         /* Mobile Screen Optimizations (<= 480px) */
         @media (max-width: 480px) {
             body {
-                padding: 24px 16px;
+                padding: 18px 14px;
             }
 
             .container {
-                border-radius: 28px;
+                border-radius: 26px;
                 min-height: auto;
                 width: 93%;
                 max-width: 375px;
@@ -483,43 +495,60 @@
             }
 
             header {
-                padding: 24px 16px 6px;
+                padding: 20px 16px 4px;
             }
 
             .logo {
-                max-width: 175px;
-                width: 68%;
+                max-width: 165px;
+                width: 65%;
             }
 
             .step-container {
-                padding: 18px 15px;
+                padding: 16px 14px;
             }
 
             h2 {
-                font-size: 1.1rem;
-                margin-bottom: 16px;
+                font-size: 1.08rem;
+                margin-bottom: 14px;
             }
 
             .multi-lang-title span {
-                font-size: 0.98rem;
+                font-size: 0.95rem;
             }
 
             .lang-btn {
-                padding: 13px 14px;
-                font-size: 0.98rem;
+                padding: 12px 14px;
+                font-size: 0.95rem;
                 border-radius: 15px;
-                margin-bottom: 10px;
+                margin-bottom: 9px;
+            }
+
+            .options-grid {
+                gap: 9px;
+                margin-bottom: 12px;
             }
 
             .option-label {
-                padding: 13px 14px;
-                font-size: 0.95rem;
+                padding: 12px 13px;
+                font-size: 0.92rem;
                 border-radius: 15px;
             }
 
+            .actions-row {
+                gap: 10px;
+                margin-top: 8px;
+            }
+
+            .back-btn {
+                padding: 12px 10px;
+                font-size: 0.92rem;
+                border-radius: 15px;
+                max-width: 115px;
+            }
+
             .submit-btn {
-                padding: 14px 16px;
-                font-size: 1rem;
+                padding: 12px 14px;
+                font-size: 0.95rem;
                 border-radius: 15px;
             }
         }
@@ -550,15 +579,16 @@
 
             <!-- Step 2: Survey Form -->
             <div id="step-2" class="step">
-                <button class="back-btn" onclick="goBack()" id="back-btn">Back</button>
-                
                 <h2 id="question-title">What did you buy?</h2>
                 
                 <div class="options-grid" id="options-container">
                     <!-- Checkboxes will be injected here by JS -->
                 </div>
 
-                <button class="submit-btn" id="submit-btn" onclick="submitForm()" disabled>Submit</button>
+                <div class="actions-row">
+                    <button class="back-btn" onclick="goBack()" id="back-btn">Back</button>
+                    <button class="submit-btn" id="submit-btn" onclick="submitForm()" disabled>Submit</button>
+                </div>
             </div>
 
             <!-- Step 3: Thank You -->
