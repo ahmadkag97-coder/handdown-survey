@@ -347,12 +347,19 @@
         const optionsContainer = document.getElementById('options-container');
         const submitBtn = document.getElementById('submit-btn');
 
-        // Log English Visit
-        (function logVisit() {
+        // Log Unique English Visit per Device Session
+        (function logUniqueVisit() {
+            const deviceKey = 'handdown_device_session_en';
+            if (sessionStorage.getItem(deviceKey) || localStorage.getItem(deviceKey)) {
+                return; // Device already counted for English in this session, skip refresh
+            }
+            sessionStorage.setItem(deviceKey, 'true');
+            localStorage.setItem(deviceKey, 'true');
+
             const data = localStorage.getItem('handdown_survey_analytics');
             const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
             analytics.visits.en = (analytics.visits.en || 0) + 1;
-            analytics.visits.total = (analytics.visits.total || 0) + 1;
+            analytics.visits.total = (analytics.visits.ku || 0) + (analytics.visits.ar || 0) + (analytics.visits.en || 0);
             localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
         })();
 

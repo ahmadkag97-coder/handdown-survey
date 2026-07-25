@@ -347,12 +347,19 @@
         const optionsContainer = document.getElementById('options-container');
         const submitBtn = document.getElementById('submit-btn');
 
-        // Log Arabic Visit
-        (function logVisit() {
+        // Log Unique Arabic Visit per Device Session
+        (function logUniqueVisit() {
+            const deviceKey = 'handdown_device_session_ar';
+            if (sessionStorage.getItem(deviceKey) || localStorage.getItem(deviceKey)) {
+                return; // Device already counted for Arabic in this session, skip refresh
+            }
+            sessionStorage.setItem(deviceKey, 'true');
+            localStorage.setItem(deviceKey, 'true');
+
             const data = localStorage.getItem('handdown_survey_analytics');
             const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
             analytics.visits.ar = (analytics.visits.ar || 0) + 1;
-            analytics.visits.total = (analytics.visits.total || 0) + 1;
+            analytics.visits.total = (analytics.visits.ku || 0) + (analytics.visits.ar || 0) + (analytics.visits.en || 0);
             localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
         })();
 
@@ -374,6 +381,42 @@
             label.appendChild(customCheck);
             label.appendChild(document.createTextNode(cat));
             optionsContainer.appendChild(label);
+        });
+
+        const categorySlugMap = {
+            'tobacco': 0,
+            'spirits': 1,
+            'perfumes': 2,
+            'watches': 3,
+            'jewelry': 4,
+            'sweets': 5,
+            'souvenirs': 6
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const pathname = window.location.pathname.toLowerCase();
+            const urlParams = new URLSearchParams(window.location.search);
+            const catParam = urlParams.get('cat');
+
+            let targetSlug = null;
+            Object.keys(categorySlugMap).forEach(slug => {
+                if (pathname.includes('/' + slug) || catParam === slug) {
+                    targetSlug = slug;
+                }
+            });
+
+            if (targetSlug !== null) {
+                const targetIndex = categorySlugMap[targetSlug];
+                const labels = optionsContainer.querySelectorAll('.option-label');
+                if (labels[targetIndex]) {
+                    const cb = labels[targetIndex].querySelector('input[type="checkbox"]');
+                    if (cb) {
+                        cb.checked = true;
+                        labels[targetIndex].classList.add('selected');
+                        submitBtn.disabled = false;
+                    }
+                }
+            }
         });
 
         function submitForm() {
