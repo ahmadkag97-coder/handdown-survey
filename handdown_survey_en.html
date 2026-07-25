@@ -1,33 +1,24 @@
 <!DOCTYPE html>
-<html lang="ku">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Handdown Duty Free Survey</title>
-    <!-- Google Fonts for Kurdish, Arabic, and English -->
+    <title>Handdown Duty Free Survey - English</title>
+    <!-- Google Fonts for English -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700&family=Cairo:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @font-face {
-            font-family: 'Rabar_013';
-            src: local('Rabar_013'), local('Rabar 13'), local('Rabar013'), local('Rabar 013'), local('Rabar');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
-
         :root {
-            --primary-dark: #121A2F; /* Navy Blue based on Duty Free branding */
-            --primary-gold: #C38B75; /* Copper/Gold from logo */
-            --brand-accent: #C38B75; /* Branding Copper/Gold Accent */
+            --primary-dark: #121A2F;
+            --primary-gold: #C38B75;
+            --brand-accent: #C38B75;
             --bg-color: #e8e3dd;
             --card-bg: #FFFFFF;
             --text-main: #1C1C1E;
             --text-muted: #8E8E93;
             --border-color: #E5E5EA;
             --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            --font-kurdish: 'Rabar_013', 'Rabar 13', 'Rabar', 'Vazirmatn', 'Alexandria', 'Cairo', sans-serif;
             --font-english: -apple-system, BlinkMacSystemFont, 'Poppins', sans-serif;
         }
 
@@ -37,9 +28,6 @@
             padding: 0;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
         }
 
         html, body {
@@ -65,30 +53,23 @@
             align-items: center;
             margin: 0;
             padding: 20px;
-            direction: ltr; /* Default, will change dynamically */
+            direction: ltr;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
-        body.rtl {
-            direction: rtl;
-            font-family: var(--font-kurdish);
-        }
-
-        /* Apple Liquid Glass Container */
         .container {
             background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(30px) saturate(210%);
             -webkit-backdrop-filter: blur(30px) saturate(210%);
             width: 100%;
-            max-width: 460px; /* Mobile optimized */
+            max-width: 460px;
             border-radius: 32px;
             border: 1px solid rgba(255, 255, 255, 0.85);
             box-shadow: 
                 0 24px 60px rgba(18, 26, 47, 0.09),
                 0 4px 16px rgba(0, 0, 0, 0.03),
-                inset 0 1.5px 2.5px rgba(255, 255, 255, 1),
-                inset 0 -1.5px 2px rgba(0, 0, 0, 0.03);
+                inset 0 1.5px 2.5px rgba(255, 255, 255, 1);
             overflow: hidden;
             position: relative;
             min-height: 500px;
@@ -97,12 +78,9 @@
             margin: auto;
         }
 
-        /* Header & Logo */
         header {
             text-align: center;
             padding: 32px 24px 10px;
-            border-bottom: none;
-            background: transparent;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -118,7 +96,6 @@
             filter: drop-shadow(0 2px 5px rgba(0,0,0,0.04));
         }
 
-        /* Steps Container */
         .step-container {
             padding: 28px 24px;
             flex-grow: 1;
@@ -142,7 +119,6 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* Typography */
         h2 {
             font-size: 1.3rem;
             font-weight: 700;
@@ -150,66 +126,6 @@
             text-align: center;
             margin-bottom: 24px;
             line-height: 1.6;
-        }
-
-        .multi-lang-title {
-            text-align: center;
-            margin-bottom: 26px;
-        }
-        .multi-lang-title span {
-            display: block;
-            font-size: 1.1rem;
-            color: var(--primary-dark);
-            font-weight: 600;
-            line-height: 1.6;
-            margin-top: 4px;
-        }
-        .multi-lang-title span:first-child {
-            margin-top: 0;
-        }
-        .multi-lang-title span.ku-text,
-        .multi-lang-title span.ar-text {
-            font-family: var(--font-kurdish);
-        }
-
-        /* Apple Liquid Glass Buttons & Options */
-        .lang-btn {
-            background: rgba(255, 255, 255, 0.58);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.75);
-            color: var(--primary-dark);
-            font-family: var(--font-kurdish);
-            font-size: 1.1rem;
-            font-weight: 600;
-            padding: 16px 20px;
-            border-radius: 18px;
-            margin-bottom: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03), inset 0 1px 1.5px rgba(255, 255, 255, 0.9);
-        }
-        .lang-btn.en-btn {
-            font-family: var(--font-english);
-            font-weight: 500;
-        }
-
-        .lang-btn:hover {
-            background: rgba(255, 255, 255, 0.85);
-            border-color: rgba(255, 255, 255, 1);
-            color: var(--primary-dark);
-            box-shadow: 
-                0 0 0 1px rgba(195, 139, 117, 0.3),
-                0 8px 22px rgba(195, 139, 117, 0.14),
-                inset 0 1.5px 2px rgba(255, 255, 255, 1);
-            transform: translateY(-1.5px);
-        }
-
-        .lang-btn:active {
-            transform: scale(0.985) translateY(0);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 1.5px rgba(0, 0, 0, 0.05);
         }
 
         .options-grid {
@@ -239,15 +155,7 @@
         .option-label:hover {
             background: rgba(255, 255, 255, 0.85);
             border-color: rgba(255, 255, 255, 1);
-            box-shadow: 
-                0 0 0 1px rgba(195, 139, 117, 0.3),
-                0 8px 22px rgba(195, 139, 117, 0.12),
-                inset 0 1.5px 2px rgba(255, 255, 255, 1);
             transform: translateY(-1.5px);
-        }
-
-        .option-label:active {
-            transform: scale(0.985) translateY(0);
         }
 
         .option-label input {
@@ -265,18 +173,8 @@
             transition: var(--transition);
             flex-shrink: 0;
             background: rgba(255, 255, 255, 0.9);
-            box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.9);
-            position: relative;
-        }
-
-        body.ltr .custom-checkbox {
             margin-right: 14px;
-            margin-left: 0;
-        }
-
-        body.rtl .custom-checkbox {
-            margin-left: 14px;
-            margin-right: 0;
+            position: relative;
         }
 
         .custom-checkbox::after {
@@ -303,19 +201,9 @@
         .option-label.selected {
             border: 1.5px solid rgba(255, 255, 255, 0.95);
             background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(25px) saturate(200%);
-            -webkit-backdrop-filter: blur(25px) saturate(200%);
-            box-shadow: 
-                0 0 0 1px rgba(255, 255, 255, 0.9),
-                0 8px 26px rgba(195, 139, 117, 0.28),
-                0 2px 8px rgba(0, 0, 0, 0.03),
-                inset 0 1.5px 2px rgba(255, 255, 255, 1),
-                inset 0 -1px 2px rgba(195, 139, 117, 0.12);
-            color: #1C1C1E;
             font-weight: 700;
         }
 
-        /* Apple Liquid Glass Action Buttons Row */
         .actions-row {
             display: flex;
             align-items: center;
@@ -334,49 +222,24 @@
             cursor: pointer;
             transition: var(--transition);
             border: 1px solid rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
         }
 
         .submit-btn:disabled {
             background: rgba(255, 255, 255, 0.45);
             color: #8E8E93;
-            border-color: rgba(255, 255, 255, 0.7);
             cursor: not-allowed;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02), inset 0 1px 1px rgba(255, 255, 255, 0.85);
         }
 
         .submit-btn:not(:disabled) {
             background: linear-gradient(135deg, #C38B75, #D59882);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 
-                0 8px 25px rgba(195, 139, 117, 0.4),
-                inset 0 1.5px 1.5px rgba(255, 255, 255, 0.6),
-                inset 0 -1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .submit-btn:not(:disabled):hover {
-            background: linear-gradient(135deg, #CF957E, #DAA28C);
-            border-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 
-                0 0 0 1px rgba(255, 255, 255, 0.6),
-                0 12px 32px rgba(195, 139, 117, 0.5), 
-                inset 0 1.5px 2px rgba(255, 255, 255, 0.8);
-            transform: scale(1.012) translateY(-1.5px);
-        }
-
-        .submit-btn:not(:disabled):active {
-            transform: scale(0.985) translateY(0);
-            box-shadow: 0 4px 16px rgba(195, 139, 117, 0.3);
+            box-shadow: 0 8px 25px rgba(195, 139, 117, 0.4);
         }
 
         .back-btn {
             flex: 1;
             max-width: 135px;
             background: rgba(255, 255, 255, 0.58);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.75);
             padding: 16px 14px;
             border-radius: 18px;
@@ -389,62 +252,23 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            line-height: 1;
-            transition: var(--transition);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03), inset 0 1px 1.5px rgba(255, 255, 255, 0.9);
-            margin-bottom: 0;
         }
 
-        .back-btn span {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1;
-        }
-
-        .back-btn .back-arrow {
-            font-size: 1.05rem;
-            line-height: 1;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .back-btn:hover {
-            background: rgba(255, 255, 255, 0.85);
-            color: var(--primary-dark);
-            border-color: rgba(255, 255, 255, 1);
-            transform: translateY(-1.5px);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
-        }
-
-        .back-btn:active {
-            transform: scale(0.985) translateY(0);
-        }
-
-        /* Apple Liquid Glass Step Indicator / Page Counter */
         .step-indicator {
             background: rgba(255, 255, 255, 0.45);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.7);
             padding: 4px 13px;
             border-radius: 12px;
             color: var(--text-muted);
-            font-family: inherit;
             font-size: 0.82rem;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
             margin-top: 12px;
             align-self: center;
-            line-height: 1.2;
-            transition: var(--transition);
         }
 
-        /* Success Step */
         .success-content {
             text-align: center;
             display: flex;
@@ -473,389 +297,101 @@
             fill: white;
         }
 
-        .success-content h2 {
-            font-size: 1.45rem;
-            margin-bottom: 8px;
-        }
-
-        .success-content p {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            font-weight: 500;
-        }
-
-        /* Mobile Screen Optimizations (<= 480px) */
         @media (max-width: 480px) {
-            body {
-                padding: 18px 14px;
-            }
-
-            .container {
-                border-radius: 26px;
-                min-height: auto;
-                width: 93%;
-                max-width: 375px;
-                box-shadow: 
-                    0 18px 45px rgba(18, 26, 47, 0.12),
-                    0 4px 16px rgba(0, 0, 0, 0.04),
-                    inset 0 1.5px 2.5px rgba(255, 255, 255, 1);
-            }
-
-            header {
-                padding: 20px 16px 4px;
-            }
-
-            .logo {
-                max-width: 165px;
-                width: 65%;
-            }
-
-            .step-container {
-                padding: 16px 14px;
-            }
-
-            h2 {
-                font-size: 1.08rem;
-                margin-bottom: 14px;
-            }
-
-            .multi-lang-title span {
-                font-size: 0.95rem;
-            }
-
-            .lang-btn {
-                padding: 12px 14px;
-                font-size: 0.95rem;
-                border-radius: 15px;
-                margin-bottom: 9px;
-            }
-
-            .options-grid {
-                gap: 9px;
-                margin-bottom: 12px;
-            }
-
-            .option-label {
-                padding: 12px 13px;
-                font-size: 0.92rem;
-                border-radius: 15px;
-            }
-
-            .actions-row {
-                gap: 10px;
-                margin-top: 8px;
-            }
-
-            .back-btn {
-                padding: 12px 10px;
-                font-size: 0.92rem;
-                border-radius: 15px;
-                max-width: 115px;
-            }
-
-            .submit-btn {
-                padding: 12px 14px;
-                font-size: 0.95rem;
-                border-radius: 15px;
-            }
+            body { padding: 18px 14px; }
+            .container { border-radius: 26px; width: 93%; max-width: 375px; }
+            header { padding: 20px 16px 4px; }
+            .logo { max-width: 165px; width: 65%; }
+            .step-container { padding: 16px 14px; }
+            h2 { font-size: 1.08rem; margin-bottom: 14px; }
+            .options-grid { gap: 9px; margin-bottom: 12px; }
+            .option-label { padding: 12px 13px; font-size: 0.92rem; border-radius: 15px; }
+            .actions-row { gap: 10px; margin-top: 8px; }
+            .back-btn { padding: 12px 10px; font-size: 0.92rem; border-radius: 15px; max-width: 115px; }
+            .submit-btn { padding: 12px 14px; font-size: 0.95rem; border-radius: 15px; }
         }
-
     </style>
 </head>
 <body class="ltr">
-
     <div class="container">
         <header>
-            <img src="handdown-logo.png" alt="Handdown Duty Free" class="logo" onerror="this.onerror=null; this.src='Asset 10@2x-8.png';">
-            <h1 style="display:none; color: var(--primary-dark); font-size: 24px;">HANDDOWN</h1>
+            <img src="/handdown-logo.png" alt="Handdown Duty Free" class="logo" onerror="this.onerror=null; this.src='/Asset 10@2x-8.png';">
         </header>
 
         <div class="step-container">
-            <!-- Step 1: Language Selection -->
-            <div id="step-1" class="step active">
-                <h2 class="multi-lang-title">
-                    <span>Please choose your language</span>
-                    <span class="ku-text">تکایە زمانێک هەڵبژێرە</span>
-                    <span class="ar-text">اختر لغتك من فضلك</span>
-                </h2>
-                
-                <button class="lang-btn ku-btn" onclick="selectLanguage('ku')">کوردی</button>
-                <button class="lang-btn ar-btn" onclick="selectLanguage('ar')">العربية</button>
-                <button class="lang-btn en-btn" onclick="selectLanguage('en')">English</button>
-            </div>
-
-            <!-- Step 2: Survey Form -->
-            <div id="step-2" class="step">
-                <h2 id="question-title">What did you buy?</h2>
-                
-                <div class="options-grid" id="options-container">
-                    <!-- Checkboxes will be injected here by JS -->
-                </div>
-
+            <div id="step-2" class="step active">
+                <h2>What did you buy from Handdown Duty Free?</h2>
+                <div class="options-grid" id="options-container"></div>
                 <div class="actions-row">
-                    <button class="back-btn" onclick="goBack()" id="back-btn">Back</button>
+                    <button class="back-btn" onclick="window.location.href='/'"><span>←</span><span>Back</span></button>
                     <button class="submit-btn" id="submit-btn" onclick="submitForm()" disabled>Submit</button>
                 </div>
             </div>
 
-            <!-- Step 3: Thank You -->
             <div id="step-3" class="step">
                 <div class="success-content">
                     <div class="check-circle">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                        </svg>
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                     </div>
-                    <h2 id="thanks-title">Thank You!</h2>
-                    <p id="thanks-subtitle">Have a safe flight.</p>
+                    <h2>Thank you for your response!</h2>
+                    <p>Have a safe flight.</p>
                 </div>
             </div>
 
-            <!-- Apple Liquid Glass Page Counter / Step Indicator -->
-            <div class="step-indicator" id="step-indicator">Step 1 of 2</div>
+            <div class="step-indicator" id="step-indicator">Step 2 of 2</div>
         </div>
     </div>
 
     <script>
-        // Content Dictionary based on Handdown Duty Free Categories
-        const content = {
-            en: {
-                dir: 'ltr',
-                backText: 'Back',
-                arrow: '←',
-                step1Text: 'Step 1 of 2',
-                step2Text: 'Step 2 of 2',
-                question: 'What did you buy from Handdown Duty Free?',
-                categories: ['Tobacco & Cigarettes', 'Spirits & Liquor', 'Perfumes & Cosmetics', 'Watches & Accessories', 'Jewelry', 'Confectionery & Sweets', 'Souvenirs'],
-                submit: 'Submit',
-                thanksTitle: 'Thank you for your response!',
-                thanksSub: 'Have a safe flight.'
-            },
-            ku: {
-                dir: 'rtl',
-                backText: 'گەڕانەوە',
-                arrow: '→',
-                step1Text: 'هەنگاوی ١ لە ۲',
-                step2Text: 'هەنگاوی ۲ لە ۲',
-                question: 'لە هاندداون دیوتی فری چیت کڕی؟',
-                categories: ['تووتن (جگەرە)', 'خواردنەوەکان', 'بۆن و جوانکاری', 'کاتژمێر و ئێکسسوارات', 'زێڕینگەری', 'شیرینی', 'دیارییەکان'],
-                submit: 'ناردن',
-                thanksTitle: 'زۆر سوپاس بۆ وەڵامەکانت!',
-                thanksSub: 'بەهیوای سەفەرێکی سەلامەت.'
-            },
-            ar: {
-                dir: 'rtl',
-                backText: 'رجوع',
-                arrow: '→',
-                step1Text: 'الخطوة ١ من ۲',
-                step2Text: 'الخطوة ۲ من ۲',
-                question: 'ماذا اشتريت من هاندداون ديوتي فري؟',
-                categories: ['التبغ (السجائر)', 'المشروبات الروحية', 'العطور ومستحضرات التجميل', 'الساعات والإكسسوارات', 'المجوهرات', 'الحلويات', 'الهدايا'],
-                submit: 'إرسال',
-                thanksTitle: 'شكراً جزيلاً على إجابتك!',
-                thanksSub: 'نتمنى لك رحلة آمنة.'
-            }
-        };
-
-        let currentLang = 'en';
-
-        // Elements
-        const step1 = document.getElementById('step-1');
-        const step2 = document.getElementById('step-2');
-        const step3 = document.getElementById('step-3');
-        const stepIndicator = document.getElementById('step-indicator');
+        const categories = ['Tobacco & Cigarettes', 'Spirits & Liquor', 'Perfumes & Cosmetics', 'Watches & Accessories', 'Jewelry', 'Confectionery & Sweets', 'Souvenirs'];
         const optionsContainer = document.getElementById('options-container');
         const submitBtn = document.getElementById('submit-btn');
 
-        // Analytics Tracking
-        function getAnalyticsData() {
+        // Log English Visit
+        (function logVisit() {
             const data = localStorage.getItem('handdown_survey_analytics');
-            return data ? JSON.parse(data) : {
-                visits: { ku: 0, ar: 0, en: 0, total: 0 },
-                responses: []
-            };
-        }
-
-        function saveAnalyticsData(data) {
-            localStorage.setItem('handdown_survey_analytics', JSON.stringify(data));
-        }
-
-        function selectLanguage(lang) {
-            currentLang = lang;
-            const data = content[lang];
-
-            // Dynamically update browser address bar URL to clean short path (/ku, /ar, /en)
-            try {
-                window.history.pushState({ lang: lang }, '', '/' + lang);
-            } catch (e) {
-                window.history.pushState({ lang: lang }, '', '?lang=' + lang);
-            }
-
-            // Log visit analytics
-            const analytics = getAnalyticsData();
-            analytics.visits[lang] = (analytics.visits[lang] || 0) + 1;
+            const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
+            analytics.visits.en = (analytics.visits.en || 0) + 1;
             analytics.visits.total = (analytics.visits.total || 0) + 1;
-            saveAnalyticsData(analytics);
-            
-            // Set layout direction
-            document.body.className = data.dir;
+            localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
+        })();
 
-            // Update step indicator badge
-            stepIndicator.style.display = 'inline-flex';
-            stepIndicator.innerText = data.step2Text;
-
-            // Populate Step 2 content
-            const backBtn = document.getElementById('back-btn');
-            if (data.dir === 'rtl') {
-                backBtn.innerHTML = `<span>${data.backText}</span><span class="back-arrow">${data.arrow}</span>`;
-            } else {
-                backBtn.innerHTML = `<span class="back-arrow">${data.arrow}</span><span>${data.backText}</span>`;
-            }
-            document.getElementById('question-title').innerText = data.question;
-            submitBtn.innerText = data.submit;
-
-            // Generate options
-            optionsContainer.innerHTML = '';
-            data.categories.forEach((cat, index) => {
-                const label = document.createElement('label');
-                label.className = 'option-label';
-                
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.value = cat;
-                checkbox.onchange = handleCheckboxChange;
-
-                const customCheck = document.createElement('div');
-                customCheck.className = 'custom-checkbox';
-
-                const textNode = document.createTextNode(cat);
-
-                label.appendChild(checkbox);
-                label.appendChild(customCheck);
-                label.appendChild(textNode);
-                
-                optionsContainer.appendChild(label);
-            });
-
-            // Populate Step 3 content
-            document.getElementById('thanks-title').innerText = data.thanksTitle;
-            document.getElementById('thanks-subtitle').innerText = data.thanksSub;
-
-            // Transition steps
-            step1.classList.remove('active');
-            step2.classList.add('active');
-            
-            // Reset submit button state
-            updateSubmitButton();
-        }
-
-        function goBack() {
-            step2.classList.remove('active');
-            step1.classList.add('active');
-            document.body.className = 'ltr'; // reset to default
-
-            // Reset browser address bar URL to clean root /
-            try {
-                window.history.pushState({}, '', '/');
-            } catch (e) {}
-
-            // Update step indicator for Step 1
-            stepIndicator.style.display = 'inline-flex';
-            stepIndicator.innerText = content[currentLang] ? content[currentLang].step1Text : 'Step 1 of 2';
-        }
-
-        function handleCheckboxChange(e) {
-            // Add/remove selected class for styling
-            const label = e.target.parentElement;
-            if(e.target.checked) {
-                label.classList.add('selected');
-            } else {
-                label.classList.remove('selected');
-            }
-            updateSubmitButton();
-        }
-
-        function updateSubmitButton() {
-            const checkboxes = optionsContainer.querySelectorAll('input[type="checkbox"]');
-            let isChecked = false;
-            checkboxes.forEach(cb => {
-                if(cb.checked) isChecked = true;
-            });
-            submitBtn.disabled = !isChecked;
-        }
+        // Populate English options
+        categories.forEach(cat => {
+            const label = document.createElement('label');
+            label.className = 'option-label';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.value = cat;
+            checkbox.onchange = (e) => {
+                label.classList.toggle('selected', e.target.checked);
+                const checked = optionsContainer.querySelectorAll('input[type="checkbox"]:checked');
+                submitBtn.disabled = checked.length === 0;
+            };
+            const customCheck = document.createElement('div');
+            customCheck.className = 'custom-checkbox';
+            label.appendChild(checkbox);
+            label.appendChild(customCheck);
+            label.appendChild(document.createTextNode(cat));
+            optionsContainer.appendChild(label);
+        });
 
         function submitForm() {
-            const selectedCategories = [];
-            const checkboxes = optionsContainer.querySelectorAll('input[type="checkbox"]:checked');
-            checkboxes.forEach(cb => selectedCategories.push(cb.value));
-
-            // Save survey response log
-            const analytics = getAnalyticsData();
+            const selected = [];
+            optionsContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => selected.push(cb.value));
+            const data = localStorage.getItem('handdown_survey_analytics');
+            const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
             analytics.responses.push({
                 id: 'RESP-' + Date.now(),
                 timestamp: new Date().toLocaleString(),
-                language: currentLang === 'ku' ? 'Kurdish' : currentLang === 'ar' ? 'Arabic' : 'English',
-                categories: selectedCategories.join(' | ')
+                language: 'English',
+                categories: selected.join(' | ')
             });
-            saveAnalyticsData(analytics);
-            
-            step2.classList.remove('active');
-            step3.classList.add('active');
-
-            // Hide step indicator on success
-            stepIndicator.style.display = 'none';
+            localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
+            document.getElementById('step-2').classList.remove('active');
+            document.getElementById('step-3').classList.add('active');
+            document.getElementById('step-indicator').style.display = 'none';
         }
-
-        function showStatsModal() {
-            const analytics = getAnalyticsData();
-            const statsContainer = document.getElementById('stats-content');
-            statsContainer.innerHTML = `
-                <p style="margin-bottom:8px;"><strong>کۆی گشتی سەردانیکەران:</strong> ${analytics.visits.total || 0}</p>
-                <div style="background:rgba(0,0,0,0.03); padding:12px; border-radius:14px; margin:10px 0;">
-                    <p style="margin-bottom:4px;">🟡 <strong>سەردانی بەشی کوردی:</strong> ${analytics.visits.ku || 0}</p>
-                    <p style="margin-bottom:4px;">🟢 <strong>سەردانی بەشی عەرەبی:</strong> ${analytics.visits.ar || 0}</p>
-                    <p style="margin-bottom:0;">🔵 <strong>سەردانی بەشی ئینگلیزی:</strong> ${analytics.visits.en || 0}</p>
-                </div>
-                <p><strong>کۆی وەڵامە تۆمارکراوەکان:</strong> ${analytics.responses.length}</p>
-            `;
-            document.getElementById('stats-modal').style.display = 'flex';
-        }
-
-        function closeStatsModal() {
-            document.getElementById('stats-modal').style.display = 'none';
-        }
-
-        function exportCSV() {
-            const analytics = getAnalyticsData();
-            if (analytics.responses.length === 0) {
-                alert('هیچ وەڵامێک تائێستا تۆمار نەکراوە.');
-                return;
-            }
-
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-            csvContent += "ID,کات (Timestamp),زمان (Language),دیاری هەڵبژێردراو (Categories)\n";
-
-            analytics.responses.forEach(r => {
-                csvContent += `"${r.id}","${r.timestamp}","${r.language}","${r.categories}"\n`;
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `handdown_survey_responses_${Date.now()}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        // Auto-check URL Query Params (e.g. ?lang=ku, ?lang=ar, ?lang=en)
-        window.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const langParam = params.get('lang');
-            if (langParam && ['ku', 'ar', 'en'].includes(langParam)) {
-                selectLanguage(langParam);
-            }
-        });
     </script>
 </body>
 </html>

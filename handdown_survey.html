@@ -681,87 +681,13 @@
         }
 
         function selectLanguage(lang) {
-            currentLang = lang;
-            const data = content[lang];
-
-            // Dynamically update browser address bar URL to clean short path (/ku, /ar, /en)
-            try {
-                window.history.pushState({ lang: lang }, '', '/' + lang);
-            } catch (e) {
-                window.history.pushState({ lang: lang }, '', '?lang=' + lang);
-            }
-
-            // Log visit analytics
-            const analytics = getAnalyticsData();
-            analytics.visits[lang] = (analytics.visits[lang] || 0) + 1;
-            analytics.visits.total = (analytics.visits.total || 0) + 1;
-            saveAnalyticsData(analytics);
-            
-            // Set layout direction
-            document.body.className = data.dir;
-
-            // Update step indicator badge
-            stepIndicator.style.display = 'inline-flex';
-            stepIndicator.innerText = data.step2Text;
-
-            // Populate Step 2 content
-            const backBtn = document.getElementById('back-btn');
-            if (data.dir === 'rtl') {
-                backBtn.innerHTML = `<span>${data.backText}</span><span class="back-arrow">${data.arrow}</span>`;
-            } else {
-                backBtn.innerHTML = `<span class="back-arrow">${data.arrow}</span><span>${data.backText}</span>`;
-            }
-            document.getElementById('question-title').innerText = data.question;
-            submitBtn.innerText = data.submit;
-
-            // Generate options
-            optionsContainer.innerHTML = '';
-            data.categories.forEach((cat, index) => {
-                const label = document.createElement('label');
-                label.className = 'option-label';
-                
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.value = cat;
-                checkbox.onchange = handleCheckboxChange;
-
-                const customCheck = document.createElement('div');
-                customCheck.className = 'custom-checkbox';
-
-                const textNode = document.createTextNode(cat);
-
-                label.appendChild(checkbox);
-                label.appendChild(customCheck);
-                label.appendChild(textNode);
-                
-                optionsContainer.appendChild(label);
-            });
-
-            // Populate Step 3 content
-            document.getElementById('thanks-title').innerText = data.thanksTitle;
-            document.getElementById('thanks-subtitle').innerText = data.thanksSub;
-
-            // Transition steps
-            step1.classList.remove('active');
-            step2.classList.add('active');
-            
-            // Reset submit button state
-            updateSubmitButton();
+            // Real browser physical redirection to standalone language folder
+            window.location.href = '/' + lang + '/';
         }
 
         function goBack() {
-            step2.classList.remove('active');
-            step1.classList.add('active');
-            document.body.className = 'ltr'; // reset to default
-
-            // Reset browser address bar URL to clean root /
-            try {
-                window.history.pushState({}, '', '/');
-            } catch (e) {}
-
-            // Update step indicator for Step 1
-            stepIndicator.style.display = 'inline-flex';
-            stepIndicator.innerText = content[currentLang] ? content[currentLang].step1Text : 'Step 1 of 2';
+            // Real browser physical redirection to root portal
+            window.location.href = '/';
         }
 
         function handleCheckboxChange(e) {
