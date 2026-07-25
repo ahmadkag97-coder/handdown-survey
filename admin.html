@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Handdown Duty Free - Admin Dashboard & QR Generator</title>
+    <title>Handdown Duty Free - Admin Dashboard</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -72,13 +72,12 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Layout Container */
         .dashboard-container {
             max-width: 1100px;
             margin: 0 auto;
         }
 
-        /* Top Bar & Header */
+        /* Header */
         .admin-header {
             background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(30px) saturate(210%);
@@ -160,7 +159,7 @@
             box-shadow: 0 8px 24px rgba(195, 139, 117, 0.45);
         }
 
-        /* KPI Cards Grid */
+        /* KPI Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -244,18 +243,81 @@
             gap: 10px;
         }
 
-        /* QR Code Generator Grid */
-        .qr-grid {
+        /* 3-Column Content Layout */
+        .breakdown-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .progress-item {
+            margin-bottom: 14px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-main);
+        }
+
+        .progress-bg {
+            height: 9px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #C38B75, #D59882);
+            border-radius: 10px;
+            transition: width 0.6s ease;
+        }
+
+        /* Filter Controls */
+        .filter-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-top: 14px;
+            margin-bottom: 16px;
+        }
+
+        .filter-select, .search-box {
+            padding: 10px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(0,0,0,0.1);
+            font-size: 0.88rem;
+            outline: none;
+            background: rgba(255,255,255,0.85);
+            font-family: inherit;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .search-box {
+            flex-grow: 1;
+            min-width: 200px;
+        }
+
+        /* QR Grid */
+        .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
         }
 
         .qr-card {
             background: rgba(255, 255, 255, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.9);
             border-radius: 20px;
-            padding: 20px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -267,25 +329,24 @@
             font-size: 0.95rem;
             font-weight: 700;
             color: var(--primary-dark);
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .qr-card-subtitle {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: var(--brand-accent);
             font-weight: 600;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .qr-img {
-            width: 170px;
-            height: 170px;
+            width: 160px;
+            height: 160px;
             background: #FFFFFF;
             padding: 10px;
             border-radius: 16px;
             border: 1px solid rgba(0,0,0,0.08);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .qr-actions {
@@ -301,135 +362,74 @@
             font-size: 0.82rem;
         }
 
-        /* Language Filter Tabs & Select */
-        .lang-tabs {
-            display: flex;
-            gap: 8px;
-            background: rgba(0, 0, 0, 0.04);
-            padding: 5px;
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.6);
-        }
-
-        .tab-btn {
-            padding: 8px 16px;
-            border-radius: 12px;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-family: inherit;
-            font-size: 0.88rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .tab-btn.active {
-            background: #FFFFFF;
-            color: var(--primary-dark);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-            font-weight: 700;
-        }
-
-        .filter-select {
-            padding: 10px 14px;
-            border-radius: 14px;
-            border: 1px solid rgba(0,0,0,0.1);
-            font-size: 0.88rem;
-            outline: none;
-            background: rgba(255,255,255,0.85);
-            font-family: inherit;
-            color: var(--primary-dark);
-            font-weight: 600;
-        }
-
         /* Table */
         .table-container {
             overflow-x: auto;
-            margin-top: 14px;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: right;
-        }
-
-        th {
-            padding: 14px;
-            font-size: 0.84rem;
-            color: var(--text-muted);
-            font-weight: 600;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
             background: rgba(255, 255, 255, 0.4);
         }
 
+        th {
+            padding: 14px 16px;
+            font-size: 0.85rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.7);
+        }
+
         td {
-            padding: 14px;
+            padding: 14px 16px;
             font-size: 0.9rem;
             color: var(--text-main);
             border-bottom: 1px solid rgba(0, 0, 0, 0.04);
         }
 
-        .badge-lang {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 10px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            background: rgba(195, 139, 117, 0.15);
-            color: #A36A55;
-            border: 1px solid rgba(195, 139, 117, 0.3);
-        }
-
         .badge-store {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            background: rgba(18, 26, 47, 0.08);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            background: rgba(18, 26, 47, 0.09);
             color: var(--primary-dark);
             border: 1px solid rgba(18, 26, 47, 0.15);
         }
 
-        /* Password Modal */
-        .login-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(18, 26, 47, 0.4);
-            backdrop-filter: blur(25px);
-            z-index: 999;
-            display: flex;
-            justify-content: center;
+        .badge-lang {
+            display: inline-flex;
             align-items: center;
-            padding: 20px;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.82rem;
+            font-weight: 700;
         }
 
-        .login-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(35px) saturate(210%);
-            border-radius: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.95);
-            padding: 36px 28px;
-            width: 100%;
-            max-width: 380px;
-            text-align: center;
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.15);
-        }
+        .badge-lang.ku { background: rgba(255, 179, 0, 0.15); color: #B37D00; border: 1px solid rgba(255, 179, 0, 0.3); }
+        .badge-lang.ar { background: rgba(76, 175, 80, 0.15); color: #2E7D32; border: 1px solid rgba(76, 175, 80, 0.3); }
+        .badge-lang.en { background: rgba(33, 150, 243, 0.15); color: #1565C0; border: 1px solid rgba(33, 150, 243, 0.3); }
 
-        .pin-input {
-            width: 100%;
-            padding: 14px;
-            border-radius: 16px;
-            border: 1px solid rgba(0, 0, 0, 0.12);
-            font-size: 1.2rem;
-            text-align: center;
-            letter-spacing: 6px;
-            margin: 18px 0;
-            outline: none;
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+        .badge-cat {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.86rem;
+            font-weight: 700;
+            background: rgba(195, 139, 117, 0.15);
+            color: #8C4E37;
+            border: 1px solid rgba(195, 139, 117, 0.3);
         }
     </style>
 </head>
@@ -441,17 +441,17 @@
             <div class="brand-info">
                 <img src="/handdown-logo.png" alt="Logo" class="admin-logo" onerror="this.src='/Asset 10@2x-8.png';">
                 <div class="header-title">
-                    <h1>داشبۆردی ئامارەکان و QR Code </h1>
-                    <p>Handdown Duty Free Store Analytics & QR Generator</p>
+                    <h1>داشبۆردی سەرجەم ئامارەکان (Admin Analytics)</h1>
+                    <p>Handdown Duty Free Customer Analytics & Location Tracking</p>
                 </div>
             </div>
             <div class="header-actions">
                 <button class="btn-glass" onclick="addMockData()">➕ زیاکردنی داتای تێست</button>
-                <button class="btn-glass btn-accent" onclick="exportCurrentCSV()">📥 داگرتنی اکسل (CSV)</button>
+                <button class="btn-glass btn-accent" onclick="exportCurrentCSV()">📥 داگرتنی فایلی Excel (CSV)</button>
             </div>
         </div>
 
-        <!-- KPI Cards Grid -->
+        <!-- Summary KPI Cards -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-header">
@@ -476,13 +476,13 @@
                     <span class="stat-title">پڕکڕیارترین کەتەگۆری</span>
                     <div class="stat-icon">🏆</div>
                 </div>
-                <div class="stat-value" id="val-top-category" style="font-size: 1.15rem; font-family: inherit;">-</div>
+                <div class="stat-value" id="val-top-category" style="font-size: 1.1rem; font-family: inherit;">-</div>
                 <div class="stat-sub">Top Product Category</div>
             </div>
 
             <div class="stat-card">
                 <div class="stat-header">
-                    <span class="stat-title">ڕێژەی ڕاگواستن (Conversion)</span>
+                    <span class="stat-title">ڕێژەی وەڵامدانەوە (Conversion)</span>
                     <div class="stat-icon">⚡</div>
                 </div>
                 <div class="stat-value" id="val-conversion-rate">0%</div>
@@ -490,82 +490,101 @@
             </div>
         </div>
 
-        <!-- QR Code Generator Section for Handdown Duty Free Stores -->
-        <div class="glass-panel">
-            <div class="panel-title">
-                <span>📱 دروستکردنی QR Code بۆ ستۆرەکانی هاندداون (Store QR Generator)</span>
+        <!-- Visual Breakdown Panels (Store, Language, Category) -->
+        <div class="breakdown-grid">
+            <!-- 1. Store Location Stats -->
+            <div class="glass-panel">
+                <div class="panel-title">
+                    <span>🏬 ئاماری وەڵامەکان بەپێی ستۆرەکان</span>
+                </div>
+                <div id="store-bars-container"></div>
             </div>
-            <div class="qr-grid" id="qr-grid-container">
-                <!-- QR Code Cards injected here dynamically -->
+
+            <!-- 2. Language Stats -->
+            <div class="glass-panel">
+                <div class="panel-title">
+                    <span>🌐 ئاماری زمانی سەردانیکەران</span>
+                </div>
+                <div id="language-bars-container"></div>
+            </div>
+
+            <!-- 3. Category Stats -->
+            <div class="glass-panel">
+                <div class="panel-title">
+                    <span>🛍️ ئاماری داواکاری کەتەگۆرییەکان</span>
+                </div>
+                <div id="category-bars-container"></div>
             </div>
         </div>
 
-        <!-- Dedicated Language Tables & Tabs -->
+        <!-- Complete Submissions Table with Filters -->
         <div class="glass-panel">
             <div class="panel-title">
-                <span>📋 خشتەی وەڵامەکان بەپێی ستۆر و زمان (Store & Language Filter)</span>
-                <div class="lang-tabs">
-                    <button class="tab-btn active" id="tab-all" onclick="switchTab('all')">گشتی (All)</button>
-                    <button class="tab-btn" id="tab-ku" onclick="switchTab('ku')">کوردی (Kurdish)</button>
-                    <button class="tab-btn" id="tab-ar" onclick="switchTab('ar')">العربية (Arabic)</button>
-                    <button class="tab-btn" id="tab-en" onclick="switchTab('en')">English</button>
-                </div>
+                <span>📋 خشتەی وەڵامەکان بە ڕوونی و جیاکراوەیی (Clear Analytics Table)</span>
+                <span id="tab-count-badge" style="font-weight: 700; color: var(--brand-accent); font-size: 0.92rem;">0 وەڵام</span>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; flex-wrap: wrap; gap: 12px;">
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-                    <input type="text" id="search-input" placeholder="گەڕان لە فۆرمەکاندا..." oninput="renderTable()" style="padding: 10px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; outline: none; background: rgba(255,255,255,0.85); width: 240px;">
-                    
-                    <!-- Store Filter Select -->
-                    <select id="store-filter-select" class="filter-select" onchange="renderTable()">
-                        <option value="all">هەموو ستۆرەکان (All Stores)</option>
-                        <option value="Haji Omaran Shop (Iran Border)">Haji Omaran Shop (Iran Border)</option>
-                        <option value="Turkish Border Shop 1 (Ibrahim Khalil)">Turkish Border Shop 1 (Ibrahim Khalil)</option>
-                        <option value="Turkish Border Shop 2 (Ibrahim Khalil)">Turkish Border Shop 2 (Ibrahim Khalil)</option>
-                        <option value="Diplomatic Shop (Erbil)">Diplomatic Shop (Erbil)</option>
-                        <option value="CIP Shop (Erbil Int Airport)">CIP Shop (Erbil Int Airport)</option>
-                        <option value="Departure - Arrival (Erbil Int Airport)">Departure - Arrival (Erbil Int Airport)</option>
-                    </select>
-                </div>
-                <span id="tab-count-badge" style="font-weight: 700; color: var(--brand-accent); font-size: 0.92rem;">0 وەڵام</span>
+            <!-- Dual Filter Controls -->
+            <div class="filter-row">
+                <!-- Search Box -->
+                <input type="text" id="search-input" class="search-box" placeholder="🔎 گەڕان بەپێی کات، زمان، ستۆر یان کاڵا..." oninput="renderTable()">
+
+                <!-- Store Filter -->
+                <select id="store-filter-select" class="filter-select" onchange="renderTable()">
+                    <option value="all">🏬 هەموو ستۆرەکان (All Stores)</option>
+                    <option value="Haji Omaran Shop (Iran Border)">🏔️ Haji Omaran Shop (Iran Border)</option>
+                    <option value="Turkish Border Shop 1 (Ibrahim Khalil)">🇹🇷 Turkish Border Shop 1 (Ibrahim Khalil)</option>
+                    <option value="Turkish Border Shop 2 (Ibrahim Khalil)">🇹🇷 Turkish Border Shop 2 (Ibrahim Khalil)</option>
+                    <option value="Diplomatic Shop (Erbil)">🏛️ Diplomatic Shop (Erbil)</option>
+                    <option value="CIP Shop (Erbil Int Airport)">🛫 CIP Shop (Erbil Int Airport)</option>
+                    <option value="Departure - Arrival (Erbil Int Airport)">✈️ Departure - Arrival (Erbil Int Airport)</option>
+                </select>
+
+                <!-- Language Filter -->
+                <select id="lang-filter-select" class="filter-select" onchange="renderTable()">
+                    <option value="all">🌐 هەموو زمانەکان (All Languages)</option>
+                    <option value="Kurdish">☀️ کوردی (Kurdish)</option>
+                    <option value="Arabic">🌙 العربية (Arabic)</option>
+                    <option value="English">🌍 English</option>
+                </select>
             </div>
 
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>کاتی تۆمار (Timestamp)</th>
-                            <th>مۆڵ/ستۆر (Store Location)</th>
-                            <th>زمان (Language)</th>
-                            <th>کاڵای هەڵبژێردراو (Selected Category)</th>
+                            <th>🕒 کاتی تۆمار (Date & Time)</th>
+                            <th>🏬 شوێنی ستۆر (Store Location)</th>
+                            <th>🌐 زمانی کڕیار (Customer Language)</th>
+                            <th>🛍️ کاڵای هەڵبژێردراو (Product Category)</th>
                         </tr>
                     </thead>
                     <tbody id="responses-table-body">
-                        <!-- Table rows injected here -->
+                        <!-- Rows injected here -->
                     </tbody>
                 </table>
             </div>
         </div>
+
+        <!-- Store QR Code Generator Grid -->
+        <div class="glass-panel">
+            <div class="panel-title">
+                <span>📱 دروستکردنی QR Code بۆ ستۆرەکانی هاندداون (Store QR Generator)</span>
+            </div>
+            <div class="qr-grid" id="qr-grid-container"></div>
+        </div>
     </div>
 
     <script>
-        let currentTab = 'all';
-
         const storeList = [
-            { slug: 'haji-omaran', name: 'Haji Omaran Shop', sub: 'IRAN BORDER' },
-            { slug: 'turkish-border-1', name: 'Turkish Border Shop 1', sub: 'IBRAHIM KHALIL' },
-            { slug: 'turkish-border-2', name: 'Turkish Border Shop 2', sub: 'IBRAHIM KHALIL' },
-            { slug: 'erbil-diplomatic', name: 'Diplomatic Shop', sub: 'ERBIL' },
-            { slug: 'erbil-cip', name: 'CIP Shop', sub: 'ERBIL INT AIRPORT' },
-            { slug: 'erbil-airport', name: 'Departure - Arrival', sub: 'ERBIL INT AIRPORT' }
+            { slug: 'haji-omaran', name: 'Haji Omaran Shop', sub: 'IRAN BORDER', full: 'Haji Omaran Shop (Iran Border)' },
+            { slug: 'turkish-border-1', name: 'Turkish Border Shop 1', sub: 'IBRAHIM KHALIL', full: 'Turkish Border Shop 1 (Ibrahim Khalil)' },
+            { slug: 'turkish-border-2', name: 'Turkish Border Shop 2', sub: 'IBRAHIM KHALIL', full: 'Turkish Border Shop 2 (Ibrahim Khalil)' },
+            { slug: 'erbil-diplomatic', name: 'Diplomatic Shop', sub: 'ERBIL', full: 'Diplomatic Shop (Erbil)' },
+            { slug: 'erbil-cip', name: 'CIP Shop', sub: 'ERBIL INT AIRPORT', full: 'CIP Shop (Erbil Int Airport)' },
+            { slug: 'erbil-airport', name: 'Departure - Arrival', sub: 'ERBIL INT AIRPORT', full: 'Departure - Arrival (Erbil Int Airport)' }
         ];
 
-        // Auto load dashboard data on DOMContentLoaded
-        window.addEventListener('DOMContentLoaded', () => {
-            loadDashboardData();
-        });
-
-        // Get stored analytics
         function getAnalyticsData() {
             const data = localStorage.getItem('handdown_survey_analytics');
             return data ? JSON.parse(data) : {
@@ -574,12 +593,16 @@
             };
         }
 
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDashboardData();
+        });
+
         function loadDashboardData() {
             const analytics = getAnalyticsData();
             const visits = analytics.visits || { ku: 0, ar: 0, en: 0, total: 0 };
             const responses = analytics.responses || [];
 
-            // 1. Update KPI Values
+            // 1. KPI Summaries
             const totalVisits = visits.total || (visits.ku + visits.ar + visits.en) || 0;
             document.getElementById('val-total-visits').innerText = totalVisits;
             document.getElementById('val-total-responses').innerText = responses.length;
@@ -587,14 +610,12 @@
             const convRate = totalVisits > 0 ? Math.round((responses.length / totalVisits) * 100) : 0;
             document.getElementById('val-conversion-rate').innerText = convRate + '%';
 
-            // Calculate Category Frequencies
+            // Top Category Calculation
             const catCounts = {};
             responses.forEach(r => {
                 if (r.categories) {
                     const list = r.categories.split(' | ');
-                    list.forEach(c => {
-                        catCounts[c] = (catCounts[c] || 0) + 1;
-                    });
+                    list.forEach(c => { catCounts[c] = (catCounts[c] || 0) + 1; });
                 }
             });
 
@@ -608,17 +629,151 @@
             });
             document.getElementById('val-top-category').innerText = topCat;
 
-            // 2. Render QR Code Grid
-            renderQRCodes();
+            // 2. Render Store Breakdown
+            renderStoreBars(responses);
 
-            // 3. Render Table
+            // 3. Render Language Breakdown
+            renderLanguageBars(visits, responses);
+
+            // 4. Render Category Breakdown
+            renderCategoryBars(catCounts, responses.length);
+
+            // 5. Render Table & QR Codes
             renderTable();
+            renderQRCodes();
+        }
+
+        function renderStoreBars(responses) {
+            const container = document.getElementById('store-bars-container');
+            container.innerHTML = '';
+            const storeCounts = {};
+
+            responses.forEach(r => {
+                const sName = r.store || 'Main Portal / General';
+                storeCounts[sName] = (storeCounts[sName] || 0) + 1;
+            });
+
+            const totalResps = responses.length || 1;
+            storeList.forEach(s => {
+                const count = storeCounts[s.full] || 0;
+                const pct = Math.round((count / totalResps) * 100);
+                container.innerHTML += `
+                    <div class="progress-item">
+                        <div class="progress-label"><span>${s.name} (${s.sub})</span><span>${count} وەڵام (${pct}%)</span></div>
+                        <div class="progress-bg"><div class="progress-fill" style="width: ${pct}%;"></div></div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderLanguageBars(visits, responses) {
+            const container = document.getElementById('language-bars-container');
+            const totalVisits = (visits.ku + visits.ar + visits.en) || 1;
+
+            const kuVisits = visits.ku || 0;
+            const arVisits = visits.ar || 0;
+            const enVisits = visits.en || 0;
+
+            const kuPct = Math.round((kuVisits / totalVisits) * 100);
+            const arPct = Math.round((arVisits / totalVisits) * 100);
+            const enPct = Math.round((enVisits / totalVisits) * 100);
+
+            container.innerHTML = `
+                <div class="progress-item">
+                    <div class="progress-label"><span>☀️ کوردی (Kurdish)</span><span>${kuVisits} سەردان (${kuPct}%)</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width: ${kuPct}%;"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>🌙 العربية (Arabic)</span><span>${arVisits} سەردان (${arPct}%)</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width: ${arPct}%;"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="progress-label"><span>🌍 English</span><span>${enVisits} سەردان (${enPct}%)</span></div>
+                    <div class="progress-bg"><div class="progress-fill" style="width: ${enPct}%;"></div></div>
+                </div>
+            `;
+        }
+
+        function renderCategoryBars(catCounts, totalResponses) {
+            const container = document.getElementById('category-bars-container');
+            container.innerHTML = '';
+            const sortedCats = Object.keys(catCounts).sort((a, b) => catCounts[b] - catCounts[a]);
+
+            if (sortedCats.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.88rem;">هیچ داتایەک دیاری نەکراوە.</p>';
+                return;
+            }
+
+            const totalPicks = Object.values(catCounts).reduce((a, b) => a + b, 0) || 1;
+            sortedCats.forEach(cat => {
+                const count = catCounts[cat];
+                const pct = Math.round((count / totalPicks) * 100);
+                container.innerHTML += `
+                    <div class="progress-item">
+                        <div class="progress-label"><span>${cat}</span><span>${count} داواکاری (${pct}%)</span></div>
+                        <div class="progress-bg"><div class="progress-fill" style="width: ${pct}%;"></div></div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderTable() {
+            const analytics = getAnalyticsData();
+            const responses = analytics.responses || [];
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const selectedStore = document.getElementById('store-filter-select').value;
+            const selectedLang = document.getElementById('lang-filter-select').value;
+            const tbody = document.getElementById('responses-table-body');
+            tbody.innerHTML = '';
+
+            let filtered = responses.filter(r => {
+                // Store Filter
+                if (selectedStore !== 'all' && (r.store || 'Main Portal / General') !== selectedStore) return false;
+
+                // Language Filter
+                if (selectedLang !== 'all' && (r.language || '') !== selectedLang) return false;
+
+                return true;
+            });
+
+            if (query) {
+                filtered = filtered.filter(r => 
+                    (r.language && r.language.toLowerCase().includes(query)) ||
+                    (r.categories && r.categories.toLowerCase().includes(query)) ||
+                    (r.store && r.store.toLowerCase().includes(query)) ||
+                    (r.timestamp && r.timestamp.toLowerCase().includes(query))
+                );
+            }
+
+            filtered.reverse();
+            document.getElementById('tab-count-badge').innerText = `${filtered.length} وەڵام`;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 24px;">هیچ وەڵامێک تێدا نەدۆزرایەوە.</td></tr>';
+                return;
+            }
+
+            filtered.forEach(r => {
+                const lang = r.language || 'Kurdish';
+                let langClass = 'ku';
+                let langIcon = '☀️';
+                if (lang === 'Arabic') { langClass = 'ar'; langIcon = '🌙'; }
+                if (lang === 'English') { langClass = 'en'; langIcon = '🌍'; }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-family: var(--font-english); font-size: 0.85rem;">${r.timestamp}</td>
+                    <td><span class="badge-store">🏬 ${r.store || 'Main Portal'}</span></td>
+                    <td><span class="badge-lang ${langClass}">${langIcon} ${lang}</span></td>
+                    <td><span class="badge-cat">🛍️ ${r.categories}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
         function renderQRCodes() {
             const container = document.getElementById('qr-grid-container');
             container.innerHTML = '';
-
             const baseUrl = window.location.origin;
 
             storeList.forEach(store => {
@@ -668,72 +823,15 @@
             printWin.document.close();
         }
 
-        function switchTab(tab) {
-            currentTab = tab;
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('tab-' + tab).classList.add('active');
-            renderTable();
-        }
-
-        function renderTable() {
-            const analytics = getAnalyticsData();
-            const responses = analytics.responses || [];
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const selectedStore = document.getElementById('store-filter-select').value;
-            const tbody = document.getElementById('responses-table-body');
-            tbody.innerHTML = '';
-
-            let filtered = responses.filter(r => {
-                // Language tab filter
-                if (currentTab === 'ku' && (r.language || '').toLowerCase() !== 'kurdish') return false;
-                if (currentTab === 'ar' && (r.language || '').toLowerCase() !== 'arabic') return false;
-                if (currentTab === 'en' && (r.language || '').toLowerCase() !== 'english') return false;
-
-                // Store filter
-                if (selectedStore !== 'all' && (r.store || 'Main Portal / General') !== selectedStore) return false;
-
-                return true;
-            });
-
-            if (query) {
-                filtered = filtered.filter(r => 
-                    (r.language && r.language.toLowerCase().includes(query)) ||
-                    (r.categories && r.categories.toLowerCase().includes(query)) ||
-                    (r.store && r.store.toLowerCase().includes(query)) ||
-                    (r.timestamp && r.timestamp.toLowerCase().includes(query))
-                );
-            }
-
-            filtered.reverse();
-            document.getElementById('tab-count-badge').innerText = `${filtered.length} وەڵام`;
-
-            if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 24px;">هیچ وەڵامێک فلتەر نەکراوە.</td></tr>';
-                return;
-            }
-
-            filtered.forEach(r => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="font-family: var(--font-english); font-size: 0.85rem;">${r.timestamp}</td>
-                    <td><span class="badge-store">${r.store || 'Main Portal / General'}</span></td>
-                    <td><span class="badge-lang">${r.language || 'Kurdish'}</span></td>
-                    <td style="font-weight: 600;">${r.categories}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
         function exportCurrentCSV() {
             const analytics = getAnalyticsData();
             const responses = analytics.responses || [];
             const selectedStore = document.getElementById('store-filter-select').value;
+            const selectedLang = document.getElementById('lang-filter-select').value;
 
             let filtered = responses.filter(r => {
-                if (currentTab === 'ku' && (r.language || '').toLowerCase() !== 'kurdish') return false;
-                if (currentTab === 'ar' && (r.language || '').toLowerCase() !== 'arabic') return false;
-                if (currentTab === 'en' && (r.language || '').toLowerCase() !== 'english') return false;
                 if (selectedStore !== 'all' && (r.store || 'Main Portal / General') !== selectedStore) return false;
+                if (selectedLang !== 'all' && (r.language || '') !== selectedLang) return false;
                 return true;
             });
 
@@ -743,10 +841,10 @@
             }
 
             let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-            csvContent += "ID,Timestamp,Store Location,Language,Selected Category\n";
+            csvContent += "Timestamp,Store Location,Customer Language,Selected Product Category\n";
 
             filtered.forEach(r => {
-                csvContent += `"${r.id}","${r.timestamp}","${r.store || 'Main Portal'}","${r.language}","${r.categories}"\n`;
+                csvContent += `"${r.timestamp}","${r.store || 'Main Portal'}","${r.language}","${r.categories}"\n`;
             });
 
             const encodedUri = encodeURI(csvContent);
@@ -772,13 +870,6 @@
             };
             localStorage.setItem('handdown_survey_analytics', JSON.stringify(mock));
             loadDashboardData();
-        }
-
-        function clearAnalytics() {
-            if (confirm("دڵنیایت لە سڕینەوەی سەرجەم ئامارەکان؟")) {
-                localStorage.removeItem('handdown_survey_analytics');
-                loadDashboardData();
-            }
         }
     </script>
 </body>
