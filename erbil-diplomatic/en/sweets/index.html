@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handdown Duty Free Survey - English</title>
+    <!-- Google Fonts for English -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #121A2F;
+            --primary-gold: #C38B75;
+            --brand-accent: #C38B75;
+            --bg-color: #e8e3dd;
+            --card-bg: #FFFFFF;
+            --text-main: #1C1C1E;
+            --text-muted: #8E8E93;
+            --border-color: #E5E5EA;
+            --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            --font-english: -apple-system, BlinkMacSystemFont, 'Poppins', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        html, body {
+            height: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
+        body {
+            font-family: var(--font-english);
+            font-size: 16px;
+            background-color: #e8e3dd;
+            background-image: 
+                radial-gradient(ellipse 70% 60% at 12% 15%, rgba(190, 116, 86, 0.45) 0%, transparent 60%),
+                radial-gradient(ellipse 65% 55% at 88% 85%, rgba(14, 25, 45, 0.35) 0%, transparent 65%),
+                radial-gradient(ellipse 60% 50% at 82% 18%, rgba(228, 167, 144, 0.48) 0%, transparent 60%),
+                radial-gradient(ellipse 55% 45% at 18% 82%, rgba(228, 167, 144, 0.38) 0%, transparent 55%),
+                radial-gradient(circle at 50% 50%, rgba(232, 227, 221, 0.75) 0%, transparent 70%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            direction: ltr;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(30px) saturate(210%);
+            -webkit-backdrop-filter: blur(30px) saturate(210%);
+            width: 100%;
+            max-width: 460px;
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 
+                0 24px 60px rgba(18, 26, 47, 0.09),
+                0 4px 16px rgba(0, 0, 0, 0.03),
+                inset 0 1.5px 2.5px rgba(255, 255, 255, 1);
+            overflow: hidden;
+            position: relative;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            margin: auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 32px 24px 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo {
+            max-width: 220px;
+            width: 75%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.04));
+        }
+
+        .step-container {
+            padding: 28px 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .step {
+            display: none;
+            flex-direction: column;
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            flex-grow: 1;
+        }
+
+        .step.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.99); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            text-align: center;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            padding: 15px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            border-radius: 18px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.58);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03), inset 0 1px 1.5px rgba(255, 255, 255, 0.9);
+        }
+
+        .option-label:hover {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(255, 255, 255, 1);
+            transform: translateY(-1.5px);
+        }
+
+        .option-label input {
+            display: none;
+        }
+
+        .custom-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #C7C7CC;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.9);
+            margin-right: 14px;
+            position: relative;
+        }
+
+        .custom-checkbox::after {
+            content: "";
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2.5px 2.5px 0;
+            transform: rotate(45deg) translate(-0.5px, -1px);
+            display: none;
+        }
+
+        .option-label input:checked + .custom-checkbox {
+            background-color: var(--brand-accent);
+            border-color: var(--brand-accent);
+            box-shadow: 0 3px 12px rgba(195, 139, 117, 0.45);
+            transform: scale(1.05);
+        }
+
+        .option-label input:checked + .custom-checkbox::after {
+            display: block;
+        }
+
+        .option-label.selected {
+            border: 1.5px solid rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.88);
+            font-weight: 700;
+        }
+
+        .actions-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .submit-btn {
+            flex: 2;
+            font-size: 1.05rem;
+            font-weight: 700;
+            font-family: inherit;
+            padding: 16px 18px;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .submit-btn:disabled {
+            background: rgba(255, 255, 255, 0.45);
+            color: #8E8E93;
+            cursor: not-allowed;
+        }
+
+        .submit-btn:not(:disabled) {
+            background: linear-gradient(135deg, #C38B75, #D59882);
+            color: white;
+            box-shadow: 0 8px 25px rgba(195, 139, 117, 0.4);
+        }
+
+        .back-btn {
+            flex: 1;
+            max-width: 135px;
+            background: rgba(255, 255, 255, 0.58);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            padding: 16px 14px;
+            border-radius: 18px;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .step-indicator {
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            padding: 4px 13px;
+            border-radius: 12px;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 12px;
+            align-self: center;
+        }
+
+        .success-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            padding: 20px 0;
+        }
+
+        .check-circle {
+            width: 80px;
+            height: 80px;
+            background-color: var(--primary-gold);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(195, 139, 117, 0.3);
+        }
+
+        .check-circle svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 18px 14px; }
+            .container { border-radius: 26px; width: 93%; max-width: 375px; }
+            header { padding: 20px 16px 4px; }
+            .logo { max-width: 165px; width: 65%; }
+            .step-container { padding: 16px 14px; }
+            h2 { font-size: 1.08rem; margin-bottom: 14px; }
+            .options-grid { gap: 9px; margin-bottom: 12px; }
+            .option-label { padding: 12px 13px; font-size: 0.92rem; border-radius: 15px; }
+            .actions-row { gap: 10px; margin-top: 8px; }
+            .back-btn { padding: 12px 10px; font-size: 0.92rem; border-radius: 15px; max-width: 115px; }
+            .submit-btn { padding: 12px 14px; font-size: 0.95rem; border-radius: 15px; }
+        }
+    </style>
+</head>
+<body class="ltr">
+    <div class="container">
+        <header>
+            <img src="/handdown-logo.png" alt="Handdown Duty Free" class="logo" onerror="this.onerror=null; this.src='/Asset 10@2x-8.png';">
+        </header>
+
+        <div class="step-container">
+            <div id="step-2" class="step active">
+                <h2>What did you buy from Handdown Duty Free?</h2>
+                <div class="options-grid" id="options-container"></div>
+                <div class="actions-row">
+                    <button class="back-btn" onclick="window.location.href='/'"><span>←</span><span>Back</span></button>
+                    <button class="submit-btn" id="submit-btn" onclick="submitForm()" disabled>Submit</button>
+                </div>
+            </div>
+
+            <div id="step-3" class="step">
+                <div class="success-content">
+                    <div class="check-circle">
+                        <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                    </div>
+                    <h2>Thank you for your response!</h2>
+                    <p>Have a safe flight.</p>
+                </div>
+            </div>
+
+            <div class="step-indicator" id="step-indicator">Step 2 of 2</div>
+        </div>
+    </div>
+
+    <script>
+        const categories = ['Tobacco & Cigarettes', 'Spirits & Liquor', 'Perfumes & Cosmetics', 'Watches & Accessories', 'Jewelry', 'Confectionery & Sweets', 'Souvenirs'];
+        const optionsContainer = document.getElementById('options-container');
+        const submitBtn = document.getElementById('submit-btn');
+
+        // Log Unique English Visit per Device Session
+        (function logUniqueVisit() {
+            const deviceKey = 'handdown_device_session_en';
+            if (sessionStorage.getItem(deviceKey) || localStorage.getItem(deviceKey)) {
+                return; // Device already counted for English in this session, skip refresh
+            }
+            sessionStorage.setItem(deviceKey, 'true');
+            localStorage.setItem(deviceKey, 'true');
+
+            const data = localStorage.getItem('handdown_survey_analytics');
+            const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
+            analytics.visits.en = (analytics.visits.en || 0) + 1;
+            analytics.visits.total = (analytics.visits.ku || 0) + (analytics.visits.ar || 0) + (analytics.visits.en || 0);
+            localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
+        })();
+
+        const storeMap = {
+            'haji-omaran': 'Haji Omaran Shop (Iran Border)',
+            'turkish-border-1': 'Turkish Border Shop 1 (Ibrahim Khalil)',
+            'turkish-border-2': 'Turkish Border Shop 2 (Ibrahim Khalil)',
+            'erbil-diplomatic': 'Diplomatic Shop (Erbil)',
+            'erbil-cip': 'CIP Shop (Erbil Int Airport)',
+            'erbil-airport': 'Departure - Arrival (Erbil Int Airport)'
+        };
+
+        function getStoreInfo() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const storeParam = urlParams.get('store') || '';
+            const pathname = window.location.pathname.toLowerCase();
+
+            for (const slug in storeMap) {
+                if (pathname.includes('/' + slug) || storeParam.includes(slug)) {
+                    return { slug: slug, name: storeMap[slug] };
+                }
+            }
+            return { slug: '', name: 'Main Portal / General' };
+        }
+
+        const categoryIndexToSlug = ['tobacco', 'spirits', 'perfumes', 'watches', 'jewelry', 'sweets', 'souvenirs'];
+
+        // Populate English options (Single-Selection)
+        categories.forEach((cat, index) => {
+            const label = document.createElement('label');
+            label.className = 'option-label';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'radio';
+            checkbox.name = 'category_selection';
+            checkbox.value = cat;
+            checkbox.onchange = (e) => {
+                // Clear all previous selections for single-select mode
+                const allLabels = optionsContainer.querySelectorAll('.option-label');
+                allLabels.forEach(l => l.classList.remove('selected'));
+
+                label.classList.add('selected');
+                submitBtn.disabled = false;
+
+                // Dynamically update browser address bar URL (?store=haji-omaran/en/jewelry or /haji-omaran/en/jewelry)
+                const catSlug = categoryIndexToSlug[index];
+                const storeInfo = getStoreInfo();
+                try {
+                    if (storeInfo.slug) {
+                        const newUrl = window.location.search.includes('store=') 
+                            ? `/?store=${storeInfo.slug}/en/${catSlug}` 
+                            : `/${storeInfo.slug}/en/${catSlug}`;
+                        window.history.pushState({ category: catSlug }, '', newUrl);
+                    } else {
+                        window.history.pushState({ category: catSlug }, '', '/en/' + catSlug);
+                    }
+                } catch(err) {}
+            };
+            const customCheck = document.createElement('div');
+            customCheck.className = 'custom-checkbox';
+            label.appendChild(checkbox);
+            label.appendChild(customCheck);
+            label.appendChild(document.createTextNode(cat));
+            optionsContainer.appendChild(label);
+        });
+
+        const categorySlugMap = {
+            'tobacco': 0,
+            'spirits': 1,
+            'perfumes': 2,
+            'watches': 3,
+            'jewelry': 4,
+            'sweets': 5,
+            'souvenirs': 6
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const pathname = window.location.pathname.toLowerCase();
+            const urlParams = new URLSearchParams(window.location.search);
+            const catParam = urlParams.get('cat');
+            const storeParam = urlParams.get('store') || '';
+
+            let targetSlug = null;
+            Object.keys(categorySlugMap).forEach(slug => {
+                if (pathname.includes('/' + slug) || catParam === slug || storeParam.includes('/' + slug)) {
+                    targetSlug = slug;
+                }
+            });
+
+            if (targetSlug !== null) {
+                const targetIndex = categorySlugMap[targetSlug];
+                const labels = optionsContainer.querySelectorAll('.option-label');
+                if (labels[targetIndex]) {
+                    const cb = labels[targetIndex].querySelector('input[type="radio"]');
+                    if (cb) {
+                        cb.checked = true;
+                        labels[targetIndex].classList.add('selected');
+                        submitBtn.disabled = false;
+                    }
+                }
+            }
+        });
+
+        function getStoreName() {
+            return getStoreInfo().name;
+        }
+
+        function submitForm() {
+            const selected = [];
+            optionsContainer.querySelectorAll('input[type="radio"]:checked').forEach(cb => selected.push(cb.value));
+            const data = localStorage.getItem('handdown_survey_analytics');
+            const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
+            analytics.responses.push({
+                id: 'RESP-' + Date.now(),
+                timestamp: new Date().toLocaleString(),
+                language: 'English',
+                categories: selected.join(' | '),
+                store: getStoreName()
+            });
+            localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
+            document.getElementById('step-2').classList.remove('active');
+            document.getElementById('step-3').classList.add('active');
+            document.getElementById('step-indicator').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
