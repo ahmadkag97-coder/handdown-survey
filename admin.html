@@ -36,6 +36,15 @@
             margin: 0;
             padding: 0;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        input, select, textarea {
+            user-select: text;
+            -webkit-user-select: text;
         }
 
         html, body {
@@ -428,8 +437,8 @@
         <div class="login-card">
             <img src="/handdown-logo.png" alt="Handdown Duty Free" style="max-width: 170px; margin-bottom: 14px;" onerror="this.src='/Asset 10@2x-8.png';">
             <h2 style="font-size: 1.2rem; color: var(--primary-dark);">داخڵبوونی ئاددین (Admin Login)</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">تکایە پین کۆد بنووسە (پین کۆدی بنەڕەتی: 1234)</p>
-            <input type="password" id="pin-input" class="pin-input" placeholder="••••" maxlength="8">
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">تکایە پین کۆد بنووسە (پین کۆد: 1234)</p>
+            <input type="password" id="pin-input" class="pin-input" placeholder="••••" maxlength="8" oninput="verifyPinInstant()" autofocus>
             <button class="btn-glass btn-accent" style="width: 100%; justify-content: center; padding: 14px;" onclick="verifyPin()">چوونە ژوورەوە</button>
             <p id="login-error" style="color: #d9534f; font-size: 0.82rem; margin-top: 10px; display: none;">وشەی تێپەڕ هەڵەیە!</p>
         </div>
@@ -561,11 +570,26 @@
             { slug: 'erbil-airport', name: 'Departure - Arrival', sub: 'ERBIL INT AIRPORT' }
         ];
 
-        // Password verification (default passcode: 1234 or empty)
-        function verifyPin() {
-            const input = document.getElementById('pin-input').value;
-            if (input === '1234' || input === '' || input === 'admin') {
+        // Instant Auto Login when typing correct PIN
+        function verifyPinInstant() {
+            const input = document.getElementById('pin-input').value.trim();
+            if (input === '1234' || input === 'admin') {
                 document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('login-error').style.display = 'none';
+                loadDashboardData();
+            } else if (input.length >= 4) {
+                document.getElementById('login-error').style.display = 'block';
+            } else {
+                document.getElementById('login-error').style.display = 'none';
+            }
+        }
+
+        // Password verification button fallback
+        function verifyPin() {
+            const input = document.getElementById('pin-input').value.trim();
+            if (input === '1234' || input === 'admin' || input === '') {
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('login-error').style.display = 'none';
                 loadDashboardData();
             } else {
                 document.getElementById('login-error').style.display = 'block';
