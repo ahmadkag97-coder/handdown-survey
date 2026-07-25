@@ -62,7 +62,7 @@
 
         /* Layout Container */
         .dashboard-container {
-            max-width: 1050px;
+            max-width: 1080px;
             margin: 0 auto;
         }
 
@@ -79,6 +79,8 @@
             align-items: center;
             box-shadow: 0 16px 40px rgba(18, 26, 47, 0.07);
             margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
         }
 
         .brand-info {
@@ -106,6 +108,7 @@
         .header-actions {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .btn-glass {
@@ -113,10 +116,10 @@
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.9);
             color: var(--primary-dark);
-            padding: 10px 18px;
+            padding: 10px 16px;
             border-radius: 14px;
             font-family: inherit;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
@@ -236,6 +239,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         /* Progress Bars */
@@ -267,9 +272,40 @@
             transition: width 0.6s ease;
         }
 
+        /* Language Filter Tabs */
+        .lang-tabs {
+            display: flex;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.04);
+            padding: 5px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tab-btn.active {
+            background: #FFFFFF;
+            color: var(--primary-dark);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            font-weight: 700;
+        }
+
         /* Table */
         .table-container {
             overflow-x: auto;
+            margin-top: 14px;
         }
 
         table {
@@ -279,11 +315,12 @@
         }
 
         th {
-            padding: 12px 14px;
-            font-size: 0.82rem;
+            padding: 14px;
+            font-size: 0.84rem;
             color: var(--text-muted);
             font-weight: 600;
             border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            background: rgba(255, 255, 255, 0.4);
         }
 
         td {
@@ -351,7 +388,7 @@
         <div class="login-card">
             <img src="/handdown-logo.png" alt="Handdown Duty Free" style="max-width: 170px; margin-bottom: 14px;" onerror="this.src='/Asset 10@2x-8.png';">
             <h2 style="font-size: 1.2rem; color: var(--primary-dark);">داخڵبوونی ئاددین (Admin Login)</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">تکایە پین کۆد یان وشەی تێپەڕ بنووسە</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">تکایە پین کۆد بنووسە (پین کۆدی بنەڕەتی: 1234)</p>
             <input type="password" id="pin-input" class="pin-input" placeholder="••••" maxlength="8">
             <button class="btn-glass btn-accent" style="width: 100%; justify-content: center; padding: 14px;" onclick="verifyPin()">چوونە ژوورەوە</button>
             <p id="login-error" style="color: #d9534f; font-size: 0.82rem; margin-top: 10px; display: none;">وشەی تێپەڕ هەڵەیە!</p>
@@ -370,7 +407,7 @@
             </div>
             <div class="header-actions">
                 <button class="btn-glass" onclick="addMockData()">➕ زیاکردنی داتای تێست</button>
-                <button class="btn-glass btn-accent" onclick="exportCSV()">📥 داگرتنی اکسل (CSV)</button>
+                <button class="btn-glass btn-accent" onclick="exportCurrentCSV()">📥 داگرتنی اکسل (CSV)</button>
                 <button class="btn-glass" style="color: #d9534f;" onclick="clearAnalytics()">🗑️ سڕینەوەی داتا</button>
             </div>
         </div>
@@ -437,19 +474,30 @@
             </div>
         </div>
 
-        <!-- Recent Responses Table -->
+        <!-- Dedicated Language Tables & Tabs -->
         <div class="glass-panel">
             <div class="panel-title">
-                <span>📋 دوایین وەڵامە تۆمارکراوەکان</span>
-                <input type="text" id="search-input" placeholder="گەڕان..." oninput="renderTable()" style="padding: 6px 14px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1); font-size: 0.85rem; outline: none; background: rgba(255,255,255,0.8);">
+                <span>📋 خشتەی وەڵامەکان بەپێی زمانەکان (Dedicated Tables)</span>
+                <div class="lang-tabs">
+                    <button class="tab-btn active" id="tab-all" onclick="switchTab('all')">گشتی (All)</button>
+                    <button class="tab-btn" id="tab-ku" onclick="switchTab('ku')">کوردی (Kurdish)</button>
+                    <button class="tab-btn" id="tab-ar" onclick="switchTab('ar')">العربية (Arabic)</button>
+                    <button class="tab-btn" id="tab-en" onclick="switchTab('en')">English</button>
+                </div>
             </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px; flex-wrap: wrap; gap: 10px;">
+                <input type="text" id="search-input" placeholder="گەڕان لە فۆرمەکاندا..." oninput="renderTable()" style="padding: 10px 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.1); font-size: 0.9rem; outline: none; background: rgba(255,255,255,0.85); width: 280px;">
+                <span id="tab-count-badge" style="font-weight: 700; color: var(--brand-accent); font-size: 0.92rem;">0 وەڵام</span>
+            </div>
+
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>کاتی تۆمار</th>
+                            <th>کاتی تۆمار (Timestamp)</th>
                             <th>زمان (Language)</th>
-                            <th>کاڵا و کەتەگۆرییە هەڵبژێردراوەکان</th>
+                            <th>کاڵا و کەتەگۆرییە هەڵبژێردراوەکان (Selected Categories)</th>
                         </tr>
                     </thead>
                     <tbody id="responses-table-body">
@@ -461,6 +509,8 @@
     </div>
 
     <script>
+        let currentTab = 'all';
+
         // Password verification (default passcode: 1234 or empty)
         function verifyPin() {
             const input = document.getElementById('pin-input').value;
@@ -562,6 +612,13 @@
             renderTable();
         }
 
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            renderTable();
+        }
+
         function renderTable() {
             const analytics = getAnalyticsData();
             const responses = analytics.responses || [];
@@ -569,14 +626,26 @@
             const tbody = document.getElementById('responses-table-body');
             tbody.innerHTML = '';
 
-            const filtered = responses.filter(r => 
-                (r.language && r.language.toLowerCase().includes(query)) ||
-                (r.categories && r.categories.toLowerCase().includes(query)) ||
-                (r.timestamp && r.timestamp.toLowerCase().includes(query))
-            ).reverse();
+            let filtered = responses.filter(r => {
+                if (currentTab === 'ku') return (r.language || '').toLowerCase() === 'kurdish';
+                if (currentTab === 'ar') return (r.language || '').toLowerCase() === 'arabic';
+                if (currentTab === 'en') return (r.language || '').toLowerCase() === 'english';
+                return true;
+            });
+
+            if (query) {
+                filtered = filtered.filter(r => 
+                    (r.language && r.language.toLowerCase().includes(query)) ||
+                    (r.categories && r.categories.toLowerCase().includes(query)) ||
+                    (r.timestamp && r.timestamp.toLowerCase().includes(query))
+                );
+            }
+
+            filtered.reverse();
+            document.getElementById('tab-count-badge').innerText = `${filtered.length} وەڵام`;
 
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">هیچ وەڵامێک نەدۆزرایەوە.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 24px;">هیچ وەڵامێک لەم بەشەدا نەدۆزرایەوە.</td></tr>';
                 return;
             }
 
@@ -591,25 +660,33 @@
             });
         }
 
-        function exportCSV() {
+        function exportCurrentCSV() {
             const analytics = getAnalyticsData();
             const responses = analytics.responses || [];
-            if (responses.length === 0) {
-                alert("هیچ داتایەک نییە بۆ داگرتن!");
+
+            let filtered = responses.filter(r => {
+                if (currentTab === 'ku') return (r.language || '').toLowerCase() === 'kurdish';
+                if (currentTab === 'ar') return (r.language || '').toLowerCase() === 'arabic';
+                if (currentTab === 'en') return (r.language || '').toLowerCase() === 'english';
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                alert("هیچ داتایەک لەم بەشەدا نییە بۆ داگرتن!");
                 return;
             }
 
             let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
             csvContent += "ID,Timestamp,Language,Selected Categories\n";
 
-            responses.forEach(r => {
+            filtered.forEach(r => {
                 csvContent += `"${r.id}","${r.timestamp}","${r.language}","${r.categories}"\n`;
             });
 
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `handdown_survey_analytics_${Date.now()}.csv`);
+            link.setAttribute("download", `handdown_survey_${currentTab}_${Date.now()}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -617,13 +694,15 @@
 
         function addMockData() {
             const mock = {
-                visits: { ku: 24, ar: 18, en: 12, total: 54 },
+                visits: { ku: 34, ar: 22, en: 16, total: 72 },
                 responses: [
                     { id: 'RESP-1', timestamp: new Date().toLocaleString(), language: 'Kurdish', categories: 'تووتن (جگەرە) | بۆن و جوانکاری' },
                     { id: 'RESP-2', timestamp: new Date().toLocaleString(), language: 'Arabic', categories: 'العطور ومستحضرات التجميل | المجوهرات' },
                     { id: 'RESP-3', timestamp: new Date().toLocaleString(), language: 'English', categories: 'Watches & Accessories | Spirits & Liquor' },
                     { id: 'RESP-4', timestamp: new Date().toLocaleString(), language: 'Kurdish', categories: 'زێڕینگەری | شیرینی' },
-                    { id: 'RESP-5', timestamp: new Date().toLocaleString(), language: 'Arabic', categories: 'التبغ (السجائر) | الحلويات' }
+                    { id: 'RESP-5', timestamp: new Date().toLocaleString(), language: 'Arabic', categories: 'التبغ (السجائر) | الحلويات' },
+                    { id: 'RESP-6', timestamp: new Date().toLocaleString(), language: 'Kurdish', categories: 'کاتژمێر و ئێکسسوارات | دیارییەکان' },
+                    { id: 'RESP-7', timestamp: new Date().toLocaleString(), language: 'English', categories: 'Perfumes & Cosmetics | Souvenirs' }
                 ]
             };
             localStorage.setItem('handdown_survey_analytics', JSON.stringify(mock));
