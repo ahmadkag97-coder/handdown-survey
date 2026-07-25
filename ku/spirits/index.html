@@ -372,8 +372,10 @@
             localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
         })();
 
+        const categoryIndexToSlug = ['tobacco', 'spirits', 'perfumes', 'watches', 'jewelry', 'sweets', 'souvenirs'];
+
         // Populate Kurdish options
-        categories.forEach(cat => {
+        categories.forEach((cat, index) => {
             const label = document.createElement('label');
             label.className = 'option-label';
             const checkbox = document.createElement('input');
@@ -383,6 +385,18 @@
                 label.classList.toggle('selected', e.target.checked);
                 const checked = optionsContainer.querySelectorAll('input[type="checkbox"]:checked');
                 submitBtn.disabled = checked.length === 0;
+
+                // Dynamically update browser address bar URL to match selected category (/ku/jewelry, /ku/perfumes, etc.)
+                if (e.target.checked) {
+                    const slug = categoryIndexToSlug[index];
+                    try {
+                        window.history.pushState({ category: slug }, '', '/ku/' + slug);
+                    } catch(err) {}
+                } else if (checked.length === 0) {
+                    try {
+                        window.history.pushState({}, '', '/ku/');
+                    } catch(err) {}
+                }
             };
             const customCheck = document.createElement('div');
             customCheck.className = 'custom-checkbox';
