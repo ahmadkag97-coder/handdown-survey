@@ -25,6 +25,8 @@
     { "source": "/admin", "destination": "/admin/index.html" },
     { "source": "/dashboard", "destination": "/admin/index.html" },
     { "source": "/analytics", "destination": "/admin/index.html" },
+    { "source": "/:store/:lang/:category", "destination": "/:lang/:category/index.html?store=:store" },
+    { "source": "/:store/:lang", "destination": "/:lang/index.html?store=:store" },
     { "source": "/:lang/:category", "destination": "/:lang/:category/index.html" }
   ]
 }

@@ -363,6 +363,28 @@
             localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
         })();
 
+        const storeMap = {
+            'haji-omaran': 'Haji Omaran Shop (Iran Border)',
+            'turkish-border-1': 'Turkish Border Shop 1 (Ibrahim Khalil)',
+            'turkish-border-2': 'Turkish Border Shop 2 (Ibrahim Khalil)',
+            'erbil-diplomatic': 'Diplomatic Shop (Erbil)',
+            'erbil-cip': 'CIP Shop (Erbil Int Airport)',
+            'erbil-airport': 'Departure - Arrival (Erbil Int Airport)'
+        };
+
+        function getStoreInfo() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const storeParam = urlParams.get('store') || '';
+            const pathname = window.location.pathname.toLowerCase();
+
+            for (const slug in storeMap) {
+                if (pathname.includes('/' + slug) || storeParam.includes(slug)) {
+                    return { slug: slug, name: storeMap[slug] };
+                }
+            }
+            return { slug: '', name: 'Main Portal / General' };
+        }
+
         const categoryIndexToSlug = ['tobacco', 'spirits', 'perfumes', 'watches', 'jewelry', 'sweets', 'souvenirs'];
 
         // Populate Arabic options (Single-Selection)
@@ -381,10 +403,18 @@
                 label.classList.add('selected');
                 submitBtn.disabled = false;
 
-                // Dynamically update browser address bar URL
-                const slug = categoryIndexToSlug[index];
+                // Dynamically update browser address bar URL (?store=haji-omaran/ar/jewelry or /haji-omaran/ar/jewelry)
+                const catSlug = categoryIndexToSlug[index];
+                const storeInfo = getStoreInfo();
                 try {
-                    window.history.pushState({ category: slug }, '', '/ar/' + slug);
+                    if (storeInfo.slug) {
+                        const newUrl = window.location.search.includes('store=') 
+                            ? `/?store=${storeInfo.slug}/ar/${catSlug}` 
+                            : `/${storeInfo.slug}/ar/${catSlug}`;
+                        window.history.pushState({ category: catSlug }, '', newUrl);
+                    } else {
+                        window.history.pushState({ category: catSlug }, '', '/ar/' + catSlug);
+                    }
                 } catch(err) {}
             };
             const customCheck = document.createElement('div');
@@ -409,10 +439,11 @@
             const pathname = window.location.pathname.toLowerCase();
             const urlParams = new URLSearchParams(window.location.search);
             const catParam = urlParams.get('cat');
+            const storeParam = urlParams.get('store') || '';
 
             let targetSlug = null;
             Object.keys(categorySlugMap).forEach(slug => {
-                if (pathname.includes('/' + slug) || catParam === slug) {
+                if (pathname.includes('/' + slug) || catParam === slug || storeParam.includes('/' + slug)) {
                     targetSlug = slug;
                 }
             });
@@ -432,24 +463,7 @@
         });
 
         function getStoreName() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const storeParam = urlParams.get('store');
-            const pathname = window.location.pathname.toLowerCase();
-
-            const storeMap = {
-                'haji-omaran': 'Haji Omaran Shop (Iran Border)',
-                'turkish-border-1': 'Turkish Border Shop 1 (Ibrahim Khalil)',
-                'turkish-border-2': 'Turkish Border Shop 2 (Ibrahim Khalil)',
-                'erbil-diplomatic': 'Diplomatic Shop (Erbil)',
-                'erbil-cip': 'CIP Shop (Erbil Int Airport)',
-                'erbil-airport': 'Departure - Arrival (Erbil Int Airport)'
-            };
-
-            if (storeParam && storeMap[storeParam]) return storeMap[storeParam];
-            for (const slug in storeMap) {
-                if (pathname.includes('/' + slug)) return storeMap[slug];
-            }
-            return 'Main Portal / General';
+            return getStoreInfo().name;
         }
 
         function submitForm() {
