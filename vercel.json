@@ -1,0 +1,8 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/ku", "destination": "/handdown_survey_ku.html" },
+    { "source": "/ar", "destination": "/handdown_survey_ar.html" },
+    { "source": "/en", "destination": "/handdown_survey_en.html" }
+  ]
+}

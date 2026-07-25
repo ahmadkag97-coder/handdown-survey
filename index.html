@@ -642,10 +642,9 @@
             currentLang = lang;
             const data = content[lang];
 
-            // Dynamically update browser address bar URL to match language page
-            const targetFile = 'handdown_survey_' + lang + '.html';
+            // Dynamically update browser address bar URL to clean short path (/ku, /ar, /en)
             try {
-                window.history.pushState({ lang: lang }, '', targetFile);
+                window.history.pushState({ lang: lang }, '', '/' + lang);
             } catch (e) {
                 window.history.pushState({ lang: lang }, '', '?lang=' + lang);
             }
@@ -713,9 +712,9 @@
             step1.classList.add('active');
             document.body.className = 'ltr'; // reset to default
 
-            // Reset browser address bar URL to index.html
+            // Reset browser address bar URL to clean root /
             try {
-                window.history.pushState({}, '', 'index.html');
+                window.history.pushState({}, '', '/');
             } catch (e) {}
 
             // Update step indicator for Step 1

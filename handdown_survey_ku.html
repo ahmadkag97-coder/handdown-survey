@@ -642,6 +642,13 @@
             currentLang = lang;
             const data = content[lang];
 
+            // Dynamically update browser address bar URL to clean short path (/ku, /ar, /en)
+            try {
+                window.history.pushState({ lang: lang }, '', '/' + lang);
+            } catch (e) {
+                window.history.pushState({ lang: lang }, '', '?lang=' + lang);
+            }
+
             // Log visit analytics
             const analytics = getAnalyticsData();
             analytics.visits[lang] = (analytics.visits[lang] || 0) + 1;
@@ -704,6 +711,11 @@
             step2.classList.remove('active');
             step1.classList.add('active');
             document.body.className = 'ltr'; // reset to default
+
+            // Reset browser address bar URL to clean root /
+            try {
+                window.history.pushState({}, '', '/');
+            } catch (e) {}
 
             // Update step indicator for Step 1
             stepIndicator.style.display = 'inline-flex';
@@ -794,9 +806,13 @@
             document.body.removeChild(link);
         }
 
-        // Auto-select Kurdish language on load for handdown_survey_ku.html
+        // Auto-check URL Query Params (e.g. ?lang=ku, ?lang=ar, ?lang=en)
         window.addEventListener('DOMContentLoaded', () => {
-            selectLanguage('ku');
+            const params = new URLSearchParams(window.location.search);
+            const langParam = params.get('lang');
+            if (langParam && ['ku', 'ar', 'en'].includes(langParam)) {
+                selectLanguage(langParam);
+            }
         });
     </script>
 </body>
