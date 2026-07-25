@@ -432,18 +432,6 @@
 </head>
 <body>
 
-    <!-- Admin Login Modal -->
-    <div class="login-overlay" id="login-overlay">
-        <div class="login-card">
-            <img src="/handdown-logo.png" alt="Handdown Duty Free" style="max-width: 170px; margin-bottom: 14px;" onerror="this.src='/Asset 10@2x-8.png';">
-            <h2 style="font-size: 1.2rem; color: var(--primary-dark);">داخڵبوونی ئاددین (Admin Login)</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">تکایە پین کۆد بنووسە (پین کۆد: 1234)</p>
-            <input type="password" id="pin-input" class="pin-input" placeholder="••••" maxlength="8" oninput="verifyPinInstant()" autofocus>
-            <button class="btn-glass btn-accent" style="width: 100%; justify-content: center; padding: 14px;" onclick="verifyPin()">چوونە ژوورەوە</button>
-            <p id="login-error" style="color: #d9534f; font-size: 0.82rem; margin-top: 10px; display: none;">وشەی تێپەڕ هەڵەیە!</p>
-        </div>
-    </div>
-
     <div class="dashboard-container">
         <!-- Header -->
         <div class="admin-header">
@@ -570,33 +558,10 @@
             { slug: 'erbil-airport', name: 'Departure - Arrival', sub: 'ERBIL INT AIRPORT' }
         ];
 
-        // Check if already authenticated in this session
+        // Auto load dashboard data on DOMContentLoaded
         window.addEventListener('DOMContentLoaded', () => {
-            if (sessionStorage.getItem('handdown_admin_auth') === 'true') {
-                document.getElementById('login-overlay').style.display = 'none';
-                loadDashboardData();
-            }
-        });
-
-        function unlockAdmin() {
-            sessionStorage.setItem('handdown_admin_auth', 'true');
-            const overlay = document.getElementById('login-overlay');
-            if (overlay) overlay.style.display = 'none';
             loadDashboardData();
-        }
-
-        // Instant Auto Login when typing 4 digits
-        function verifyPinInstant() {
-            const input = document.getElementById('pin-input').value.trim();
-            if (input.length >= 4 || input === '1234' || input === 'admin') {
-                unlockAdmin();
-            }
-        }
-
-        // Password verification button fallback
-        function verifyPin() {
-            unlockAdmin();
-        }
+        });
 
         // Get stored analytics
         function getAnalyticsData() {
