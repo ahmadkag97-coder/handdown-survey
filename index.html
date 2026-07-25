@@ -642,6 +642,14 @@
             currentLang = lang;
             const data = content[lang];
 
+            // Dynamically update browser address bar URL to match language page
+            const targetFile = 'handdown_survey_' + lang + '.html';
+            try {
+                window.history.pushState({ lang: lang }, '', targetFile);
+            } catch (e) {
+                window.history.pushState({ lang: lang }, '', '?lang=' + lang);
+            }
+
             // Log visit analytics
             const analytics = getAnalyticsData();
             analytics.visits[lang] = (analytics.visits[lang] || 0) + 1;
@@ -704,6 +712,11 @@
             step2.classList.remove('active');
             step1.classList.add('active');
             document.body.className = 'ltr'; // reset to default
+
+            // Reset browser address bar URL to index.html
+            try {
+                window.history.pushState({}, '', 'index.html');
+            } catch (e) {}
 
             // Update step indicator for Step 1
             stepIndicator.style.display = 'inline-flex';
