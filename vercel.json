@@ -1,8 +1,13 @@
 {
   "cleanUrls": true,
   "rewrites": [
+    { "source": "/", "destination": "/index.html" },
     { "source": "/ku", "destination": "/handdown_survey_ku.html" },
     { "source": "/ar", "destination": "/handdown_survey_ar.html" },
-    { "source": "/en", "destination": "/handdown_survey_en.html" }
+    { "source": "/en", "destination": "/handdown_survey_en.html" },
+    { "source": "/handdown_survey", "destination": "/index.html" },
+    { "source": "/handdown_survey_ku", "destination": "/handdown_survey_ku.html" },
+    { "source": "/handdown_survey_ar", "destination": "/handdown_survey_ar.html" },
+    { "source": "/handdown_survey_en", "destination": "/handdown_survey_en.html" }
   ]
 }
