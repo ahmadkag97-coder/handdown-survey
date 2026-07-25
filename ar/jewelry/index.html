@@ -365,29 +365,27 @@
 
         const categoryIndexToSlug = ['tobacco', 'spirits', 'perfumes', 'watches', 'jewelry', 'sweets', 'souvenirs'];
 
-        // Populate Arabic options
+        // Populate Arabic options (Single-Selection)
         categories.forEach((cat, index) => {
             const label = document.createElement('label');
             label.className = 'option-label';
             const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
+            checkbox.type = 'radio';
+            checkbox.name = 'category_selection';
             checkbox.value = cat;
             checkbox.onchange = (e) => {
-                label.classList.toggle('selected', e.target.checked);
-                const checked = optionsContainer.querySelectorAll('input[type="checkbox"]:checked');
-                submitBtn.disabled = checked.length === 0;
+                // Clear all previous selections for single-select mode
+                const allLabels = optionsContainer.querySelectorAll('.option-label');
+                allLabels.forEach(l => l.classList.remove('selected'));
 
-                // Dynamically update browser address bar URL to match selected category (/ar/jewelry, /ar/perfumes, etc.)
-                if (e.target.checked) {
-                    const slug = categoryIndexToSlug[index];
-                    try {
-                        window.history.pushState({ category: slug }, '', '/ar/' + slug);
-                    } catch(err) {}
-                } else if (checked.length === 0) {
-                    try {
-                        window.history.pushState({}, '', '/ar/');
-                    } catch(err) {}
-                }
+                label.classList.add('selected');
+                submitBtn.disabled = false;
+
+                // Dynamically update browser address bar URL
+                const slug = categoryIndexToSlug[index];
+                try {
+                    window.history.pushState({ category: slug }, '', '/ar/' + slug);
+                } catch(err) {}
             };
             const customCheck = document.createElement('div');
             customCheck.className = 'custom-checkbox';
@@ -423,7 +421,7 @@
                 const targetIndex = categorySlugMap[targetSlug];
                 const labels = optionsContainer.querySelectorAll('.option-label');
                 if (labels[targetIndex]) {
-                    const cb = labels[targetIndex].querySelector('input[type="checkbox"]');
+                    const cb = labels[targetIndex].querySelector('input[type="radio"]');
                     if (cb) {
                         cb.checked = true;
                         labels[targetIndex].classList.add('selected');
@@ -435,7 +433,7 @@
 
         function submitForm() {
             const selected = [];
-            optionsContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(cb => selected.push(cb.value));
+            optionsContainer.querySelectorAll('input[type="radio"]:checked').forEach(cb => selected.push(cb.value));
             const data = localStorage.getItem('handdown_survey_analytics');
             const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
             analytics.responses.push({
