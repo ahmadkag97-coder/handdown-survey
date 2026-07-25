@@ -440,6 +440,27 @@
             }
         });
 
+        function getStoreName() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const storeParam = urlParams.get('store');
+            const pathname = window.location.pathname.toLowerCase();
+
+            const storeMap = {
+                'haji-omaran': 'Haji Omaran Shop (Iran Border)',
+                'turkish-border-1': 'Turkish Border Shop 1 (Ibrahim Khalil)',
+                'turkish-border-2': 'Turkish Border Shop 2 (Ibrahim Khalil)',
+                'erbil-diplomatic': 'Diplomatic Shop (Erbil)',
+                'erbil-cip': 'CIP Shop (Erbil Int Airport)',
+                'erbil-airport': 'Departure - Arrival (Erbil Int Airport)'
+            };
+
+            if (storeParam && storeMap[storeParam]) return storeMap[storeParam];
+            for (const slug in storeMap) {
+                if (pathname.includes('/' + slug)) return storeMap[slug];
+            }
+            return 'Main Portal / General';
+        }
+
         function submitForm() {
             const selected = [];
             optionsContainer.querySelectorAll('input[type="radio"]:checked').forEach(cb => selected.push(cb.value));
@@ -449,7 +470,8 @@
                 id: 'RESP-' + Date.now(),
                 timestamp: new Date().toLocaleString(),
                 language: 'Kurdish',
-                categories: selected.join(' | ')
+                categories: selected.join(' | '),
+                store: getStoreName()
             });
             localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
             document.getElementById('step-2').classList.remove('active');
