@@ -42,6 +42,12 @@
             -ms-user-select: none;
         }
 
+        html, body {
+            height: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+        }
+
         body {
             font-family: var(--font-english);
             font-size: 16px;
@@ -57,9 +63,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            direction: ltr; /* Default, will change dynamically */
+            margin: 0;
             padding: 20px;
+            direction: ltr; /* Default, will change dynamically */
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -85,9 +91,10 @@
                 inset 0 -1.5px 2px rgba(0, 0, 0, 0.03);
             overflow: hidden;
             position: relative;
-            min-height: 520px;
+            min-height: 500px;
             display: flex;
             flex-direction: column;
+            margin: auto;
         }
 
         /* Header & Logo */
