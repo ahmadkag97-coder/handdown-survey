@@ -154,7 +154,18 @@
         .qr-actions { display: flex; gap: 8px; width: 100%; }
         .qr-actions .btn-glass { flex: 1; justify-content: center; padding: 8px 10px; font-size: 0.82rem; }
 
-        .table-container { overflow-x: auto; border-radius: 18px; border: 1px solid rgba(255,255,255,0.8); }
+        .table-container { overflow-x: auto; max-height: 460px; overflow-y: auto; border-radius: 18px; border: 1px solid rgba(255,255,255,0.8); -webkit-overflow-scrolling: touch; }
+        .table-container table thead th { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); }
+        .load-more-container { text-align: center; padding-top: 14px; }
+        .load-more-btn {
+            background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(255, 255, 255, 0.9);
+            color: var(--primary-dark); padding: 12px 24px; border-radius: 16px;
+            font-family: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer;
+            transition: var(--transition); display: inline-flex; align-items: center; gap: 8px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+        }
+        .load-more-btn:hover { background: rgba(255, 255, 255, 0.95); transform: translateY(-1px); }
+        .load-more-btn:active { transform: scale(0.98); }
         table { width: 100%; border-collapse: collapse; text-align: right; background: rgba(255,255,255,0.4); }
         th { padding: 14px 16px; font-size: 0.85rem; color: var(--primary-dark); font-weight: 700; border-bottom: 1px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.7); }
         td { padding: 14px 16px; font-size: 0.9rem; color: var(--text-main); border-bottom: 1px solid rgba(0,0,0,0.04); }
@@ -328,6 +339,9 @@
                     <thead><tr><th>🕒 کات</th><th>🏬 ستۆر</th><th>🌐 زمان</th><th>🛍️ کاڵا</th></tr></thead>
                     <tbody id="responses-table-body"></tbody>
                 </table>
+            </div>
+            <div id="load-more-wrap" class="load-more-container" style="display:none;">
+                <button class="load-more-btn" onclick="loadMoreResponses()">➕ بینینی وەڵامی زیاتر (Show More)</button>
             </div>
         </div>
 
@@ -599,7 +613,18 @@
             });
         }
 
-        function renderTable() {
+        let tableDisplayLimit = 10;
+
+        function loadMoreResponses() {
+            tableDisplayLimit += 10;
+            renderTable(false);
+        }
+
+        function renderTable(resetLimit = true) {
+            if (resetLimit) {
+                tableDisplayLimit = 10;
+            }
+
             const query = (document.getElementById('search-input').value || '').toLowerCase();
             const selStore = document.getElementById('store-filter-select').value;
             const selLang = document.getElementById('lang-filter-select').value;
@@ -623,14 +648,17 @@
             }
 
             document.getElementById('tab-count-badge').innerText = `${filtered.length} وەڵام`;
+            const loadMoreWrap = document.getElementById('load-more-wrap');
 
             if (filtered.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:24px;">هیچ وەڵامێک نەدۆزرایەوە.</td></tr>';
+                if (loadMoreWrap) loadMoreWrap.style.display = 'none';
                 return;
             }
 
             filtered.reverse();
-            filtered.forEach(r => {
+            const visibleRows = filtered.slice(0, tableDisplayLimit);
+            visibleRows.forEach(r => {
                 const lang = r.language || 'Kurdish';
                 let langClass = 'ku', langIcon = '☀️';
                 if (lang === 'Arabic') { langClass = 'ar'; langIcon = '🌙'; }
@@ -639,6 +667,16 @@
                 tr.innerHTML = `<td style="font-family:var(--font-english);font-size:0.85rem;">${r.timestamp || '-'}</td><td><span class="badge-store">🏬 ${normalizeStoreName(r.store)}</span></td><td><span class="badge-lang ${langClass}">${langIcon} ${lang}</span></td><td><span class="badge-cat">🛍️ ${r.categories || '-'}</span></td>`;
                 tbody.appendChild(tr);
             });
+
+            if (loadMoreWrap) {
+                if (filtered.length > tableDisplayLimit) {
+                    loadMoreWrap.style.display = 'block';
+                    const remaining = filtered.length - tableDisplayLimit;
+                    loadMoreWrap.querySelector('button').innerText = `➕ بینینی ۱۰ وەڵامی زیاتر (${remaining} وەڵامی تر دەمێنێت)`;
+                } else {
+                    loadMoreWrap.style.display = 'none';
+                }
+            }
         }
 
         function renderQRCodes() {
