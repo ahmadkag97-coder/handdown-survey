@@ -342,7 +342,8 @@
             'turkish-border-2': 'Turkish Border Shop 2 (Ibrahim Khalil)',
             'erbil-diplomatic': 'Diplomatic Shop (Erbil)',
             'erbil-cip': 'CIP Shop (Erbil Int Airport)',
-            'erbil-airport': 'Departure - Arrival (Erbil Int Airport)'
+            'erbil-departure': 'Departure Shop (Erbil Int Airport)',
+            'erbil-arrival': 'Arrival Shop (Erbil Int Airport)'
         };
 
         function getStoreInfo() {
@@ -406,6 +407,20 @@
             });
         })();
 
+        function getStoreThanksMessage() {
+            const storeInfo = getStoreInfo();
+            const thanksMap = {
+                'erbil-arrival': { title: 'Thank you for your response!', sub: 'Welcome to Kurdistan.' },
+                'erbil-departure': { title: 'Thank you for your response!', sub: 'Have a safe flight.' },
+                'erbil-cip': { title: 'Thank you for your response!', sub: 'Have a safe flight.' },
+                'haji-omaran': { title: 'Thank you for your response!', sub: 'Have a safe journey.' },
+                'turkish-border-1': { title: 'Thank you for your response!', sub: 'Have a safe journey.' },
+                'turkish-border-2': { title: 'Thank you for your response!', sub: 'Have a safe journey.' },
+                'erbil-diplomatic': { title: 'Thank you for your response!', sub: 'Have a wonderful day.' }
+            };
+            return thanksMap[storeInfo.slug] || { title: 'Thank you for your response!', sub: 'Have a safe flight.' };
+        }
+
         // Form Submission
         async function submitForm() {
             const selected = optionsContainer.querySelector('input[type="radio"]:checked');
@@ -428,6 +443,10 @@
             const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
             analytics.responses.push({ id: 'RESP-' + Date.now(), timestamp: new Date().toLocaleString(), language: 'English', categories: selected.value, store: storeInfo.name });
             localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
+
+            const msg = getStoreThanksMessage();
+            document.querySelector('#step-3 h2').innerText = msg.title;
+            document.querySelector('#step-3 p').innerText = msg.sub;
 
             document.getElementById('step-2').classList.remove('active');
             document.getElementById('step-3').classList.add('active');

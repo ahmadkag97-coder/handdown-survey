@@ -342,7 +342,8 @@
             'turkish-border-2': 'Turkish Border Shop 2 (Ibrahim Khalil)',
             'erbil-diplomatic': 'Diplomatic Shop (Erbil)',
             'erbil-cip': 'CIP Shop (Erbil Int Airport)',
-            'erbil-airport': 'Departure - Arrival (Erbil Int Airport)'
+            'erbil-departure': 'Departure Shop (Erbil Int Airport)',
+            'erbil-arrival': 'Arrival Shop (Erbil Int Airport)'
         };
 
         function getStoreInfo() {
@@ -406,6 +407,20 @@
             });
         })();
 
+        function getStoreThanksMessage() {
+            const storeInfo = getStoreInfo();
+            const thanksMap = {
+                'erbil-arrival': { title: 'شكراً جزيلاً على إجابتك!', sub: 'أهلاً بك في كوردستان.' },
+                'erbil-departure': { title: 'شكراً جزيلاً على إجابتك!', sub: 'نتمنى لك رحلة آمنة.' },
+                'erbil-cip': { title: 'شكراً جزيلاً على إجابتك!', sub: 'نتمنى لك رحلة آمنة.' },
+                'haji-omaran': { title: 'شكراً جزيلاً على إجابتك!', sub: 'نتمنى لك طريقاً آمناً.' },
+                'turkish-border-1': { title: 'شكراً جزيلاً على إجابتك!', sub: 'نتمنى لك طريقاً آمناً.' },
+                'turkish-border-2': { title: 'شكراً جزيلاً على إجابتك!', sub: 'نتمنى لك طريقاً آمناً.' },
+                'erbil-diplomatic': { title: 'شكراً جزيلاً على إجابتك!', sub: 'نتمنى لك وقتاً ممتعاً.' }
+            };
+            return thanksMap[storeInfo.slug] || { title: 'شكراً جزيلاً على إجابتك!', sub: 'نتمنى لك رحلة آمنة.' };
+        }
+
         // Form Submission
         async function submitForm() {
             const selected = optionsContainer.querySelector('input[type="radio"]:checked');
@@ -428,6 +443,10 @@
             const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
             analytics.responses.push({ id: 'RESP-' + Date.now(), timestamp: new Date().toLocaleString(), language: 'Arabic', categories: selected.value, store: storeInfo.name });
             localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
+
+            const msg = getStoreThanksMessage();
+            document.querySelector('#step-3 h2').innerText = msg.title;
+            document.querySelector('#step-3 p').innerText = msg.sub;
 
             document.getElementById('step-2').classList.remove('active');
             document.getElementById('step-3').classList.add('active');
