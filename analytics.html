@@ -766,36 +766,40 @@
             canvas.height = 1000;
             const ctx = canvas.getContext('2d');
 
-            // Draw luxury background gradient
-            const grad = ctx.createLinearGradient(0, 0, 0, 1000);
-            grad.addColorStop(0, '#FAF8F6');
-            grad.addColorStop(1, '#E8E3DD');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, 800, 1000);
+            function renderCard(logoImg) {
+                // Draw luxury background gradient matching website
+                const grad = ctx.createLinearGradient(0, 0, 0, 1000);
+                grad.addColorStop(0, '#FAF8F6');
+                grad.addColorStop(1, '#E8E3DD');
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 800, 1000);
 
-            // Border & Gold Accent
-            ctx.strokeStyle = 'rgba(195, 139, 117, 0.5)';
-            ctx.lineWidth = 6;
-            ctx.strokeRect(30, 30, 740, 940);
+                // Border & Gold Accent
+                ctx.strokeStyle = '#C38B75';
+                ctx.lineWidth = 6;
+                ctx.strokeRect(30, 30, 740, 940);
 
-            ctx.fillStyle = '#C38B75';
-            ctx.fillRect(30, 30, 740, 14);
+                ctx.fillStyle = '#C38B75';
+                ctx.fillRect(30, 30, 740, 14);
 
-            // Load Logo
-            const logo = new Image();
-            logo.crossOrigin = 'anonymous';
-            logo.src = '/handdown-logo.png';
-            logo.onload = () => {
-                ctx.drawImage(logo, 250, 75, 300, 75);
+                // Draw Logo
+                if (logoImg) {
+                    ctx.drawImage(logoImg, 250, 70, 300, 75);
+                } else {
+                    ctx.font = 'bold 36px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
+                    ctx.fillStyle = '#121A2F';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('HANDDOWN DUTY FREE', 400, 115);
+                }
 
                 // Subtitle Badge
-                ctx.font = '600 20px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
+                ctx.font = '700 20px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
                 ctx.fillStyle = '#C38B75';
                 ctx.textAlign = 'center';
                 ctx.fillText(storeSub.toUpperCase(), 400, 195);
 
                 // Store Title
-                ctx.font = 'bold 34px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
+                ctx.font = 'bold 36px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
                 ctx.fillStyle = '#121A2F';
                 ctx.fillText(storeName, 400, 245);
 
@@ -807,26 +811,35 @@
                     // White QR background frame
                     ctx.fillStyle = '#FFFFFF';
                     ctx.fillRect(170, 290, 460, 460);
+                    ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(170, 290, 460, 460);
 
-                    // Draw QR
+                    // Draw QR Code
                     ctx.drawImage(qrImg, 200, 320, 400, 400);
 
-                    // Footer call to action (NO URL text)
+                    // CTA Text
                     ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
                     ctx.fillStyle = '#121A2F';
-                    ctx.fillText('Scan QR Code to Start Survey', 400, 835);
+                    ctx.fillText('Scan QR Code to Start Survey', 400, 825);
 
                     ctx.font = '18px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
                     ctx.fillStyle = '#8E8E93';
-                    ctx.fillText('Handdown Duty Free Survey System', 400, 880);
+                    ctx.fillText('Handdown Duty Free Survey System', 400, 870);
 
-                    // Trigger direct file download
+                    // Trigger direct PNG download
                     const link = document.createElement('a');
                     link.download = `Handdown-QR-${storeSlug}.png`;
                     link.href = canvas.toDataURL('image/png');
                     link.click();
                 };
-            };
+            }
+
+            const logo = new Image();
+            logo.crossOrigin = 'anonymous';
+            logo.src = '/handdown-logo.png';
+            logo.onload = () => renderCard(logo);
+            logo.onerror = () => renderCard(null);
         }
 
         function printQR(storeSlug, storeName, storeSub) {
