@@ -909,17 +909,39 @@
         .footer-text { font-size: 0.95rem; color: #8E8E93; font-weight: 500; }
 
         @media print {
-            @page { size: portrait; margin: 10mm; }
-            body { background: none !important; padding: 0 !important; }
-            .print-card {
-                border: 2.5px solid #C38B75 !important;
-                max-width: 640px !important; width: 100% !important;
-                box-shadow: none !important; margin: auto !important; padding: 50px 36px 40px !important;
-                page-break-inside: avoid;
+            @page { size: A4 portrait; margin: 0; }
+            html, body {
+                width: 100vw !important;
+                height: 100vh !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #FFFFFF !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                overflow: hidden !important;
             }
-            .logo { max-width: 320px !important; margin-bottom: 24px !important; }
-            .title { font-size: 2.2rem !important; }
-            .qr-img { width: 420px !important; height: 420px !important; }
+            .print-card {
+                width: 86% !important;
+                max-width: 640px !important;
+                border: 3px solid #C38B75 !important;
+                border-radius: 36px !important;
+                padding: 46px 36px 36px !important;
+                background: #FFFFFF !important;
+                box-shadow: none !important;
+                margin: auto !important;
+                text-align: center !important;
+                page-break-inside: avoid !important;
+                page-break-before: avoid !important;
+                page-break-after: avoid !important;
+            }
+            .logo { max-width: 320px !important; margin: 0 auto 22px !important; display: block !important; }
+            .sub { font-size: 1.1rem !important; font-weight: 700 !important; color: #C38B75 !important; letter-spacing: 2.5px !important; text-transform: uppercase !important; margin-bottom: 8px !important; }
+            .title { font-size: 2.2rem !important; font-weight: 800 !important; color: #121A2F !important; margin-bottom: 28px !important; line-height: 1.25 !important; }
+            .qr-box { background: #FFFFFF !important; padding: 22px !important; border-radius: 32px !important; display: inline-block !important; border: 1.5px solid rgba(0,0,0,0.05) !important; margin-bottom: 28px !important; }
+            .qr-img { width: 400px !important; height: 400px !important; display: block !important; }
+            .cta { font-size: 1.35rem !important; font-weight: 700 !important; color: #121A2F !important; margin-bottom: 6px !important; }
+            .footer-text { font-size: 0.95rem !important; color: #8E8E93 !important; font-weight: 500 !important; }
         }
     </style>
 </head>
