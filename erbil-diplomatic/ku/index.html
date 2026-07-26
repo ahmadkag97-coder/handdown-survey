@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Handdown Duty Free Survey - کوردی</title>
-    <!-- Google Fonts for Kurdish -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600;700&family=Cairo:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700&family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -37,6 +36,7 @@
             padding: 0;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
+            -webkit-user-select: none;
         }
 
         html, body {
@@ -64,7 +64,6 @@
             padding: 20px;
             direction: rtl;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
@@ -75,10 +74,7 @@
             max-width: 460px;
             border-radius: 32px;
             border: 1px solid rgba(255, 255, 255, 0.85);
-            box-shadow: 
-                0 24px 60px rgba(18, 26, 47, 0.09),
-                0 4px 16px rgba(0, 0, 0, 0.03),
-                inset 0 1.5px 2.5px rgba(255, 255, 255, 1);
+            box-shadow: 0 24px 60px rgba(18, 26, 47, 0.09), 0 4px 16px rgba(0, 0, 0, 0.03), inset 0 1.5px 2.5px rgba(255, 255, 255, 1);
             overflow: hidden;
             position: relative;
             min-height: 500px;
@@ -119,9 +115,7 @@
             flex-grow: 1;
         }
 
-        .step.active {
-            display: flex;
-        }
+        .step.active { display: flex; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px) scale(0.99); }
@@ -167,9 +161,7 @@
             transform: translateY(-1.5px);
         }
 
-        .option-label input {
-            display: none;
-        }
+        .option-label input { display: none; }
 
         .custom-checkbox {
             width: 24px;
@@ -203,9 +195,7 @@
             transform: scale(1.05);
         }
 
-        .option-label input:checked + .custom-checkbox::after {
-            display: block;
-        }
+        .option-label input:checked + .custom-checkbox::after { display: block; }
 
         .option-label.selected {
             border: 1.5px solid rgba(255, 255, 255, 0.95);
@@ -300,11 +290,7 @@
             box-shadow: 0 8px 20px rgba(195, 139, 117, 0.3);
         }
 
-        .check-circle svg {
-            width: 40px;
-            height: 40px;
-            fill: white;
-        }
+        .check-circle svg { width: 40px; height: 40px; fill: white; }
 
         @media (max-width: 480px) {
             body { padding: 18px 14px; }
@@ -351,27 +337,33 @@
         </div>
     </div>
 
+    <!-- Appwrite Web SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@16.1.0/dist/appwrite.min.js"></script>
+
     <script>
-        const categories = ['تووتن (جگەرە)', 'خواردنەوەکان', 'بۆن و جوانکاری', 'کاتژمێر و ئێکسسوارات', 'زێڕینگەری', 'شیرینی', 'دیارییەکان'];
-        const optionsContainer = document.getElementById('options-container');
-        const submitBtn = document.getElementById('submit-btn');
+        // ===== Appwrite Configuration =====
+        const APPWRITE_ENDPOINT = 'https://fra.cloud.appwrite.io/v1';
+        const APPWRITE_PROJECT = '6a65bea6001b95f75b63';
+        const DATABASE_ID = 'handdown_analytics';
+        const VISITS_COLLECTION = 'visits';
+        const RESPONSES_COLLECTION = 'responses';
 
-        // Log Unique Kurdish Visit per Device Session
-        (function logUniqueVisit() {
-            const deviceKey = 'handdown_device_session_ku';
-            if (sessionStorage.getItem(deviceKey) || localStorage.getItem(deviceKey)) {
-                return; // Device already counted for Kurdish in this session, skip refresh
+        // Initialize Appwrite
+        const client = new Appwrite.Client();
+        client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT);
+        const databases = new Appwrite.Databases(client);
+
+        // ===== Device ID (persistent per device) =====
+        function getDeviceId() {
+            let id = localStorage.getItem('handdown_device_id');
+            if (!id) {
+                id = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('handdown_device_id', id);
             }
-            sessionStorage.setItem(deviceKey, 'true');
-            localStorage.setItem(deviceKey, 'true');
+            return id;
+        }
 
-            const data = localStorage.getItem('handdown_survey_analytics');
-            const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
-            analytics.visits.ku = (analytics.visits.ku || 0) + 1;
-            analytics.visits.total = (analytics.visits.ku || 0) + (analytics.visits.ar || 0) + (analytics.visits.en || 0);
-            localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
-        })();
-
+        // ===== Store Detection =====
         const storeMap = {
             'haji-omaran': 'Haji Omaran Shop (Iran Border)',
             'turkish-border-1': 'Turkish Border Shop 1 (Ibrahim Khalil)',
@@ -385,109 +377,130 @@
             const urlParams = new URLSearchParams(window.location.search);
             const storeParam = urlParams.get('store') || '';
             const pathname = window.location.pathname.toLowerCase();
-
             for (const slug in storeMap) {
                 if (pathname.includes('/' + slug) || storeParam.includes(slug)) {
                     return { slug: slug, name: storeMap[slug] };
                 }
             }
-            return { slug: '', name: 'Main Portal / General' };
+            return { slug: 'general', name: 'Main Portal / General' };
         }
 
-        const categoryIndexToSlug = ['tobacco', 'spirits', 'perfumes', 'watches', 'jewelry', 'sweets', 'souvenirs'];
+        // ===== Log Unique Visit to Appwrite =====
+        (async function logVisit() {
+            const sessionKey = 'handdown_visit_session_ku';
+            if (sessionStorage.getItem(sessionKey)) return;
+            sessionStorage.setItem(sessionKey, 'true');
+
+            const storeInfo = getStoreInfo();
+            try {
+                await databases.createDocument(DATABASE_ID, VISITS_COLLECTION, Appwrite.ID.unique(), {
+                    timestamp: new Date().toISOString(),
+                    language: 'Kurdish',
+                    store: storeInfo.name,
+                    store_slug: storeInfo.slug,
+                    device_id: getDeviceId(),
+                    page_url: window.location.href
+                });
+            } catch(e) { console.warn('Visit log failed:', e); }
+
+            // Also keep localStorage backup
+            const data = localStorage.getItem('handdown_survey_analytics');
+            const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
+            analytics.visits.ku = (analytics.visits.ku || 0) + 1;
+            analytics.visits.total = (analytics.visits.ku || 0) + (analytics.visits.ar || 0) + (analytics.visits.en || 0);
+            localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
+        })();
+
+        // ===== Category Setup =====
+        const categories = ['تووتن (جگەرە)', 'خواردنەوەکان', 'بۆن و جوانکاری', 'کاتژمێر و ئێکسسوارات', 'زێڕینگەری', 'شیرینی', 'دیارییەکان'];
+        const categorySlugs = ['tobacco', 'spirits', 'perfumes', 'watches', 'jewelry', 'sweets', 'souvenirs'];
+        const optionsContainer = document.getElementById('options-container');
+        const submitBtn = document.getElementById('submit-btn');
+        let selectedCatIndex = -1;
 
         // Populate Kurdish options (Single-Selection)
         categories.forEach((cat, index) => {
             const label = document.createElement('label');
             label.className = 'option-label';
-            const checkbox = document.createElement('input');
-            checkbox.type = 'radio';
-            checkbox.name = 'category_selection';
-            checkbox.value = cat;
-            checkbox.onchange = (e) => {
-                // Clear all previous selections for single-select mode
-                const allLabels = optionsContainer.querySelectorAll('.option-label');
-                allLabels.forEach(l => l.classList.remove('selected'));
-
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'category_selection';
+            radio.value = cat;
+            radio.onchange = () => {
+                optionsContainer.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
                 label.classList.add('selected');
                 submitBtn.disabled = false;
+                selectedCatIndex = index;
 
-                // Dynamically update browser address bar URL (?store=haji-omaran/ku/jewelry or /haji-omaran/ku/jewelry)
-                const catSlug = categoryIndexToSlug[index];
+                // Update URL
+                const catSlug = categorySlugs[index];
                 const storeInfo = getStoreInfo();
                 try {
-                    if (storeInfo.slug) {
-                        const newUrl = window.location.search.includes('store=') 
-                            ? `/?store=${storeInfo.slug}/ku/${catSlug}` 
-                            : `/${storeInfo.slug}/ku/${catSlug}`;
-                        window.history.pushState({ category: catSlug }, '', newUrl);
+                    if (storeInfo.slug !== 'general') {
+                        window.history.pushState({}, '', `/${storeInfo.slug}/ku/${catSlug}`);
                     } else {
-                        window.history.pushState({ category: catSlug }, '', '/ku/' + catSlug);
+                        window.history.pushState({}, '', `/ku/${catSlug}`);
                     }
-                } catch(err) {}
+                } catch(e) {}
             };
             const customCheck = document.createElement('div');
             customCheck.className = 'custom-checkbox';
-            label.appendChild(checkbox);
+            label.appendChild(radio);
             label.appendChild(customCheck);
             label.appendChild(document.createTextNode(cat));
             optionsContainer.appendChild(label);
         });
 
-        const categorySlugMap = {
-            'tobacco': 0,
-            'spirits': 1,
-            'perfumes': 2,
-            'watches': 3,
-            'jewelry': 4,
-            'sweets': 5,
-            'souvenirs': 6
-        };
-
+        // Auto-select from URL
         window.addEventListener('DOMContentLoaded', () => {
             const pathname = window.location.pathname.toLowerCase();
-            const urlParams = new URLSearchParams(window.location.search);
-            const catParam = urlParams.get('cat');
-            const storeParam = urlParams.get('store') || '';
-
-            let targetSlug = null;
-            Object.keys(categorySlugMap).forEach(slug => {
-                if (pathname.includes('/' + slug) || catParam === slug || storeParam.includes('/' + slug)) {
-                    targetSlug = slug;
-                }
-            });
-
-            if (targetSlug !== null) {
-                const targetIndex = categorySlugMap[targetSlug];
-                const labels = optionsContainer.querySelectorAll('.option-label');
-                if (labels[targetIndex]) {
-                    const cb = labels[targetIndex].querySelector('input[type="radio"]');
-                    if (cb) {
-                        cb.checked = true;
-                        labels[targetIndex].classList.add('selected');
-                        submitBtn.disabled = false;
+            const storeParam = (new URLSearchParams(window.location.search).get('store') || '');
+            categorySlugs.forEach((slug, i) => {
+                if (pathname.includes('/' + slug) || storeParam.includes('/' + slug)) {
+                    const labels = optionsContainer.querySelectorAll('.option-label');
+                    if (labels[i]) {
+                        const r = labels[i].querySelector('input[type="radio"]');
+                        if (r) { r.checked = true; labels[i].classList.add('selected'); submitBtn.disabled = false; selectedCatIndex = i; }
                     }
                 }
-            }
+            });
         });
 
-        function getStoreName() {
-            return getStoreInfo().name;
-        }
+        // ===== Submit to Appwrite =====
+        async function submitForm() {
+            const selected = optionsContainer.querySelector('input[type="radio"]:checked');
+            if (!selected) return;
 
-        function submitForm() {
-            const selected = [];
-            optionsContainer.querySelectorAll('input[type="radio"]:checked').forEach(cb => selected.push(cb.value));
+            const storeInfo = getStoreInfo();
+            const catSlug = selectedCatIndex >= 0 ? categorySlugs[selectedCatIndex] : 'unknown';
+            const responseData = {
+                timestamp: new Date().toISOString(),
+                language: 'Kurdish',
+                categories: selected.value,
+                category_slug: catSlug,
+                store: storeInfo.name,
+                store_slug: storeInfo.slug,
+                device_id: getDeviceId()
+            };
+
+            // Save to Appwrite cloud
+            try {
+                await databases.createDocument(DATABASE_ID, RESPONSES_COLLECTION, Appwrite.ID.unique(), responseData);
+            } catch(e) { console.warn('Response save failed:', e); }
+
+            // Also keep localStorage backup
             const data = localStorage.getItem('handdown_survey_analytics');
             const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
             analytics.responses.push({
                 id: 'RESP-' + Date.now(),
                 timestamp: new Date().toLocaleString(),
                 language: 'Kurdish',
-                categories: selected.join(' | '),
-                store: getStoreName()
+                categories: selected.value,
+                store: storeInfo.name
             });
             localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
+
+            // Show success
             document.getElementById('step-2').classList.remove('active');
             document.getElementById('step-3').classList.add('active');
             document.getElementById('step-indicator').style.display = 'none';
