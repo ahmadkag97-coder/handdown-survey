@@ -368,14 +368,14 @@
             <div class="panel-title" style="flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;">
                 <span>📱 QR Code بۆ ستۆرەکان</span>
                 <select id="qr-store-select" class="filter-select" style="min-width:220px;padding:8px 12px;border-radius:12px;" onchange="renderQRCodes()">
-                    <option value="all">🏬 هەموو ستۆرەکان (All Stores)</option>
-                    <option value="haji-omaran">🏔️ Haji Omaran Shop</option>
+                    <option value="haji-omaran" selected>🏔️ Haji Omaran Shop</option>
                     <option value="turkish-border-1">🇹🇷 Turkish Border Shop 1</option>
                     <option value="turkish-border-2">🇹🇷 Turkish Border Shop 2</option>
                     <option value="erbil-diplomatic">🏛️ Diplomatic Shop (Erbil)</option>
                     <option value="erbil-cip">🛫 CIP Shop (Erbil Int Airport)</option>
                     <option value="erbil-departure">🛫 Departure Shop (Erbil Int Airport)</option>
                     <option value="erbil-arrival">🛬 Arrival Shop (Erbil Int Airport)</option>
+                    <option value="all">🏬 هەموو ستۆرەکان (All Stores)</option>
                 </select>
             </div>
             <div class="qr-grid" id="qr-grid-container"></div>
@@ -762,7 +762,7 @@
             if (!container) return;
             container.innerHTML = '';
             const baseUrl = window.location.origin;
-            const selStore = document.getElementById('qr-store-select') ? document.getElementById('qr-store-select').value : 'all';
+            const selStore = document.getElementById('qr-store-select') ? document.getElementById('qr-store-select').value : 'haji-omaran';
 
             const filteredStores = storeList.filter(store => selStore === 'all' || store.slug === selStore);
 
