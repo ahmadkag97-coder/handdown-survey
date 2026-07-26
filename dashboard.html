@@ -298,9 +298,28 @@
     <!-- Appwrite SDK (Loaded safely) -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@26.2.0/dist/iife/sdk.min.js"></script>
     <script>
-        // ===== PIN Code Authentication =====
-        const CORRECT_PIN = '1234';
+        // ===== PIN Code Authentication via Appwrite Cloud =====
+        let cloudPin = '1234';
         let currentPin = '';
+
+        async function fetchCloudPin() {
+            try {
+                if (window.Appwrite) {
+                    const client = new Appwrite.Client();
+                    client.setEndpoint('https://fra.cloud.appwrite.io/v1').setProject('6a65bea6001b95f75b63');
+                    const databases = new Appwrite.Databases(client);
+                    const doc = await databases.getDocument('handdown_analytics', 'settings', 'admin_pin');
+                    if (doc && doc.pin_code) {
+                        cloudPin = String(doc.pin_code);
+                    }
+                }
+            } catch(e) {
+                console.warn('Appwrite PIN fetch fallback:', e);
+            }
+        }
+
+        // Fetch Cloud PIN on load
+        fetchCloudPin();
 
         function checkPinAuth() {
             if (sessionStorage.getItem('handdown_admin_authenticated') === 'true') {
@@ -344,8 +363,9 @@
             document.getElementById('pin-error').classList.remove('visible');
         }
 
-        function verifyPin() {
-            if (currentPin === CORRECT_PIN) {
+        async function verifyPin() {
+            await fetchCloudPin();
+            if (currentPin === cloudPin) {
                 sessionStorage.setItem('handdown_admin_authenticated', 'true');
                 const overlay = document.getElementById('pin-overlay');
                 overlay.style.opacity = '0';
