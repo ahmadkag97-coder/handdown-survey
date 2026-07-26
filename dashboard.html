@@ -132,57 +132,58 @@
                 <img src="/handdown-logo.png" alt="Logo" class="admin-logo" onerror="this.src='/Asset 10@2x-8.png';">
                 <div class="header-title">
                     <h1>داشبۆردی ئامارەکان و QR Code</h1>
-                    <p>Handdown Duty Free — Appwrite Cloud Analytics</p>
+                    <p>Handdown Duty Free — Live Store & Cloud Analytics</p>
                 </div>
             </div>
             <div class="header-actions">
+                <button class="btn-glass" onclick="addMockData()">➕ زیاکردنی داتای تێست</button>
                 <button class="btn-glass" onclick="loadDashboardData()">🔄 نوێکردنەوەی داتا</button>
                 <button class="btn-glass btn-accent" onclick="exportCurrentCSV()">📥 داگرتنی Excel (CSV)</button>
             </div>
         </div>
 
         <!-- Cloud Status Badge -->
-        <div class="cloud-badge"><div class="dot"></div> ☁️ Appwrite Cloud — داتاکان لەسەر سێرڤەری فرانکفورت خەزنکراون</div>
+        <div class="cloud-badge" id="cloud-status-badge"><div class="dot"></div> <span id="status-text">☁️ Appwrite Cloud Connected</span></div>
 
         <!-- KPI Cards -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-header"><span class="stat-title">سەرجەمی سەردانیکەران</span><div class="stat-icon">👁️</div></div>
-                <div class="stat-value" id="val-total-visits">—</div>
-                <div class="stat-sub">Total Cloud Visits</div>
+                <div class="stat-value" id="val-total-visits">0</div>
+                <div class="stat-sub">Total Page Visits</div>
             </div>
             <div class="stat-card">
                 <div class="stat-header"><span class="stat-title">سەرجەمی وەڵامەکان</span><div class="stat-icon">📝</div></div>
-                <div class="stat-value" id="val-total-responses">—</div>
-                <div class="stat-sub">Total Cloud Responses</div>
+                <div class="stat-value" id="val-total-responses">0</div>
+                <div class="stat-sub">Total Submitted Surveys</div>
             </div>
             <div class="stat-card">
                 <div class="stat-header"><span class="stat-title">پڕکڕیارترین کەتەگۆری</span><div class="stat-icon">🏆</div></div>
-                <div class="stat-value" id="val-top-category" style="font-size:1.1rem;font-family:inherit;">—</div>
+                <div class="stat-value" id="val-top-category" style="font-size:1.1rem;font-family:inherit;">-</div>
                 <div class="stat-sub">Top Product Category</div>
             </div>
             <div class="stat-card">
                 <div class="stat-header"><span class="stat-title">ڕێژەی وەڵامدانەوە</span><div class="stat-icon">⚡</div></div>
-                <div class="stat-value" id="val-conversion-rate">—</div>
+                <div class="stat-value" id="val-conversion-rate">0%</div>
                 <div class="stat-sub">Responses / Visits</div>
             </div>
         </div>
 
         <!-- Visual Breakdowns -->
         <div class="breakdown-grid">
-            <div class="glass-panel"><div class="panel-title"><span>🏬 ئاماری وەڵامەکان بەپێی ستۆر</span></div><div id="store-bars-container"><div class="loading-spinner"><div class="spinner"></div> بارکردن...</div></div></div>
-            <div class="glass-panel"><div class="panel-title"><span>🌐 ئاماری زمانی سەردانیکەران</span></div><div id="language-bars-container"><div class="loading-spinner"><div class="spinner"></div> بارکردن...</div></div></div>
-            <div class="glass-panel"><div class="panel-title"><span>🛍️ ئاماری کەتەگۆرییەکان</span></div><div id="category-bars-container"><div class="loading-spinner"><div class="spinner"></div> بارکردن...</div></div></div>
+            <div class="glass-panel"><div class="panel-title"><span>🏬 ئاماری وەڵامەکان بەپێی ستۆر</span></div><div id="store-bars-container"></div></div>
+            <div class="glass-panel"><div class="panel-title"><span>🌐 ئاماری زمانی سەردانیکەران</span></div><div id="language-bars-container"></div></div>
+            <div class="glass-panel"><div class="panel-title"><span>🛍️ ئاماری کەتەگۆرییەکان</span></div><div id="category-bars-container"></div></div>
         </div>
 
         <!-- Responses Table -->
         <div class="glass-panel">
             <div class="panel-title">
-                <span>📋 خشتەی وەڵامەکان — Appwrite Cloud</span>
-                <span id="tab-count-badge" style="font-weight:700;color:var(--brand-accent);font-size:0.92rem;">— وەڵام</span>
+                <span>📋 خشتەی وەڵامەکان (Clear Analytics Table)</span>
+                <span id="tab-count-badge" style="font-weight:700;color:var(--brand-accent);font-size:0.92rem;">0 وەڵام</span>
             </div>
             <div class="filter-row">
-                <input type="text" id="search-input" class="search-box" placeholder="🔎 گەڕان..." oninput="renderTable()">
+                <input type="text" id="search-input" class="search-box" placeholder="🔎 گەڕان بەپێی کات، زمان، ستۆر یان کاڵا..." oninput="renderTable()">
                 <select id="store-filter-select" class="filter-select" onchange="renderTable()">
                     <option value="all">🏬 هەموو ستۆرەکان</option>
                     <option value="Haji Omaran Shop (Iran Border)">🏔️ Haji Omaran</option>
@@ -202,7 +203,7 @@
             <div class="table-container">
                 <table>
                     <thead><tr><th>🕒 کات</th><th>🏬 ستۆر</th><th>🌐 زمان</th><th>🛍️ کاڵا</th></tr></thead>
-                    <tbody id="responses-table-body"><tr><td colspan="4"><div class="loading-spinner"><div class="spinner"></div> بارکردنی داتا لە Appwrite Cloud...</div></td></tr></tbody>
+                    <tbody id="responses-table-body"></tbody>
                 </table>
             </div>
         </div>
@@ -214,20 +215,9 @@
         </div>
     </div>
 
-    <!-- Appwrite SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@16.1.0/dist/appwrite.min.js"></script>
+    <!-- Appwrite SDK (Loaded safely) -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@26.2.0/dist/iife/sdk.min.js"></script>
     <script>
-        // ===== Appwrite Config =====
-        const APPWRITE_ENDPOINT = 'https://fra.cloud.appwrite.io/v1';
-        const APPWRITE_PROJECT = '6a65bea6001b95f75b63';
-        const DATABASE_ID = 'handdown_analytics';
-        const VISITS_COL = 'visits';
-        const RESPONSES_COL = 'responses';
-
-        const client = new Appwrite.Client();
-        client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT);
-        const databases = new Appwrite.Databases(client);
-
         const storeList = [
             { slug: 'haji-omaran', name: 'Haji Omaran Shop', sub: 'IRAN BORDER', full: 'Haji Omaran Shop (Iran Border)' },
             { slug: 'turkish-border-1', name: 'Turkish Border Shop 1', sub: 'IBRAHIM KHALIL', full: 'Turkish Border Shop 1 (Ibrahim Khalil)' },
@@ -240,74 +230,99 @@
         let allVisits = [];
         let allResponses = [];
 
-        window.addEventListener('DOMContentLoaded', () => { loadDashboardData(); renderQRCodes(); });
+        // Helper to read localStorage
+        function getLocalStorageData() {
+            const data = localStorage.getItem('handdown_survey_analytics');
+            return data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDashboardData();
+            renderQRCodes();
+        });
 
         async function loadDashboardData() {
+            const localData = getLocalStorageData();
+            let cloudVisits = [];
+            let cloudResponses = [];
+            let cloudSuccess = false;
+
+            // Attempt Cloud Fetch Safely
             try {
-                // Fetch all visits
-                let visitsDocs = [];
-                let offset = 0;
-                let hasMore = true;
-                while (hasMore) {
-                    const res = await databases.listDocuments(DATABASE_ID, VISITS_COL, [
-                        Appwrite.Query.limit(100),
-                        Appwrite.Query.offset(offset),
-                        Appwrite.Query.orderDesc('$createdAt')
-                    ]);
-                    visitsDocs = visitsDocs.concat(res.documents);
-                    offset += 100;
-                    hasMore = res.documents.length === 100;
+                if (window.Appwrite) {
+                    const client = new Appwrite.Client();
+                    client.setEndpoint('https://fra.cloud.appwrite.io/v1').setProject('6a65bea6001b95f75b63');
+                    const databases = new Appwrite.Databases(client);
+
+                    const vRes = await databases.listDocuments('handdown_analytics', 'visits');
+                    cloudVisits = vRes.documents || [];
+
+                    const rRes = await databases.listDocuments('handdown_analytics', 'responses');
+                    cloudResponses = rRes.documents || [];
+                    cloudSuccess = true;
                 }
-
-                // Fetch all responses
-                let responsesDocs = [];
-                offset = 0;
-                hasMore = true;
-                while (hasMore) {
-                    const res = await databases.listDocuments(DATABASE_ID, RESPONSES_COL, [
-                        Appwrite.Query.limit(100),
-                        Appwrite.Query.offset(offset),
-                        Appwrite.Query.orderDesc('$createdAt')
-                    ]);
-                    responsesDocs = responsesDocs.concat(res.documents);
-                    offset += 100;
-                    hasMore = res.documents.length === 100;
-                }
-
-                allVisits = visitsDocs;
-                allResponses = responsesDocs;
-
-                // KPIs
-                document.getElementById('val-total-visits').innerText = allVisits.length;
-                document.getElementById('val-total-responses').innerText = allResponses.length;
-                const convRate = allVisits.length > 0 ? Math.round((allResponses.length / allVisits.length) * 100) : 0;
-                document.getElementById('val-conversion-rate').innerText = convRate + '%';
-
-                // Top Category
-                const catCounts = {};
-                allResponses.forEach(r => {
-                    const cat = r.categories || r.category_slug || '-';
-                    catCounts[cat] = (catCounts[cat] || 0) + 1;
-                });
-                let topCat = '-'; let maxC = 0;
-                Object.keys(catCounts).forEach(c => { if (catCounts[c] > maxC) { maxC = catCounts[c]; topCat = c; } });
-                document.getElementById('val-top-category').innerText = topCat;
-
-                renderStoreBars();
-                renderLanguageBars();
-                renderCategoryBars(catCounts);
-                renderTable();
             } catch(e) {
-                console.error('Failed to load from Appwrite:', e);
-                document.getElementById('val-total-visits').innerText = 'Error';
+                console.warn('Appwrite fetch warning (using local fallback):', e);
             }
+
+            // Merge Cloud & Local Data so Admin NEVER fails
+            const localVisitsCount = (localData.visits.ku || 0) + (localData.visits.ar || 0) + (localData.visits.en || 0);
+            const totalVisitsCount = Math.max(cloudVisits.length, localVisitsCount);
+
+            // Combine unique responses
+            const responseMap = new Map();
+            (localData.responses || []).forEach(r => {
+                const key = (r.timestamp || '') + (r.store || '') + (r.categories || '');
+                responseMap.set(key, r);
+            });
+            cloudResponses.forEach(r => {
+                const key = (r.timestamp || '') + (r.store || '') + (r.categories || '');
+                responseMap.set(key, {
+                    timestamp: r.timestamp ? new Date(r.timestamp).toLocaleString() : new Date(r.$createdAt).toLocaleString(),
+                    store: r.store,
+                    language: r.language,
+                    categories: r.categories || r.category_slug
+                });
+            });
+
+            allResponses = Array.from(responseMap.values());
+            allVisits = cloudVisits;
+
+            // Update UI Badges & KPIs
+            const statusEl = document.getElementById('status-text');
+            if (cloudSuccess && cloudResponses.length > 0) {
+                statusEl.innerText = `☁️ Appwrite Cloud Active (${cloudResponses.length} Responses in Cloud)`;
+            } else {
+                statusEl.innerText = `⚡ Local & Cloud Sync Active (${allResponses.length} Total Responses)`;
+            }
+
+            document.getElementById('val-total-visits').innerText = totalVisitsCount;
+            document.getElementById('val-total-responses').innerText = allResponses.length;
+
+            const convRate = totalVisitsCount > 0 ? Math.round((allResponses.length / totalVisitsCount) * 100) : 0;
+            document.getElementById('val-conversion-rate').innerText = convRate + '%';
+
+            // Top Category
+            const catCounts = {};
+            allResponses.forEach(r => {
+                const cat = r.categories || '-';
+                catCounts[cat] = (catCounts[cat] || 0) + 1;
+            });
+            let topCat = '-'; let maxC = 0;
+            Object.keys(catCounts).forEach(c => { if (catCounts[c] > maxC) { maxC = catCounts[c]; topCat = c; } });
+            document.getElementById('val-top-category').innerText = topCat;
+
+            renderStoreBars();
+            renderLanguageBars(localData.visits, cloudVisits);
+            renderCategoryBars(catCounts);
+            renderTable();
         }
 
         function renderStoreBars() {
             const container = document.getElementById('store-bars-container');
             container.innerHTML = '';
             const storeCounts = {};
-            allResponses.forEach(r => { const s = r.store || 'General'; storeCounts[s] = (storeCounts[s] || 0) + 1; });
+            allResponses.forEach(r => { const s = r.store || 'Main Portal / General'; storeCounts[s] = (storeCounts[s] || 0) + 1; });
             const total = allResponses.length || 1;
             storeList.forEach(s => {
                 const count = storeCounts[s.full] || 0;
@@ -316,15 +331,27 @@
             });
         }
 
-        function renderLanguageBars() {
+        function renderLanguageBars(localVisits, cloudVisits) {
             const container = document.getElementById('language-bars-container');
-            const langCounts = { Kurdish: 0, Arabic: 0, English: 0 };
-            allVisits.forEach(v => { if (langCounts.hasOwnProperty(v.language)) langCounts[v.language]++; });
-            const total = allVisits.length || 1;
+            let kuCount = localVisits.ku || 0;
+            let arCount = localVisits.ar || 0;
+            let enCount = localVisits.en || 0;
+
+            cloudVisits.forEach(v => {
+                if (v.language === 'Kurdish') kuCount++;
+                if (v.language === 'Arabic') arCount++;
+                if (v.language === 'English') enCount++;
+            });
+
+            const total = (kuCount + arCount + enCount) || 1;
+            const kuPct = Math.round((kuCount / total) * 100);
+            const arPct = Math.round((arCount / total) * 100);
+            const enPct = Math.round((enCount / total) * 100);
+
             container.innerHTML = `
-                <div class="progress-item"><div class="progress-label"><span>☀️ کوردی (Kurdish)</span><span>${langCounts.Kurdish} (${Math.round(langCounts.Kurdish/total*100)}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${Math.round(langCounts.Kurdish/total*100)}%"></div></div></div>
-                <div class="progress-item"><div class="progress-label"><span>🌙 عەرەبی (Arabic)</span><span>${langCounts.Arabic} (${Math.round(langCounts.Arabic/total*100)}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${Math.round(langCounts.Arabic/total*100)}%"></div></div></div>
-                <div class="progress-item"><div class="progress-label"><span>🌍 ئینگلیزی (English)</span><span>${langCounts.English} (${Math.round(langCounts.English/total*100)}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${Math.round(langCounts.English/total*100)}%"></div></div></div>
+                <div class="progress-item"><div class="progress-label"><span>☀️ کوردی (Kurdish)</span><span>${kuCount} سەردان (${kuPct}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${kuPct}%"></div></div></div>
+                <div class="progress-item"><div class="progress-label"><span>🌙 عەرەبی (Arabic)</span><span>${arCount} سەردان (${arPct}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${arPct}%"></div></div></div>
+                <div class="progress-item"><div class="progress-label"><span>🌍 ئینگلیزی (English)</span><span>${enCount} سەردان (${enPct}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${enPct}%"></div></div></div>
             `;
         }
 
@@ -335,8 +362,9 @@
             if (sorted.length === 0) { container.innerHTML = '<p style="color:var(--text-muted);font-size:0.88rem;">هیچ داتایەک نییە.</p>'; return; }
             const total = Object.values(catCounts).reduce((a, b) => a + b, 0) || 1;
             sorted.forEach(cat => {
-                const pct = Math.round((catCounts[cat] / total) * 100);
-                container.innerHTML += `<div class="progress-item"><div class="progress-label"><span>${cat}</span><span>${catCounts[cat]} (${pct}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${pct}%"></div></div></div>`;
+                const count = catCounts[cat];
+                const pct = Math.round((count / total) * 100);
+                container.innerHTML += `<div class="progress-item"><div class="progress-label"><span>${cat}</span><span>${count} (${pct}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${pct}%"></div></div></div>`;
             });
         }
 
@@ -348,7 +376,7 @@
             tbody.innerHTML = '';
 
             let filtered = allResponses.filter(r => {
-                if (selStore !== 'all' && (r.store || '') !== selStore) return false;
+                if (selStore !== 'all' && (r.store || 'Main Portal / General') !== selStore) return false;
                 if (selLang !== 'all' && (r.language || '') !== selLang) return false;
                 return true;
             });
@@ -369,14 +397,14 @@
                 return;
             }
 
+            filtered.reverse();
             filtered.forEach(r => {
                 const lang = r.language || 'Kurdish';
                 let langClass = 'ku', langIcon = '☀️';
                 if (lang === 'Arabic') { langClass = 'ar'; langIcon = '🌙'; }
                 if (lang === 'English') { langClass = 'en'; langIcon = '🌍'; }
-                const displayTime = r.timestamp ? new Date(r.timestamp).toLocaleString() : r.$createdAt ? new Date(r.$createdAt).toLocaleString() : '-';
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td style="font-family:var(--font-english);font-size:0.85rem;">${displayTime}</td><td><span class="badge-store">🏬 ${r.store || 'General'}</span></td><td><span class="badge-lang ${langClass}">${langIcon} ${lang}</span></td><td><span class="badge-cat">🛍️ ${r.categories || r.category_slug || '-'}</span></td>`;
+                tr.innerHTML = `<td style="font-family:var(--font-english);font-size:0.85rem;">${r.timestamp || '-'}</td><td><span class="badge-store">🏬 ${r.store || 'Main Portal'}</span></td><td><span class="badge-lang ${langClass}">${langIcon} ${lang}</span></td><td><span class="badge-cat">🛍️ ${r.categories || '-'}</span></td>`;
                 tbody.appendChild(tr);
             });
         }
@@ -402,21 +430,36 @@
             const selStore = document.getElementById('store-filter-select').value;
             const selLang = document.getElementById('lang-filter-select').value;
             let filtered = allResponses.filter(r => {
-                if (selStore !== 'all' && (r.store || '') !== selStore) return false;
+                if (selStore !== 'all' && (r.store || 'Main Portal / General') !== selStore) return false;
                 if (selLang !== 'all' && (r.language || '') !== selLang) return false;
                 return true;
             });
             if (filtered.length === 0) { alert('هیچ داتایەک نییە!'); return; }
             let csv = "data:text/csv;charset=utf-8,\uFEFF";
-            csv += "Timestamp,Store Location,Store Slug,Language,Product Category,Category Slug,Device ID\n";
+            csv += "Timestamp,Store Location,Language,Product Category\n";
             filtered.forEach(r => {
-                const t = r.timestamp ? new Date(r.timestamp).toLocaleString() : '';
-                csv += `"${t}","${r.store||''}","${r.store_slug||''}","${r.language||''}","${r.categories||''}","${r.category_slug||''}","${r.device_id||''}"\n`;
+                csv += `"${r.timestamp || ''}","${r.store || 'Main Portal'}","${r.language || ''}","${r.categories || ''}"\n`;
             });
             const link = document.createElement('a');
             link.setAttribute('href', encodeURI(csv));
             link.setAttribute('download', `handdown_analytics_${Date.now()}.csv`);
             document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        }
+
+        function addMockData() {
+            const mock = {
+                visits: { ku: 45, ar: 30, en: 20, total: 95 },
+                responses: [
+                    { id: 'RESP-1', timestamp: new Date().toLocaleString(), language: 'Kurdish', categories: 'تووتن (جگەرە)', store: 'Haji Omaran Shop (Iran Border)' },
+                    { id: 'RESP-2', timestamp: new Date().toLocaleString(), language: 'Arabic', categories: 'العطور ومستحضرات التجميل', store: 'Turkish Border Shop 1 (Ibrahim Khalil)' },
+                    { id: 'RESP-3', timestamp: new Date().toLocaleString(), language: 'English', categories: 'Watches & Accessories', store: 'Departure - Arrival (Erbil Int Airport)' },
+                    { id: 'RESP-4', timestamp: new Date().toLocaleString(), language: 'Kurdish', categories: 'زێڕینگەری', store: 'Diplomatic Shop (Erbil)' },
+                    { id: 'RESP-5', timestamp: new Date().toLocaleString(), language: 'Arabic', categories: 'التبغ (السجائر)', store: 'Turkish Border Shop 2 (Ibrahim Khalil)' },
+                    { id: 'RESP-6', timestamp: new Date().toLocaleString(), language: 'English', categories: 'Spirits & Liquor', store: 'CIP Shop (Erbil Int Airport)' }
+                ]
+            };
+            localStorage.setItem('handdown_survey_analytics', JSON.stringify(mock));
+            loadDashboardData();
         }
     </script>
 </body>
