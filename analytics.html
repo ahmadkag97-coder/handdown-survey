@@ -859,38 +859,19 @@
         .footer-text { font-size: 0.95rem; color: #8E8E93; font-weight: 500; }
 
         @media print {
-            @page { size: portrait; margin: 0; }
-            html, body {
-                background: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                width: 100vw !important;
-                height: 100vh !important;
-                max-height: 100vh !important;
-                overflow: hidden !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-            }
+            @page { size: portrait; margin: 10mm; }
+            html, body { background: none !important; padding: 0 !important; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
             .print-card {
-                border: 3px solid #C38B75 !important;
-                max-width: 88vw !important;
-                max-height: 94vh !important;
-                box-shadow: none !important;
-                margin: auto !important;
-                padding: 24px 20px !important;
-                page-break-inside: avoid !important;
-                page-break-before: avoid !important;
-                page-break-after: avoid !important;
+                border: 3.5px solid #C38B75 !important;
+                max-width: 680px !important; width: 100% !important;
+                box-shadow: none !important; margin: auto !important; padding: 40px 30px !important;
+                page-break-inside: avoid;
             }
-            .top-bar { height: 10px !important; }
-            .logo { max-width: 220px !important; margin: 6px auto 14px !important; }
-            .sub { font-size: 0.95rem !important; margin-bottom: 4px !important; }
-            .title { font-size: 1.6rem !important; margin-bottom: 16px !important; }
-            .qr-box { padding: 14px !important; border-radius: 20px !important; margin-bottom: 16px !important; }
-            .qr-img { width: 340px !important; height: 340px !important; max-width: 58vw !important; max-height: 42vh !important; object-fit: contain !important; }
-            .cta { font-size: 1.15rem !important; margin-bottom: 4px !important; }
-            .footer-text { font-size: 0.82rem !important; }
+            .logo { max-width: 340px !important; margin-bottom: 24px !important; }
+            .title { font-size: 2.2rem !important; }
+            .qr-box { padding: 22px !important; border-radius: 26px !important; }
+            .qr-img { width: 440px !important; height: 440px !important; }
+            .cta { font-size: 1.45rem !important; }
         }
     </style>
 </head>
