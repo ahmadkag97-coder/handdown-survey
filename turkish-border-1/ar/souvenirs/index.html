@@ -425,28 +425,22 @@
             if (step3) {
                 step3.classList.add('active');
                 step3.style.display = 'block';
-                const msg = getStoreThanksMessage ? getStoreThanksMessage() : { title: 'شكراً جزيلاً على إجابتك!', sub: 'نتمنى لك رحلة آمنة.' };
-                const h2 = step3.querySelector('h2');
-                const p = step3.querySelector('p');
-                if (h2) h2.innerText = msg.title;
-                if (p) p.innerText = msg.sub;
+                step3.innerHTML = `
+                    <div style="background: rgba(211,47,47,0.06); border: 2px solid #D32F2F; border-radius: 24px; padding: 28px 20px; text-align: center; margin: 10px 0;">
+                        <div style="font-size: 2.8rem; margin-bottom: 10px;">⚠️</div>
+                        <h2 style="font-size: 1.35rem; font-weight: 800; color: #121A2F; margin-bottom: 10px;">لقد شاركت بالفعل!</h2>
+                        <p style="font-size: 1.02rem; font-weight: 600; color: #4A4A4A; line-height: 1.6; margin-bottom: 16px;">
+                            عزيزي المستخدم، يمكنك الإجابة مرة واحدة فقط كل ۲٤ ساعة.
+                        </p>
+                        <div style="background: #FFFFFF; border: 1.5px solid rgba(211,47,47,0.3); padding: 12px 18px; border-radius: 16px; display: inline-block; font-size: 0.95rem; font-weight: 700; color: #D32F2F; box-shadow: 0 4px 12px rgba(211,47,47,0.08);">
+                            ⏰ يمكنك المشاركة مجدداً بعد <b>${hours}</b> ساعة و <b>${mins}</b> دقيقة
+                        </div>
+                    </div>
+                `;
             }
             if (stepIndicator) stepIndicator.style.display = 'none';
             if (optContainer) optContainer.innerHTML = '';
             if (sBtn) { sBtn.disabled = true; sBtn.style.display = 'none'; }
-
-            let banner = document.getElementById('rate-limit-banner');
-            if (!banner) {
-                banner = document.createElement('div');
-                banner.id = 'rate-limit-banner';
-                banner.style.cssText = 'background:rgba(211,47,47,0.12);border:1px solid rgba(211,47,47,0.3);color:#D32F2F;padding:14px;border-radius:16px;font-size:0.9rem;text-align:center;margin-top:16px;line-height:1.6;font-weight:600;';
-                const step3Content = document.querySelector('#step-3 .success-content');
-                if (step3Content) step3Content.appendChild(banner);
-            }
-            if (banner) {
-                banner.style.display = 'block';
-                banner.innerHTML = `⚠️ عفواً عزيزي المستخدم! لقد شاركت بالفعل.<br>يمكنك الإجابة مرة واحدة فقط كل ۲٤ ساعة.<br><small style="opacity:0.85;">(يمكنك المشاركة مجدداً بعد <b>${hours}</b> ساعة و <b>${mins}</b> دقيقة)</small>`;
-            }
         }
 
         // Run immediate lock check
