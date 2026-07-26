@@ -428,11 +428,18 @@
             w.document.close();
         }
 
+        function normalizeStoreName(store) {
+            if (!store || store === 'Main Portal' || store === 'Main Portal / General') return 'Main Portal / General';
+            if (store.includes('Departure - Arrival')) return 'Departure Shop (Erbil Int Airport)';
+            return store;
+        }
+
         function exportCurrentCSV() {
             const selStore = document.getElementById('store-filter-select').value;
             const selLang = document.getElementById('lang-filter-select').value;
             let filtered = allResponses.filter(r => {
-                if (selStore !== 'all' && (r.store || 'Main Portal / General') !== selStore) return false;
+                const sName = normalizeStoreName(r.store);
+                if (selStore !== 'all' && sName !== selStore) return false;
                 if (selLang !== 'all' && (r.language || '') !== selLang) return false;
                 return true;
             });
@@ -440,7 +447,7 @@
             let csv = "data:text/csv;charset=utf-8,\uFEFF";
             csv += "Timestamp,Store Location,Language,Product Category\n";
             filtered.forEach(r => {
-                csv += `"${r.timestamp || ''}","${r.store || 'Main Portal'}","${r.language || ''}","${r.categories || ''}"\n`;
+                csv += `"${r.timestamp || ''}","${normalizeStoreName(r.store)}","${r.language || ''}","${r.categories || ''}"\n`;
             });
             const link = document.createElement('a');
             link.setAttribute('href', encodeURI(csv));
@@ -450,14 +457,15 @@
 
         function addMockData() {
             const mock = {
-                visits: { ku: 45, ar: 30, en: 20, total: 95 },
+                visits: { ku: 55, ar: 40, en: 25, total: 120 },
                 responses: [
                     { id: 'RESP-1', timestamp: new Date().toLocaleString(), language: 'Kurdish', categories: 'تووتن (جگەرە)', store: 'Haji Omaran Shop (Iran Border)' },
                     { id: 'RESP-2', timestamp: new Date().toLocaleString(), language: 'Arabic', categories: 'العطور ومستحضرات التجميل', store: 'Turkish Border Shop 1 (Ibrahim Khalil)' },
-                    { id: 'RESP-3', timestamp: new Date().toLocaleString(), language: 'English', categories: 'Watches & Accessories', store: 'Departure - Arrival (Erbil Int Airport)' },
-                    { id: 'RESP-4', timestamp: new Date().toLocaleString(), language: 'Kurdish', categories: 'زێڕینگەری', store: 'Diplomatic Shop (Erbil)' },
+                    { id: 'RESP-3', timestamp: new Date().toLocaleString(), language: 'English', categories: 'Watches & Accessories', store: 'Departure Shop (Erbil Int Airport)' },
+                    { id: 'RESP-4', timestamp: new Date().toLocaleString(), language: 'Kurdish', categories: 'زێڕینگەری', store: 'Arrival Shop (Erbil Int Airport)' },
                     { id: 'RESP-5', timestamp: new Date().toLocaleString(), language: 'Arabic', categories: 'التبغ (السجائر)', store: 'Turkish Border Shop 2 (Ibrahim Khalil)' },
-                    { id: 'RESP-6', timestamp: new Date().toLocaleString(), language: 'English', categories: 'Spirits & Liquor', store: 'CIP Shop (Erbil Int Airport)' }
+                    { id: 'RESP-6', timestamp: new Date().toLocaleString(), language: 'English', categories: 'Spirits & Liquor', store: 'CIP Shop (Erbil Int Airport)' },
+                    { id: 'RESP-7', timestamp: new Date().toLocaleString(), language: 'Kurdish', categories: 'شیرینی', store: 'Diplomatic Shop (Erbil)' }
                 ]
             };
             localStorage.setItem('handdown_survey_analytics', JSON.stringify(mock));
