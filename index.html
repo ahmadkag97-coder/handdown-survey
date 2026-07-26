@@ -681,8 +681,24 @@
         }
 
         function selectLanguage(lang) {
-            // Real browser physical redirection to standalone language folder
-            window.location.href = '/' + lang + '/';
+            const pathname = window.location.pathname.toLowerCase();
+            const urlParams = new URLSearchParams(window.location.search);
+            const storeParam = urlParams.get('store') || '';
+            const storeSlugs = ['haji-omaran', 'turkish-border-1', 'turkish-border-2', 'erbil-diplomatic', 'erbil-cip', 'erbil-airport'];
+            
+            let detectedStore = '';
+            for (const s of storeSlugs) {
+                if (pathname.includes('/' + s) || storeParam.includes(s)) {
+                    detectedStore = s;
+                    break;
+                }
+            }
+            
+            if (detectedStore) {
+                window.location.href = '/' + detectedStore + '/' + lang;
+            } else {
+                window.location.href = '/' + lang + '/';
+            }
         }
 
         function goBack() {

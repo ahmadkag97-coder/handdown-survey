@@ -414,7 +414,7 @@
             container.innerHTML = '';
             const baseUrl = window.location.origin;
             storeList.forEach(store => {
-                const targetUrl = `${baseUrl}/${store.slug}/ku`;
+                const targetUrl = `${baseUrl}/${store.slug}`;
                 const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(targetUrl)}`;
                 container.innerHTML += `<div class="qr-card"><div class="qr-card-subtitle">${store.sub}</div><div class="qr-card-title">${store.name}</div><img src="${qrImgUrl}" alt="${store.name} QR" class="qr-img"><div class="qr-actions"><a href="${qrImgUrl}" download="${store.slug}-qr.png" target="_blank" class="btn-glass btn-accent">📥 داگرتن</a><button class="btn-glass" onclick="printQR('${qrImgUrl}','${store.name}','${store.sub}')">🖨️ چاپ</button></div></div>`;
             });
