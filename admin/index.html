@@ -365,7 +365,19 @@
 
         <!-- QR Codes -->
         <div class="glass-panel">
-            <div class="panel-title"><span>📱 QR Code بۆ ستۆرەکان</span></div>
+            <div class="panel-title" style="flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;">
+                <span>📱 QR Code بۆ ستۆرەکان</span>
+                <select id="qr-store-select" class="filter-select" style="min-width:220px;padding:8px 12px;border-radius:12px;" onchange="renderQRCodes()">
+                    <option value="all">🏬 هەموو ستۆرەکان (All Stores)</option>
+                    <option value="haji-omaran">🏔️ Haji Omaran Shop</option>
+                    <option value="turkish-border-1">🇹🇷 Turkish Border Shop 1</option>
+                    <option value="turkish-border-2">🇹🇷 Turkish Border Shop 2</option>
+                    <option value="erbil-diplomatic">🏛️ Diplomatic Shop (Erbil)</option>
+                    <option value="erbil-cip">🛫 CIP Shop (Erbil Int Airport)</option>
+                    <option value="erbil-departure">🛫 Departure Shop (Erbil Int Airport)</option>
+                    <option value="erbil-arrival">🛬 Arrival Shop (Erbil Int Airport)</option>
+                </select>
+            </div>
             <div class="qr-grid" id="qr-grid-container"></div>
         </div>
     </div>
@@ -747,9 +759,14 @@
 
         function renderQRCodes() {
             const container = document.getElementById('qr-grid-container');
+            if (!container) return;
             container.innerHTML = '';
             const baseUrl = window.location.origin;
-            storeList.forEach(store => {
+            const selStore = document.getElementById('qr-store-select') ? document.getElementById('qr-store-select').value : 'all';
+
+            const filteredStores = storeList.filter(store => selStore === 'all' || store.slug === selStore);
+
+            filteredStores.forEach(store => {
                 const targetUrl = `${baseUrl}/${store.slug}`;
                 const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(targetUrl)}`;
                 container.innerHTML += `<div class="qr-card"><div class="qr-card-subtitle">${store.sub}</div><div class="qr-card-title">${store.name}</div><img src="${qrImgUrl}" alt="${store.name} QR" class="qr-img"><div class="qr-actions"><button class="btn-glass btn-accent" onclick="downloadQRCard('${store.slug}','${store.name}','${store.sub}')">📥 داگرتن</button><button class="btn-glass" onclick="printQR('${store.slug}','${store.name}','${store.sub}')">🖨️ چاپ</button></div></div>`;
