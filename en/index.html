@@ -328,33 +328,14 @@
         </div>
     </div>
 
-    <!-- Appwrite Web SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@16.1.0/dist/appwrite.min.js"></script>
-
+    <!-- FIRST: Render categories immediately (zero dependencies) -->
     <script>
-        // ===== Appwrite Configuration =====
-        const APPWRITE_ENDPOINT = 'https://fra.cloud.appwrite.io/v1';
-        const APPWRITE_PROJECT = '6a65bea6001b95f75b63';
-        const DATABASE_ID = 'handdown_analytics';
-        const VISITS_COLLECTION = 'visits';
-        const RESPONSES_COLLECTION = 'responses';
+        const categories = ['Tobacco & Cigarettes', 'Spirits & Liquor', 'Perfumes & Cosmetics', 'Watches & Accessories', 'Jewelry', 'Confectionery & Sweets', 'Souvenirs'];
+        const categorySlugs = ['tobacco', 'spirits', 'perfumes', 'watches', 'jewelry', 'sweets', 'souvenirs'];
+        const optionsContainer = document.getElementById('options-container');
+        const submitBtn = document.getElementById('submit-btn');
+        let selectedCatIndex = -1;
 
-        // Initialize Appwrite
-        const client = new Appwrite.Client();
-        client.setEndpoint(APPWRITE_ENDPOINT).setProject(APPWRITE_PROJECT);
-        const databases = new Appwrite.Databases(client);
-
-        // ===== Device ID (persistent per device) =====
-        function getDeviceId() {
-            let id = localStorage.getItem('handdown_device_id');
-            if (!id) {
-                id = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('handdown_device_id', id);
-            }
-            return id;
-        }
-
-        // ===== Store Detection =====
         const storeMap = {
             'haji-omaran': 'Haji Omaran Shop (Iran Border)',
             'turkish-border-1': 'Turkish Border Shop 1 (Ibrahim Khalil)',
@@ -376,40 +357,13 @@
             return { slug: 'general', name: 'Main Portal / General' };
         }
 
-        // ===== Log Unique Visit to Appwrite =====
-        (async function logVisit() {
-            const sessionKey = 'handdown_visit_session_en';
-            if (sessionStorage.getItem(sessionKey)) return;
-            sessionStorage.setItem(sessionKey, 'true');
+        function getDeviceId() {
+            let id = localStorage.getItem('handdown_device_id');
+            if (!id) { id = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9); localStorage.setItem('handdown_device_id', id); }
+            return id;
+        }
 
-            const storeInfo = getStoreInfo();
-            try {
-                await databases.createDocument(DATABASE_ID, VISITS_COLLECTION, Appwrite.ID.unique(), {
-                    timestamp: new Date().toISOString(),
-                    language: 'English',
-                    store: storeInfo.name,
-                    store_slug: storeInfo.slug,
-                    device_id: getDeviceId(),
-                    page_url: window.location.href
-                });
-            } catch(e) { console.warn('Visit log failed:', e); }
-
-            // Also keep localStorage backup
-            const data = localStorage.getItem('handdown_survey_analytics');
-            const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
-            analytics.visits.en = (analytics.visits.en || 0) + 1;
-            analytics.visits.total = (analytics.visits.ku || 0) + (analytics.visits.ar || 0) + (analytics.visits.en || 0);
-            localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
-        })();
-
-        // ===== Category Setup =====
-        const categories = ['Tobacco & Cigarettes', 'Spirits & Liquor', 'Perfumes & Cosmetics', 'Watches & Accessories', 'Jewelry', 'Confectionery & Sweets', 'Souvenirs'];
-        const categorySlugs = ['tobacco', 'spirits', 'perfumes', 'watches', 'jewelry', 'sweets', 'souvenirs'];
-        const optionsContainer = document.getElementById('options-container');
-        const submitBtn = document.getElementById('submit-btn');
-        let selectedCatIndex = -1;
-
-        // Populate English options (Single-Selection)
+        // Render options immediately
         categories.forEach((cat, index) => {
             const label = document.createElement('label');
             label.className = 'option-label';
@@ -422,16 +376,11 @@
                 label.classList.add('selected');
                 submitBtn.disabled = false;
                 selectedCatIndex = index;
-
-                // Update URL
                 const catSlug = categorySlugs[index];
                 const storeInfo = getStoreInfo();
                 try {
-                    if (storeInfo.slug !== 'general') {
-                        window.history.pushState({}, '', `/${storeInfo.slug}/en/${catSlug}`);
-                    } else {
-                        window.history.pushState({}, '', `/en/${catSlug}`);
-                    }
+                    if (storeInfo.slug !== 'general') { window.history.pushState({}, '', `/${storeInfo.slug}/en/${catSlug}`); }
+                    else { window.history.pushState({}, '', `/en/${catSlug}`); }
                 } catch(e) {}
             };
             const customCheck = document.createElement('div');
@@ -443,7 +392,7 @@
         });
 
         // Auto-select from URL
-        window.addEventListener('DOMContentLoaded', () => {
+        (function() {
             const pathname = window.location.pathname.toLowerCase();
             const storeParam = (new URLSearchParams(window.location.search).get('store') || '');
             categorySlugs.forEach((slug, i) => {
@@ -455,47 +404,66 @@
                     }
                 }
             });
-        });
+        })();
 
-        // ===== Submit to Appwrite =====
+        // Form Submission
         async function submitForm() {
             const selected = optionsContainer.querySelector('input[type="radio"]:checked');
             if (!selected) return;
-
             const storeInfo = getStoreInfo();
             const catSlug = selectedCatIndex >= 0 ? categorySlugs[selectedCatIndex] : 'unknown';
-            const responseData = {
-                timestamp: new Date().toISOString(),
-                language: 'English',
-                categories: selected.value,
-                category_slug: catSlug,
-                store: storeInfo.name,
-                store_slug: storeInfo.slug,
-                device_id: getDeviceId()
-            };
 
-            // Save to Appwrite cloud
-            try {
-                await databases.createDocument(DATABASE_ID, RESPONSES_COLLECTION, Appwrite.ID.unique(), responseData);
-            } catch(e) { console.warn('Response save failed:', e); }
+            // Save to Appwrite Cloud (if SDK ready)
+            if (window._appwriteDB && window.Appwrite) {
+                try {
+                    await window._appwriteDB.createDocument('handdown_analytics', 'responses', window.Appwrite.ID.unique(), {
+                        timestamp: new Date().toISOString(), language: 'English', categories: selected.value,
+                        category_slug: catSlug, store: storeInfo.name, store_slug: storeInfo.slug, device_id: getDeviceId()
+                    });
+                } catch(e) { console.warn('Appwrite save failed:', e); }
+            }
 
-            // Also keep localStorage backup
+            // Always save to localStorage as backup
             const data = localStorage.getItem('handdown_survey_analytics');
             const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
-            analytics.responses.push({
-                id: 'RESP-' + Date.now(),
-                timestamp: new Date().toLocaleString(),
-                language: 'English',
-                categories: selected.value,
-                store: storeInfo.name
-            });
+            analytics.responses.push({ id: 'RESP-' + Date.now(), timestamp: new Date().toLocaleString(), language: 'English', categories: selected.value, store: storeInfo.name });
             localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
 
-            // Show success
             document.getElementById('step-2').classList.remove('active');
             document.getElementById('step-3').classList.add('active');
             document.getElementById('step-indicator').style.display = 'none';
         }
+    </script>
+
+    <!-- SECOND: Appwrite SDK loaded asynchronously -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@26.2.0/dist/iife/sdk.min.js"></script>
+    <script>
+        try {
+            if (window.Appwrite) {
+                const client = new Appwrite.Client();
+                client.setEndpoint('https://fra.cloud.appwrite.io/v1').setProject('6a65bea6001b95f75b63');
+                window._appwriteDB = new Appwrite.Databases(client);
+
+                (async function() {
+                    const sessionKey = 'handdown_visit_session_en';
+                    if (sessionStorage.getItem(sessionKey)) return;
+                    sessionStorage.setItem(sessionKey, 'true');
+                    const storeInfo = getStoreInfo();
+                    try {
+                        await window._appwriteDB.createDocument('handdown_analytics', 'visits', Appwrite.ID.unique(), {
+                            timestamp: new Date().toISOString(), language: 'English', store: storeInfo.name,
+                            store_slug: storeInfo.slug, device_id: getDeviceId(), page_url: window.location.href
+                        });
+                    } catch(e) {}
+
+                    const data = localStorage.getItem('handdown_survey_analytics');
+                    const analytics = data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
+                    analytics.visits.en = (analytics.visits.en || 0) + 1;
+                    analytics.visits.total = (analytics.visits.ku || 0) + (analytics.visits.ar || 0) + (analytics.visits.en || 0);
+                    localStorage.setItem('handdown_survey_analytics', JSON.stringify(analytics));
+                })();
+            }
+        } catch(e) {}
     </script>
 </body>
 </html>
