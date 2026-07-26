@@ -759,73 +759,85 @@
         async function downloadQRCard(storeSlug, storeName, storeSub) {
             const baseUrl = window.location.origin;
             const targetUrl = `${baseUrl}/${storeSlug}`;
-            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(targetUrl)}`;
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(targetUrl)}`;
 
             const canvas = document.createElement('canvas');
             canvas.width = 800;
-            canvas.height = 1000;
+            canvas.height = 1060;
             const ctx = canvas.getContext('2d');
 
+            function drawRoundedRect(x, y, width, height, radius) {
+                ctx.beginPath();
+                ctx.moveTo(x + radius, y);
+                ctx.lineTo(x + width - radius, y);
+                ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+                ctx.lineTo(x + width, y + height - radius);
+                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                ctx.lineTo(x + radius, y + height);
+                ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+                ctx.lineTo(x, y + radius);
+                ctx.quadraticCurveTo(x, y, x + radius, y);
+                ctx.closePath();
+            }
+
             function renderCard(logoImg) {
-                // Draw luxury background gradient matching website
-                const grad = ctx.createLinearGradient(0, 0, 0, 1000);
-                grad.addColorStop(0, '#FAF8F6');
-                grad.addColorStop(1, '#E8E3DD');
-                ctx.fillStyle = grad;
-                ctx.fillRect(0, 0, 800, 1000);
+                // Canvas background
+                ctx.fillStyle = '#FAF8F6';
+                ctx.fillRect(0, 0, 800, 1060);
 
-                // Border & Gold Accent
+                // Main White Card Container
+                ctx.fillStyle = '#FFFFFF';
                 ctx.strokeStyle = '#C38B75';
-                ctx.lineWidth = 6;
-                ctx.strokeRect(30, 30, 740, 940);
-
-                ctx.fillStyle = '#C38B75';
-                ctx.fillRect(30, 30, 740, 14);
+                ctx.lineWidth = 5;
+                drawRoundedRect(40, 40, 720, 980, 36);
+                ctx.fill();
+                ctx.stroke();
 
                 // Draw Logo
                 if (logoImg) {
-                    ctx.drawImage(logoImg, 250, 70, 300, 75);
+                    ctx.drawImage(logoImg, 240, 90, 320, 80);
                 } else {
                     ctx.font = 'bold 36px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
                     ctx.fillStyle = '#121A2F';
                     ctx.textAlign = 'center';
-                    ctx.fillText('HANDDOWN DUTY FREE', 400, 115);
+                    ctx.fillText('HANDDOWN DUTY FREE', 400, 130);
                 }
 
                 // Subtitle Badge
                 ctx.font = '700 20px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
                 ctx.fillStyle = '#C38B75';
                 ctx.textAlign = 'center';
-                ctx.fillText(storeSub.toUpperCase(), 400, 195);
+                ctx.fillText(storeSub.toUpperCase(), 400, 220);
 
                 // Store Title
                 ctx.font = 'bold 36px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
                 ctx.fillStyle = '#121A2F';
-                ctx.fillText(storeName, 400, 245);
+                ctx.fillText(storeName, 400, 270);
 
                 // Load & Draw QR Code
                 const qrImg = new Image();
                 qrImg.crossOrigin = 'anonymous';
                 qrImg.src = qrApiUrl;
                 qrImg.onload = () => {
-                    // White QR background frame
+                    // White QR Container Box with Rounded Corners
                     ctx.fillStyle = '#FFFFFF';
-                    ctx.fillRect(170, 290, 460, 460);
                     ctx.strokeStyle = 'rgba(0,0,0,0.06)';
                     ctx.lineWidth = 2;
-                    ctx.strokeRect(170, 290, 460, 460);
+                    drawRoundedRect(160, 320, 480, 480, 32);
+                    ctx.fill();
+                    ctx.stroke();
 
                     // Draw QR Code
-                    ctx.drawImage(qrImg, 200, 320, 400, 400);
+                    ctx.drawImage(qrImg, 180, 340, 440, 440);
 
                     // CTA Text
                     ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
                     ctx.fillStyle = '#121A2F';
-                    ctx.fillText('Scan QR Code to Start Survey', 400, 825);
+                    ctx.fillText('Scan QR Code to Start Survey', 400, 860);
 
-                    ctx.font = '18px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
+                    ctx.font = '500 18px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
                     ctx.fillStyle = '#8E8E93';
-                    ctx.fillText('Handdown Duty Free Survey System', 400, 870);
+                    ctx.fillText('Handdown Duty Free Survey System', 400, 905);
 
                     // Trigger direct PNG download
                     const link = document.createElement('a');
@@ -856,42 +868,38 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Poppins', sans-serif; background: #E8E3DD;
+            font-family: 'Poppins', sans-serif; background: #FAF8F6;
             display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 30px;
         }
         .print-card {
-            width: 100%; max-width: 650px; border: 3.5px solid #C38B75; border-radius: 36px; padding: 48px 36px;
-            text-align: center; background: #FAF8F6; box-shadow: 0 20px 50px rgba(0,0,0,0.09); position: relative; overflow: hidden; margin: auto;
+            width: 100%; max-width: 620px; border: 2.5px solid #C38B75; border-radius: 36px; padding: 50px 36px 40px;
+            text-align: center; background: #FFFFFF; box-shadow: 0 16px 40px rgba(0,0,0,0.06); position: relative; margin: auto;
         }
-        .top-bar { height: 16px; background: #C38B75; position: absolute; top: 0; left: 0; right: 0; }
-        .logo { max-width: 320px; margin: 12px auto 26px; display: block; }
-        .sub { font-size: 1.15rem; font-weight: 700; color: #C38B75; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
-        .title { font-size: 2.1rem; font-weight: 800; color: #121A2F; margin-bottom: 28px; line-height: 1.25; }
-        .qr-box { background: #FFF; padding: 24px; border-radius: 28px; display: inline-block; box-shadow: 0 12px 36px rgba(0,0,0,0.08); border: 2px solid rgba(0,0,0,0.06); margin-bottom: 28px; }
+        .logo { max-width: 320px; margin: 0 auto 24px; display: block; }
+        .sub { font-size: 1.05rem; font-weight: 700; color: #C38B75; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 8px; }
+        .title { font-size: 2.2rem; font-weight: 800; color: #121A2F; margin-bottom: 32px; line-height: 1.2; }
+        .qr-box { background: #FFFFFF; padding: 24px; border-radius: 32px; display: inline-block; box-shadow: 0 14px 40px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.04); margin-bottom: 32px; }
         .qr-img { width: 420px; height: 420px; display: block; }
-        .cta { font-size: 1.35rem; font-weight: 700; color: #121A2F; margin-bottom: 6px; }
+        .cta { font-size: 1.4rem; font-weight: 700; color: #121A2F; margin-bottom: 8px; }
         .footer-text { font-size: 0.95rem; color: #8E8E93; font-weight: 500; }
 
         @media print {
             @page { size: portrait; margin: 10mm; }
-            html, body { background: none !important; padding: 0 !important; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+            body { background: none !important; padding: 0 !important; }
             .print-card {
-                border: 3.5px solid #C38B75 !important;
-                max-width: 680px !important; width: 100% !important;
+                border: 2.5px solid #C38B75 !important;
+                max-width: 640px !important; width: 100% !important;
                 box-shadow: none !important; margin: auto !important; padding: 40px 30px !important;
                 page-break-inside: avoid;
             }
-            .logo { max-width: 340px !important; margin-bottom: 24px !important; }
+            .logo { max-width: 320px !important; margin-bottom: 20px !important; }
             .title { font-size: 2.2rem !important; }
-            .qr-box { padding: 22px !important; border-radius: 26px !important; }
-            .qr-img { width: 440px !important; height: 440px !important; }
-            .cta { font-size: 1.45rem !important; }
+            .qr-img { width: 420px !important; height: 420px !important; }
         }
     </style>
 </head>
 <body>
     <div class="print-card">
-        <div class="top-bar"></div>
         <img src="/handdown-logo.png" alt="Handdown Duty Free" class="logo" onerror="this.src='/Asset 10@2x-8.png';">
         <div class="sub">${storeSub}</div>
         <div class="title">${storeName}</div>
