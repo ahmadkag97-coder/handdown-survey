@@ -433,6 +433,12 @@
             radio.name = 'category_selection';
             radio.value = catObj.text;
             radio.onchange = () => {
+                const timeInfo = getRemainingTimeInfo();
+                if (timeInfo.isLocked) {
+                    radio.checked = false;
+                    showRateLimitModal(timeInfo.hoursLeft, timeInfo.minutesLeft);
+                    return;
+                }
                 optionsContainer.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
                 label.classList.add('selected');
                 submitBtn.disabled = false;
@@ -464,6 +470,7 @@
 
         // Auto-select from URL
         (function() {
+            const timeInfo = getRemainingTimeInfo();
             const pathname = window.location.pathname.toLowerCase();
             const storeParam = (new URLSearchParams(window.location.search).get('store') || '');
             categoriesWithIcons.forEach((catObj, i) => {
@@ -471,10 +478,22 @@
                     const labels = optionsContainer.querySelectorAll('.option-label');
                     if (labels[i]) {
                         const r = labels[i].querySelector('input[type="radio"]');
-                        if (r) { r.checked = true; labels[i].classList.add('selected'); submitBtn.disabled = false; selectedCatIndex = i; }
+                        if (r) {
+                            r.checked = true;
+                            labels[i].classList.add('selected');
+                            selectedCatIndex = i;
+                            if (timeInfo.isLocked) {
+                                submitBtn.disabled = true;
+                            } else {
+                                submitBtn.disabled = false;
+                            }
+                        }
                     }
                 }
             });
+            if (timeInfo.isLocked) {
+                showRateLimitModal(timeInfo.hoursLeft, timeInfo.minutesLeft);
+            }
         })();
 
         function getStoreThanksMessage() {
@@ -523,10 +542,15 @@
                 banner.style.display = 'block';
                 banner.innerHTML = `⚠️ Sorry! You have already submitted a response.<br>You can participate once every 24 hours.<br><small style="opacity:0.85;">(You can submit again in <b>${hours}</b> hours and <b>${mins}</b> minutes)</small>`;
             }
+            if (optionsContainer) {
+                optionsContainer.style.pointerEvents = 'none';
+                optionsContainer.style.opacity = '0.5';
+            }
             if (submitBtn) {
                 submitBtn.disabled = true;
                 submitBtn.style.opacity = '0.5';
                 submitBtn.style.cursor = 'not-allowed';
+                submitBtn.style.pointerEvents = 'none';
             }
         }
 
