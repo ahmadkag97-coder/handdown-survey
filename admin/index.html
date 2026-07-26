@@ -154,7 +154,21 @@
         .qr-actions { display: flex; gap: 8px; width: 100%; }
         .qr-actions .btn-glass { flex: 1; justify-content: center; padding: 8px 10px; font-size: 0.82rem; }
 
-        .table-container { overflow-x: auto; max-height: 460px; overflow-y: auto; border-radius: 18px; border: 1px solid rgba(255,255,255,0.8); -webkit-overflow-scrolling: touch; }
+        .table-container {
+            overflow-x: auto;
+            max-height: 440px;
+            overflow-y: auto;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.8);
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(195, 139, 117, 0.4) transparent;
+        }
+        .table-container::-webkit-scrollbar { width: 5px; height: 5px; }
+        .table-container::-webkit-scrollbar-track { background: transparent; }
+        .table-container::-webkit-scrollbar-thumb { background: rgba(195, 139, 117, 0.45); border-radius: 10px; }
+        .table-container::-webkit-scrollbar-thumb:hover { background: var(--brand-accent); }
+        .glass-panel { overflow: hidden; }
         .table-container table thead th { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); }
         .load-more-container { text-align: center; padding-top: 14px; }
         .load-more-btn {
@@ -613,6 +627,27 @@
             });
         }
 
+        function formatCategoryName(catStr) {
+            if (!catStr || catStr.includes('?')) return '🛍️ دیاری نەکراوە';
+            const catLower = String(catStr).toLowerCase();
+            const map = {
+                'tobacco': '🚬 تووتن (جگەرە)',
+                'spirits': '🍾 خواردنەوەکان',
+                'perfumes': '💄 بۆن و جوانکاری',
+                'watches': '⌚ کاتژمێر و ئێکسسوارات',
+                'jewelry': '💎 زێڕینگەری',
+                'sweets': '🍬 شیرینی',
+                'souvenirs': '🎁 دیارییەکان'
+            };
+            for (const key in map) {
+                if (catLower.includes(key)) return map[key];
+            }
+            if (!catStr.startsWith('🚬') && !catStr.startsWith('🍾') && !catStr.startsWith('💄') && !catStr.startsWith('⌚') && !catStr.startsWith('💎') && !catStr.startsWith('🍬') && !catStr.startsWith('🎁')) {
+                return '🛍️ ' + catStr;
+            }
+            return catStr;
+        }
+
         let tableDisplayLimit = 10;
 
         function loadMoreResponses() {
@@ -664,7 +699,7 @@
                 if (lang === 'Arabic') { langClass = 'ar'; langIcon = '🌙'; }
                 if (lang === 'English') { langClass = 'en'; langIcon = '🌍'; }
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td style="font-family:var(--font-english);font-size:0.85rem;">${r.timestamp || '-'}</td><td><span class="badge-store">🏬 ${normalizeStoreName(r.store)}</span></td><td><span class="badge-lang ${langClass}">${langIcon} ${lang}</span></td><td><span class="badge-cat">🛍️ ${r.categories || '-'}</span></td>`;
+                tr.innerHTML = `<td style="font-family:var(--font-english);font-size:0.85rem;">${r.timestamp || '-'}</td><td><span class="badge-store">🏬 ${normalizeStoreName(r.store)}</span></td><td><span class="badge-lang ${langClass}">${langIcon} ${lang}</span></td><td><span class="badge-cat">${formatCategoryName(r.categories)}</span></td>`;
                 tbody.appendChild(tr);
             });
 
