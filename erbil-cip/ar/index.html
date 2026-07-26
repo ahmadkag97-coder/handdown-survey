@@ -381,6 +381,84 @@
 
     <!-- FIRST: Render categories immediately with icons -->
     <script>
+        // ===== Dual Storage 24-Hour Per Device Rate Limiter =====
+        const RATE_LIMIT_HOURS = 24;
+        const RATE_LIMIT_MS = RATE_LIMIT_HOURS * 60 * 60 * 1000;
+
+        function getRemainingTimeInfo() {
+            let lastTimeStr = localStorage.getItem('handdown_last_survey_submission_time');
+            if (!lastTimeStr) {
+                const match = document.cookie.match(/(?:^|; )handdown_last_survey_submission_time=([^;]*)/);
+                if (match) lastTimeStr = match[1];
+            }
+            if (!lastTimeStr) return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
+            let lastTime = parseInt(lastTimeStr, 10);
+            if (isNaN(lastTime)) lastTime = new Date(lastTimeStr).getTime();
+            if (isNaN(lastTime)) return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
+            const now = Date.now();
+            const elapsed = now - lastTime;
+            if (elapsed < RATE_LIMIT_MS) {
+                const remainingMs = RATE_LIMIT_MS - elapsed;
+                const hoursLeft = Math.floor(remainingMs / (1000 * 60 * 60));
+                const minutesLeft = Math.ceil((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+                return { isLocked: true, remainingMs, hoursLeft, minutesLeft };
+            }
+            return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
+        }
+
+        function setSubmissionLockTimestamp() {
+            const nowStr = Date.now().toString();
+            try { localStorage.setItem('handdown_last_survey_submission_time', nowStr); } catch(e){}
+            try { document.cookie = "handdown_last_survey_submission_time=" + nowStr + "; max-age=86400; path=/; SameSite=Lax"; } catch(e){}
+        }
+
+        function applyLockedStateUI(hours, mins) {
+            const step1 = document.getElementById('step-1');
+            const step2 = document.getElementById('step-2');
+            const step3 = document.getElementById('step-3');
+            const stepIndicator = document.getElementById('step-indicator');
+            const optContainer = document.getElementById('options-container');
+            const sBtn = document.getElementById('submit-btn');
+
+            if (step1) step1.style.display = 'none';
+            if (step2) step2.style.display = 'none';
+            if (step3) {
+                step3.classList.add('active');
+                step3.style.display = 'block';
+                const msg = getStoreThanksMessage ? getStoreThanksMessage() : { title: 'شكراً جزيلاً على إجابتك!', sub: 'نتمنى لك رحلة آمنة.' };
+                const h2 = step3.querySelector('h2');
+                const p = step3.querySelector('p');
+                if (h2) h2.innerText = msg.title;
+                if (p) p.innerText = msg.sub;
+            }
+            if (stepIndicator) stepIndicator.style.display = 'none';
+            if (optContainer) optContainer.innerHTML = '';
+            if (sBtn) { sBtn.disabled = true; sBtn.style.display = 'none'; }
+
+            let banner = document.getElementById('rate-limit-banner');
+            if (!banner) {
+                banner = document.createElement('div');
+                banner.id = 'rate-limit-banner';
+                banner.style.cssText = 'background:rgba(211,47,47,0.12);border:1px solid rgba(211,47,47,0.3);color:#D32F2F;padding:14px;border-radius:16px;font-size:0.9rem;text-align:center;margin-top:16px;line-height:1.6;font-weight:600;';
+                const step3Content = document.querySelector('#step-3 .success-content');
+                if (step3Content) step3Content.appendChild(banner);
+            }
+            if (banner) {
+                banner.style.display = 'block';
+                banner.innerHTML = `⚠️ عفواً عزيزي المستخدم! لقد شاركت بالفعل.<br>يمكنك الإجابة مرة واحدة فقط كل ۲٤ ساعة.<br><small style="opacity:0.85;">(يمكنك المشاركة مجدداً بعد <b>${hours}</b> ساعة و <b>${mins}</b> دقيقة)</small>`;
+            }
+        }
+
+        // Run immediate lock check
+        const initialLock = getRemainingTimeInfo();
+        if (initialLock.isLocked) {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => applyLockedStateUI(initialLock.hoursLeft, initialLock.minutesLeft));
+            } else {
+                applyLockedStateUI(initialLock.hoursLeft, initialLock.minutesLeft);
+            }
+        }
+
         const categoriesWithIcons = [
             { text: 'التبغ (السجائر)', icon: '🚬', slug: 'tobacco' },
             { text: 'المشروبات الروحية', icon: '🍾', slug: 'spirits' },
@@ -423,78 +501,67 @@
             return id;
         }
 
-        // Render options immediately with touch & icons
-        categoriesWithIcons.forEach((catObj, index) => {
-            const label = document.createElement('label');
-            label.className = 'option-label';
-            
-            const radio = document.createElement('input');
-            radio.type = 'radio';
-            radio.name = 'category_selection';
-            radio.value = catObj.text;
-            radio.onchange = () => {
-                const timeInfo = getRemainingTimeInfo();
-                if (timeInfo.isLocked) {
-                    radio.checked = false;
-                    showRateLimitModal(timeInfo.hoursLeft, timeInfo.minutesLeft);
-                    return;
-                }
-                optionsContainer.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
-                label.classList.add('selected');
-                submitBtn.disabled = false;
-                selectedCatIndex = index;
-                const storeInfo = getStoreInfo();
-                try {
-                    if (storeInfo.slug !== 'general') { window.history.pushState({}, '', `/${storeInfo.slug}/ar/${catObj.slug}`); }
-                    else { window.history.pushState({}, '', `/ar/${catObj.slug}`); }
-                } catch(e) {}
-            };
+        // Render options immediately with touch & icons if not locked
+        if (!initialLock.isLocked) {
+            categoriesWithIcons.forEach((catObj, index) => {
+                const label = document.createElement('label');
+                label.className = 'option-label';
+                
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'category_selection';
+                radio.value = catObj.text;
+                radio.onchange = () => {
+                    if (getRemainingTimeInfo().isLocked) return;
+                    optionsContainer.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
+                    label.classList.add('selected');
+                    submitBtn.disabled = false;
+                    selectedCatIndex = index;
+                    const storeInfo = getStoreInfo();
+                    try {
+                        if (storeInfo.slug !== 'general') { window.history.pushState({}, '', `/${storeInfo.slug}/ar/${catObj.slug}`); }
+                        else { window.history.pushState({}, '', `/ar/${catObj.slug}`); }
+                    } catch(e) {}
+                };
 
-            const iconSpan = document.createElement('span');
-            iconSpan.className = 'cat-icon';
-            iconSpan.innerText = catObj.icon;
+                const iconSpan = document.createElement('span');
+                iconSpan.className = 'cat-icon';
+                iconSpan.innerText = catObj.icon;
 
-            const textSpan = document.createElement('span');
-            textSpan.className = 'option-text';
-            textSpan.innerText = catObj.text;
+                const textSpan = document.createElement('span');
+                textSpan.className = 'option-text';
+                textSpan.innerText = catObj.text;
 
-            const customCheck = document.createElement('div');
-            customCheck.className = 'custom-checkbox';
+                const customCheck = document.createElement('div');
+                customCheck.className = 'custom-checkbox';
 
-            label.appendChild(radio);
-            label.appendChild(iconSpan);
-            label.appendChild(textSpan);
-            label.appendChild(customCheck);
-            optionsContainer.appendChild(label);
-        });
+                label.appendChild(radio);
+                label.appendChild(iconSpan);
+                label.appendChild(textSpan);
+                label.appendChild(customCheck);
+                optionsContainer.appendChild(label);
+            });
 
-        // Auto-select from URL
-        (function() {
-            const timeInfo = getRemainingTimeInfo();
-            const pathname = window.location.pathname.toLowerCase();
-            const storeParam = (new URLSearchParams(window.location.search).get('store') || '');
-            categoriesWithIcons.forEach((catObj, i) => {
-                if (pathname.includes('/' + catObj.slug) || storeParam.includes('/' + catObj.slug)) {
-                    const labels = optionsContainer.querySelectorAll('.option-label');
-                    if (labels[i]) {
-                        const r = labels[i].querySelector('input[type="radio"]');
-                        if (r) {
-                            r.checked = true;
-                            labels[i].classList.add('selected');
-                            selectedCatIndex = i;
-                            if (timeInfo.isLocked) {
-                                submitBtn.disabled = true;
-                            } else {
+            // Auto-select from URL if not locked
+            (function() {
+                const pathname = window.location.pathname.toLowerCase();
+                const storeParam = (new URLSearchParams(window.location.search).get('store') || '');
+                categoriesWithIcons.forEach((catObj, i) => {
+                    if (pathname.includes('/' + catObj.slug) || storeParam.includes('/' + catObj.slug)) {
+                        const labels = optionsContainer.querySelectorAll('.option-label');
+                        if (labels[i]) {
+                            const r = labels[i].querySelector('input[type="radio"]');
+                            if (r) {
+                                r.checked = true;
+                                labels[i].classList.add('selected');
+                                selectedCatIndex = i;
                                 submitBtn.disabled = false;
                             }
                         }
                     }
-                }
-            });
-            if (timeInfo.isLocked) {
-                showRateLimitModal(timeInfo.hoursLeft, timeInfo.minutesLeft);
-            }
-        })();
+                });
+            })();
+        }
 
         function getStoreThanksMessage() {
             const storeInfo = getStoreInfo();
@@ -510,94 +577,19 @@
             return thanksMap[storeInfo.slug] || { title: 'شكراً جزيلاً على إجابتك!', sub: 'نتمنى لك رحلة آمنة.' };
         }
 
-        // ===== 24-Hour Per Device Rate Limiter =====
-        const RATE_LIMIT_HOURS = 24;
-        const RATE_LIMIT_MS = RATE_LIMIT_HOURS * 60 * 60 * 1000;
-
-        function getRemainingTimeInfo() {
-            const lastTimeStr = localStorage.getItem('handdown_last_survey_submission_time');
-            if (!lastTimeStr) return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
-            let lastTime = parseInt(lastTimeStr, 10);
-            if (isNaN(lastTime)) {
-                lastTime = new Date(lastTimeStr).getTime();
-            }
-            if (isNaN(lastTime)) return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
-            const now = Date.now();
-            const elapsed = now - lastTime;
-            if (elapsed < RATE_LIMIT_MS) {
-                const remainingMs = RATE_LIMIT_MS - elapsed;
-                const hoursLeft = Math.floor(remainingMs / (1000 * 60 * 60));
-                const minutesLeft = Math.ceil((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
-                return { isLocked: true, remainingMs, hoursLeft, minutesLeft };
-            }
-            return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
-        }
-
-        function checkRateLimitOnLoad() {
-            const timeInfo = getRemainingTimeInfo();
-            if (timeInfo.isLocked) {
-                const step1 = document.getElementById('step-1');
-                const step2 = document.getElementById('step-2');
-                const step3 = document.getElementById('step-3');
-                const stepIndicator = document.getElementById('step-indicator');
-
-                if (step1) step1.classList.remove('active');
-                if (step2) step2.classList.remove('active');
-                if (step3) {
-                    step3.classList.add('active');
-                    const msg = getStoreThanksMessage();
-                    const h2 = step3.querySelector('h2');
-                    const p = step3.querySelector('p');
-                    if (h2) h2.innerText = msg.title;
-                    if (p) p.innerText = msg.sub;
-                }
-                if (stepIndicator) stepIndicator.style.display = 'none';
-
-                showRateLimitModal(timeInfo.hoursLeft, timeInfo.minutesLeft);
-            }
-        }
-
-        function showRateLimitModal(hours, mins) {
-            let banner = document.getElementById('rate-limit-banner');
-            if (!banner) {
-                banner = document.createElement('div');
-                banner.id = 'rate-limit-banner';
-                banner.style.cssText = 'background:rgba(211,47,47,0.12);border:1px solid rgba(211,47,47,0.3);color:#D32F2F;padding:14px;border-radius:16px;font-size:0.9rem;text-align:center;margin-top:16px;line-height:1.6;font-weight:600;';
-                const step3Content = document.querySelector('#step-3 .success-content');
-                if (step3Content) step3Content.appendChild(banner);
-            }
-            if (banner) {
-                banner.style.display = 'block';
-                banner.innerHTML = `⚠️ عفواً عزيزي المستخدم! لقد شاركت بالفعل.<br>يمكنك الإجابة مرة واحدة فقط كل ۲٤ ساعة.<br><small style="opacity:0.85;">(يمكنك المشاركة مجدداً بعد <b>${hours}</b> ساعة و <b>${mins}</b> دقيقة)</small>`;
-            }
-            if (optionsContainer) {
-                optionsContainer.style.pointerEvents = 'none';
-                optionsContainer.style.opacity = '0.5';
-            }
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.style.opacity = '0.5';
-                submitBtn.style.cursor = 'not-allowed';
-                submitBtn.style.pointerEvents = 'none';
-            }
-        }
-
-        // Run rate limit check on load
-        checkRateLimitOnLoad();
-
         // Form Submission
         async function submitForm() {
             const timeInfo = getRemainingTimeInfo();
             if (timeInfo.isLocked) {
-                showRateLimitModal(timeInfo.hoursLeft, timeInfo.minutesLeft);
+                applyLockedStateUI(timeInfo.hoursLeft, timeInfo.minutesLeft);
                 return;
             }
 
             const selected = optionsContainer.querySelector('input[type="radio"]:checked');
             if (!selected) return;
 
-            // Record 24-hour rate limit timestamp as integer milliseconds
-            localStorage.setItem('handdown_last_survey_submission_time', Date.now().toString());
+            // Record 24-hour rate limit timestamp in dual storage
+            setSubmissionLockTimestamp();
 
             const storeInfo = getStoreInfo();
             const catSlug = selectedCatIndex >= 0 ? categoriesWithIcons[selectedCatIndex].slug : 'unknown';
