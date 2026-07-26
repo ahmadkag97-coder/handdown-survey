@@ -526,7 +526,11 @@
         function getRemainingTimeInfo() {
             const lastTimeStr = localStorage.getItem('handdown_last_survey_submission_time');
             if (!lastTimeStr) return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
-            const lastTime = new Date(lastTimeStr).getTime();
+            let lastTime = parseInt(lastTimeStr, 10);
+            if (isNaN(lastTime)) {
+                lastTime = new Date(lastTimeStr).getTime();
+            }
+            if (isNaN(lastTime)) return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
             const now = Date.now();
             const elapsed = now - lastTime;
             if (elapsed < RATE_LIMIT_MS) {
@@ -541,12 +545,36 @@
         function checkRateLimitOnLoad() {
             const timeInfo = getRemainingTimeInfo();
             if (timeInfo.isLocked) {
+                const step1 = document.getElementById('step-1');
+                const step2 = document.getElementById('step-2');
+                const step3 = document.getElementById('step-3');
+                const stepIndicator = document.getElementById('step-indicator');
+
+                if (step1) step1.classList.remove('active');
+                if (step2) step2.classList.remove('active');
+                if (step3) {
+                    step3.classList.add('active');
+                    const msg = getStoreThanksMessage();
+                    const h2 = step3.querySelector('h2');
+                    const p = step3.querySelector('p');
+                    if (h2) h2.innerText = msg.title;
+                    if (p) p.innerText = msg.sub;
+                }
+                if (stepIndicator) stepIndicator.style.display = 'none';
+
                 showRateLimitModal(timeInfo.hoursLeft, timeInfo.minutesLeft);
             }
         }
 
         function showRateLimitModal(hours, mins) {
-            const banner = document.getElementById('rate-limit-banner');
+            let banner = document.getElementById('rate-limit-banner');
+            if (!banner) {
+                banner = document.createElement('div');
+                banner.id = 'rate-limit-banner';
+                banner.style.cssText = 'background:rgba(211,47,47,0.12);border:1px solid rgba(211,47,47,0.3);color:#D32F2F;padding:14px;border-radius:16px;font-size:0.9rem;text-align:center;margin-top:16px;line-height:1.6;font-weight:600;';
+                const step3Content = document.querySelector('#step-3 .success-content');
+                if (step3Content) step3Content.appendChild(banner);
+            }
             if (banner) {
                 banner.style.display = 'block';
                 banner.innerHTML = `⚠️ ببورە، بەکارهێنەری بەڕێز! تۆ پێشتر بەشداریت کردووە.<br>تەنها ۱ جار لە ۲٤ کاتژمێردا دەتوانیت وەڵام بنێریت.<br><small style="opacity:0.85;">(دەتوانیت دوای <b>${hours}</b> کاتژمێر و <b>${mins}</b> خولەکی تر بەشدار ببیتەوە)</small>`;
@@ -577,8 +605,8 @@
             const selected = optionsContainer.querySelector('input[type="radio"]:checked');
             if (!selected) return;
 
-            // Record 24-hour rate limit timestamp
-            localStorage.setItem('handdown_last_survey_submission_time', new Date().toISOString());
+            // Record 24-hour rate limit timestamp as integer milliseconds
+            localStorage.setItem('handdown_last_survey_submission_time', Date.now().toString());
 
             const storeInfo = getStoreInfo();
             const catSlug = selectedCatIndex >= 0 ? categoriesWithIcons[selectedCatIndex].slug : 'unknown';

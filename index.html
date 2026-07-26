@@ -803,7 +803,7 @@
                 return;
             }
 
-            localStorage.setItem('handdown_last_survey_submission_time', new Date().toISOString());
+            localStorage.setItem('handdown_last_survey_submission_time', Date.now().toString());
 
             const selectedCategories = [];
             const checkboxes = optionsContainer.querySelectorAll('input[type="checkbox"]:checked');
