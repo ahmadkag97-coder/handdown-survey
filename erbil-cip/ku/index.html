@@ -366,6 +366,7 @@
         <div class="step-container">
             <div id="step-2" class="step active">
                 <h2>لە هاندداون دیوتی فری چیت کڕی؟</h2>
+                <div id="rate-limit-banner" style="display:none;background:rgba(211,47,47,0.12);border:1px solid rgba(211,47,47,0.3);color:#D32F2F;padding:14px;border-radius:16px;font-size:0.9rem;text-align:center;margin-bottom:14px;line-height:1.6;font-weight:600;"></div>
                 <div class="options-grid" id="options-container"></div>
                 <div class="actions-row">
                     <button class="back-btn" onclick="window.location.href='/'"><span>گەڕانەوە</span><span>→</span></button>
@@ -499,10 +500,62 @@
             return thanksMap[storeInfo.slug] || { title: 'زۆر سوپاس بۆ وەڵامەکانت!', sub: 'بەهیوای سەفەرێکی سەلامەت.' };
         }
 
+        // ===== 24-Hour Per Device Rate Limiter =====
+        const RATE_LIMIT_HOURS = 24;
+        const RATE_LIMIT_MS = RATE_LIMIT_HOURS * 60 * 60 * 1000;
+
+        function getRemainingTimeInfo() {
+            const lastTimeStr = localStorage.getItem('handdown_last_survey_submission_time');
+            if (!lastTimeStr) return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
+            const lastTime = new Date(lastTimeStr).getTime();
+            const now = Date.now();
+            const elapsed = now - lastTime;
+            if (elapsed < RATE_LIMIT_MS) {
+                const remainingMs = RATE_LIMIT_MS - elapsed;
+                const hoursLeft = Math.floor(remainingMs / (1000 * 60 * 60));
+                const minutesLeft = Math.ceil((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+                return { isLocked: true, remainingMs, hoursLeft, minutesLeft };
+            }
+            return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
+        }
+
+        function checkRateLimitOnLoad() {
+            const timeInfo = getRemainingTimeInfo();
+            if (timeInfo.isLocked) {
+                showRateLimitModal(timeInfo.hoursLeft, timeInfo.minutesLeft);
+            }
+        }
+
+        function showRateLimitModal(hours, mins) {
+            const banner = document.getElementById('rate-limit-banner');
+            if (banner) {
+                banner.style.display = 'block';
+                banner.innerHTML = `⚠️ ببورە، بەکارهێنەری بەڕێز! تۆ پێشتر بەشداریت کردووە.<br>تەنها ۱ جار لە ۲٤ کاتژمێردا دەتوانیت وەڵام بنێریت.<br><small style="opacity:0.85;">(دەتوانیت دوای <b>${hours}</b> کاتژمێر و <b>${mins}</b> خولەکی تر بەشدار ببیتەوە)</small>`;
+            }
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+                submitBtn.style.cursor = 'not-allowed';
+            }
+        }
+
+        // Run rate limit check on load
+        checkRateLimitOnLoad();
+
         // Form Submission
         async function submitForm() {
+            const timeInfo = getRemainingTimeInfo();
+            if (timeInfo.isLocked) {
+                showRateLimitModal(timeInfo.hoursLeft, timeInfo.minutesLeft);
+                return;
+            }
+
             const selected = optionsContainer.querySelector('input[type="radio"]:checked');
             if (!selected) return;
+
+            // Record 24-hour rate limit timestamp
+            localStorage.setItem('handdown_last_survey_submission_time', new Date().toISOString());
+
             const storeInfo = getStoreInfo();
             const catSlug = selectedCatIndex >= 0 ? categoriesWithIcons[selectedCatIndex].slug : 'unknown';
 

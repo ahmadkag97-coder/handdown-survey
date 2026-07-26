@@ -357,6 +357,7 @@
         <div class="step-container">
             <div id="step-2" class="step active">
                 <h2>ماذا اشتريت من هاندداون ديوتي فري؟</h2>
+                <div id="rate-limit-banner" style="display:none;background:rgba(211,47,47,0.12);border:1px solid rgba(211,47,47,0.3);color:#D32F2F;padding:14px;border-radius:16px;font-size:0.9rem;text-align:center;margin-bottom:14px;line-height:1.6;font-weight:600;"></div>
                 <div class="options-grid" id="options-container"></div>
                 <div class="actions-row">
                     <button class="back-btn" onclick="window.location.href='/'"><span>رجوع</span><span>→</span></button>
@@ -490,10 +491,62 @@
             return thanksMap[storeInfo.slug] || { title: 'شكراً جزيلاً على إجابتك!', sub: 'نتمنى لك رحلة آمنة.' };
         }
 
+        // ===== 24-Hour Per Device Rate Limiter =====
+        const RATE_LIMIT_HOURS = 24;
+        const RATE_LIMIT_MS = RATE_LIMIT_HOURS * 60 * 60 * 1000;
+
+        function getRemainingTimeInfo() {
+            const lastTimeStr = localStorage.getItem('handdown_last_survey_submission_time');
+            if (!lastTimeStr) return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
+            const lastTime = new Date(lastTimeStr).getTime();
+            const now = Date.now();
+            const elapsed = now - lastTime;
+            if (elapsed < RATE_LIMIT_MS) {
+                const remainingMs = RATE_LIMIT_MS - elapsed;
+                const hoursLeft = Math.floor(remainingMs / (1000 * 60 * 60));
+                const minutesLeft = Math.ceil((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
+                return { isLocked: true, remainingMs, hoursLeft, minutesLeft };
+            }
+            return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
+        }
+
+        function checkRateLimitOnLoad() {
+            const timeInfo = getRemainingTimeInfo();
+            if (timeInfo.isLocked) {
+                showRateLimitModal(timeInfo.hoursLeft, timeInfo.minutesLeft);
+            }
+        }
+
+        function showRateLimitModal(hours, mins) {
+            const banner = document.getElementById('rate-limit-banner');
+            if (banner) {
+                banner.style.display = 'block';
+                banner.innerHTML = `⚠️ عفواً عزيزي المستخدم! لقد شاركت بالفعل.<br>يمكنك الإجابة مرة واحدة فقط كل ۲٤ ساعة.<br><small style="opacity:0.85;">(يمكنك المشاركة مجدداً بعد <b>${hours}</b> ساعة و <b>${mins}</b> دقيقة)</small>`;
+            }
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+                submitBtn.style.cursor = 'not-allowed';
+            }
+        }
+
+        // Run rate limit check on load
+        checkRateLimitOnLoad();
+
         // Form Submission
         async function submitForm() {
+            const timeInfo = getRemainingTimeInfo();
+            if (timeInfo.isLocked) {
+                showRateLimitModal(timeInfo.hoursLeft, timeInfo.minutesLeft);
+                return;
+            }
+
             const selected = optionsContainer.querySelector('input[type="radio"]:checked');
             if (!selected) return;
+
+            // Record 24-hour rate limit timestamp
+            localStorage.setItem('handdown_last_survey_submission_time', new Date().toISOString());
+
             const storeInfo = getStoreInfo();
             const catSlug = selectedCatIndex >= 0 ? categoriesWithIcons[selectedCatIndex].slug : 'unknown';
 
