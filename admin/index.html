@@ -158,18 +158,27 @@
             overflow-x: auto;
             max-height: 440px;
             overflow-y: auto;
-            border-radius: 18px;
-            border: 1px solid rgba(255,255,255,0.8);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.85);
             -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
             scrollbar-color: rgba(195, 139, 117, 0.4) transparent;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.02);
         }
         .table-container::-webkit-scrollbar { width: 5px; height: 5px; }
         .table-container::-webkit-scrollbar-track { background: transparent; }
         .table-container::-webkit-scrollbar-thumb { background: rgba(195, 139, 117, 0.45); border-radius: 10px; }
         .table-container::-webkit-scrollbar-thumb:hover { background: var(--brand-accent); }
         .glass-panel { overflow: hidden; }
-        .table-container table thead th { position: sticky; top: 0; z-index: 10; background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); }
+        
+        table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: right; background: rgba(255,255,255,0.4); border-radius: 20px; }
+        th { padding: 14px 16px; font-size: 0.85rem; color: var(--primary-dark); font-weight: 700; border-bottom: 1px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); }
+        .table-container table thead th { position: sticky; top: 0; z-index: 10; }
+        .table-container table thead tr:first-child th:first-child { border-top-right-radius: 18px; }
+        .table-container table thead tr:first-child th:last-child { border-top-left-radius: 18px; }
+        .table-container table tbody tr:last-child td:first-child { border-bottom-right-radius: 18px; }
+        .table-container table tbody tr:last-child td:last-child { border-bottom-left-radius: 18px; }
+        
         .load-more-container { text-align: center; padding-top: 14px; }
         .load-more-btn {
             background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(255, 255, 255, 0.9);
@@ -180,8 +189,6 @@
         }
         .load-more-btn:hover { background: rgba(255, 255, 255, 0.95); transform: translateY(-1px); }
         .load-more-btn:active { transform: scale(0.98); }
-        table { width: 100%; border-collapse: collapse; text-align: right; background: rgba(255,255,255,0.4); }
-        th { padding: 14px 16px; font-size: 0.85rem; color: var(--primary-dark); font-weight: 700; border-bottom: 1px solid rgba(0,0,0,0.08); background: rgba(255,255,255,0.7); }
         td { padding: 14px 16px; font-size: 0.9rem; color: var(--text-main); border-bottom: 1px solid rgba(0,0,0,0.04); }
         .badge-store { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 12px; font-size: 0.82rem; font-weight: 700; background: rgba(18,26,47,0.09); color: var(--primary-dark); border: 1px solid rgba(18,26,47,0.15); }
         .badge-lang { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 12px; font-size: 0.82rem; font-weight: 700; }
