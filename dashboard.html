@@ -346,9 +346,9 @@
                 </select>
                 <select id="lang-filter-select" class="filter-select" onchange="renderTable()">
                     <option value="all">🌐 هەموو زمانەکان</option>
-                    <option value="Kurdish">☀️ کوردی</option>
-                    <option value="Arabic">🌙 عەرەبی</option>
-                    <option value="English">🌍 ئینگلیزی</option>
+                    <option value="Kurdish">کوردی</option>
+                    <option value="Arabic">عەرەبی</option>
+                    <option value="English">ئینگلیزی</option>
                 </select>
             </div>
             <div class="table-container">
@@ -638,9 +638,9 @@
             const enPct = totalSum > 0 ? Math.round((enCount / total) * 100) : 0;
 
             container.innerHTML = `
-                <div class="progress-item"><div class="progress-label"><span>☀️ کوردی (Kurdish)</span><span>${kuCount} سەردان (${kuPct}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${kuPct}%"></div></div></div>
-                <div class="progress-item"><div class="progress-label"><span>🌙 عەرەبی (Arabic)</span><span>${arCount} سەردان (${arPct}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${arPct}%"></div></div></div>
-                <div class="progress-item"><div class="progress-label"><span>🌍 ئینگلیزی (English)</span><span>${enCount} سەردان (${enPct}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${enPct}%"></div></div></div>
+                <div class="progress-item"><div class="progress-label"><span>کوردی (Kurdish)</span><span>${kuCount} سەردان (${kuPct}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${kuPct}%"></div></div></div>
+                <div class="progress-item"><div class="progress-label"><span>عەرەبی (Arabic)</span><span>${arCount} سەردان (${arPct}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${arPct}%"></div></div></div>
+                <div class="progress-item"><div class="progress-label"><span>ئینگلیزی (English)</span><span>${enCount} سەردان (${enPct}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${enPct}%"></div></div></div>
             `;
         }
 
@@ -725,11 +725,11 @@
             const visibleRows = filtered.slice(0, tableDisplayLimit);
             visibleRows.forEach(r => {
                 const lang = r.language || 'Kurdish';
-                let langClass = 'ku', langIcon = '☀️';
-                if (lang === 'Arabic') { langClass = 'ar'; langIcon = '🌙'; }
-                if (lang === 'English') { langClass = 'en'; langIcon = '🌍'; }
+                let langClass = 'ku';
+                if (lang === 'Arabic') { langClass = 'ar'; }
+                if (lang === 'English') { langClass = 'en'; }
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td style="font-family:var(--font-english);font-size:0.85rem;">${r.timestamp || '-'}</td><td><span class="badge-store">🏬 ${normalizeStoreName(r.store)}</span></td><td><span class="badge-lang ${langClass}">${langIcon} ${lang}</span></td><td><span class="badge-cat">${formatCategoryName(r.categories)}</span></td>`;
+                tr.innerHTML = `<td style="font-family:var(--font-english);font-size:0.85rem;">${r.timestamp || '-'}</td><td><span class="badge-store">🏬 ${normalizeStoreName(r.store)}</span></td><td><span class="badge-lang ${langClass}">${lang}</span></td><td><span class="badge-cat">${formatCategoryName(r.categories)}</span></td>`;
                 tbody.appendChild(tr);
             });
 
