@@ -559,35 +559,24 @@
                 console.warn('Appwrite fetch warning (using local fallback):', e);
             }
 
-            // Merge Cloud & Local Data so Admin NEVER fails
-            const localVisitsCount = (localData.visits.ku || 0) + (localData.visits.ar || 0) + (localData.visits.en || 0);
-            const totalVisitsCount = Math.max(cloudVisits.length, localVisitsCount);
+            let totalVisitsCount = 0;
+            const statusEl = document.getElementById('status-text');
 
-            // Combine unique responses
-            const responseMap = new Map();
-            (localData.responses || []).forEach(r => {
-                const key = (r.timestamp || '') + (r.store || '') + (r.categories || '');
-                responseMap.set(key, r);
-            });
-            cloudResponses.forEach(r => {
-                const key = (r.timestamp || '') + (r.store || '') + (r.categories || '');
-                responseMap.set(key, {
+            if (cloudSuccess) {
+                totalVisitsCount = cloudVisits.length;
+                allResponses = cloudResponses.map(r => ({
                     timestamp: r.timestamp ? new Date(r.timestamp).toLocaleString() : new Date(r.$createdAt).toLocaleString(),
                     store: r.store,
                     language: r.language,
                     categories: r.categories || r.category_slug
-                });
-            });
-
-            allResponses = Array.from(responseMap.values());
-            allVisits = cloudVisits;
-
-            // Update UI Badges & KPIs
-            const statusEl = document.getElementById('status-text');
-            if (cloudSuccess && cloudResponses.length > 0) {
-                statusEl.innerText = `☁️ Appwrite Cloud Active (${cloudResponses.length} Responses in Cloud)`;
+                }));
+                allVisits = cloudVisits;
+                statusEl.innerText = `☁️ Appwrite Cloud Active (${allResponses.length} Real Responses)`;
             } else {
-                statusEl.innerText = `⚡ Local & Cloud Sync Active (${allResponses.length} Total Responses)`;
+                const localVisitsCount = (localData.visits.ku || 0) + (localData.visits.ar || 0) + (localData.visits.en || 0);
+                totalVisitsCount = localVisitsCount;
+                allResponses = localData.responses || [];
+                statusEl.innerText = `⚡ Local Backup Mode (${allResponses.length} Total Responses)`;
             }
 
             document.getElementById('val-total-visits').innerText = totalVisitsCount;
@@ -607,7 +596,7 @@
             document.getElementById('val-top-category').innerText = topCat;
 
             renderStoreBars();
-            renderLanguageBars(localData.visits, cloudVisits);
+            renderLanguageBars(localData.visits, cloudVisits, cloudSuccess);
             renderCategoryBars(catCounts);
             renderTable();
         }
@@ -617,30 +606,37 @@
             container.innerHTML = '';
             const storeCounts = {};
             allResponses.forEach(r => { const s = normalizeStoreName(r.store); storeCounts[s] = (storeCounts[s] || 0) + 1; });
-            const total = allResponses.length || 1;
+            const total = allResponses.length || 0;
             storeList.forEach(s => {
                 const count = storeCounts[s.full] || 0;
-                const pct = Math.round((count / total) * 100);
+                const pct = total > 0 ? Math.round((count / total) * 100) : 0;
                 container.innerHTML += `<div class="progress-item"><div class="progress-label"><span>${s.name} (${s.sub})</span><span>${count} وەڵام (${pct}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${pct}%"></div></div></div>`;
             });
         }
 
-        function renderLanguageBars(localVisits, cloudVisits) {
+        function renderLanguageBars(localVisits, cloudVisits, cloudSuccess) {
             const container = document.getElementById('language-bars-container');
-            let kuCount = localVisits.ku || 0;
-            let arCount = localVisits.ar || 0;
-            let enCount = localVisits.en || 0;
+            let kuCount = 0;
+            let arCount = 0;
+            let enCount = 0;
 
-            cloudVisits.forEach(v => {
-                if (v.language === 'Kurdish') kuCount++;
-                if (v.language === 'Arabic') arCount++;
-                if (v.language === 'English') enCount++;
-            });
+            if (cloudSuccess) {
+                cloudVisits.forEach(v => {
+                    if (v.language === 'Kurdish') kuCount++;
+                    if (v.language === 'Arabic') arCount++;
+                    if (v.language === 'English') enCount++;
+                });
+            } else {
+                kuCount = localVisits.ku || 0;
+                arCount = localVisits.ar || 0;
+                enCount = localVisits.en || 0;
+            }
 
-            const total = (kuCount + arCount + enCount) || 1;
-            const kuPct = Math.round((kuCount / total) * 100);
-            const arPct = Math.round((arCount / total) * 100);
-            const enPct = Math.round((enCount / total) * 100);
+            const totalSum = kuCount + arCount + enCount;
+            const total = totalSum || 0;
+            const kuPct = totalSum > 0 ? Math.round((kuCount / total) * 100) : 0;
+            const arPct = totalSum > 0 ? Math.round((arCount / total) * 100) : 0;
+            const enPct = totalSum > 0 ? Math.round((enCount / total) * 100) : 0;
 
             container.innerHTML = `
                 <div class="progress-item"><div class="progress-label"><span>☀️ کوردی (Kurdish)</span><span>${kuCount} سەردان (${kuPct}%)</span></div><div class="progress-bg"><div class="progress-fill" style="width:${kuPct}%"></div></div></div>
