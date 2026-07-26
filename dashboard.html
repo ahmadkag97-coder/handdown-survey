@@ -288,6 +288,7 @@
             <div class="header-actions">
                 <button class="btn-glass" onclick="lockAdmin()">🔒 چوونەدەرەوە</button>
                 <button class="btn-glass" onclick="loadDashboardData()">🔄 نوێکردنەوەی داتا</button>
+                <button class="btn-glass" style="color:#D32F2F;border-color:rgba(211,47,47,0.3);" onclick="clearAllAnalyticsData()">🗑️ سفرکردنەوەی داتاکان</button>
                 <button class="btn-glass btn-accent" onclick="exportCurrentCSV()">📥 داگرتنی Excel (CSV)</button>
             </div>
         </div>
@@ -464,6 +465,37 @@
             const overlay = document.getElementById('pin-overlay');
             overlay.style.display = 'flex';
             setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+        }
+
+        async function clearAllAnalyticsData() {
+            if (!confirm('دڵنیایت لە سڕینەوە و سفرکردنەوەی تەواوی ئامارەکان لەسەر برۆوسەر و سێرڤەر؟')) return;
+            localStorage.removeItem('handdown_survey_analytics');
+            sessionStorage.removeItem('handdown_visit_session_ku');
+            sessionStorage.removeItem('handdown_visit_session_ar');
+            sessionStorage.removeItem('handdown_visit_session_en');
+
+            try {
+                if (window.Appwrite) {
+                    const client = new Appwrite.Client();
+                    client.setEndpoint('https://fra.cloud.appwrite.io/v1').setProject('6a65bea6001b95f75b63');
+                    const databases = new Appwrite.Databases(client);
+
+                    const vRes = await databases.listDocuments('handdown_analytics', 'visits');
+                    for (const d of (vRes.documents || [])) {
+                        await databases.deleteDocument('handdown_analytics', 'visits', d.$id);
+                    }
+
+                    const rRes = await databases.listDocuments('handdown_analytics', 'responses');
+                    for (const d of (rRes.documents || [])) {
+                        await databases.deleteDocument('handdown_analytics', 'responses', d.$id);
+                    }
+                }
+            } catch(e) {
+                console.warn('Appwrite clear warning:', e);
+            }
+
+            alert('تەواوی داتاکان بەسەرکەوتوویی سفر کرانەوە!');
+            loadDashboardData();
         }
 
         // Support Physical Keyboard Input
