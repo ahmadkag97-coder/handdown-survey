@@ -29,7 +29,7 @@
             --font-kurdish: 'Rabar_013', 'Vazirmatn', 'Cairo', 'Alexandria', sans-serif;
             --font-english: -apple-system, BlinkMacSystemFont, 'Poppins', sans-serif;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
         input, select, textarea { user-select: text; -webkit-user-select: text; }
         html, body { min-height: 100vh; }
         body {
@@ -43,6 +43,52 @@
                 radial-gradient(circle at 50% 50%, rgba(232, 227, 221, 0.75) 0%, transparent 70%);
             background-attachment: fixed; color: var(--text-main); direction: rtl; padding: 24px 16px;
         }
+
+        /* PIN Code Lock Overlay */
+        .pin-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(232, 227, 221, 0.88); backdrop-filter: blur(28px) saturate(200%);
+            -webkit-backdrop-filter: blur(28px) saturate(200%); z-index: 99999;
+            display: flex; justify-content: center; align-items: center; padding: 20px;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+        .pin-card {
+            background: rgba(255, 255, 255, 0.75); border: 1px solid rgba(255, 255, 255, 0.95);
+            border-radius: 32px; padding: 32px 28px; width: 100%; max-width: 360px;
+            text-align: center; box-shadow: 0 24px 60px rgba(18, 26, 47, 0.12);
+        }
+        .pin-logo { max-width: 180px; margin-bottom: 16px; }
+        .pin-card h2 { font-size: 1.2rem; color: var(--primary-dark); font-weight: 700; margin-bottom: 4px; }
+        .pin-card p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 22px; }
+
+        .pin-dots { display: flex; justify-content: center; gap: 14px; margin-bottom: 14px; }
+        .pin-dots .dot {
+            width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--brand-accent);
+            background: transparent; transition: all 0.2s ease;
+        }
+        .pin-dots .dot.filled { background: var(--brand-accent); transform: scale(1.15); box-shadow: 0 2px 8px rgba(195,139,117,0.4); }
+
+        .pin-error { color: #D32F2F; font-size: 0.84rem; font-weight: 700; height: 22px; margin-bottom: 14px; opacity: 0; transition: opacity 0.2s ease; }
+        .pin-error.visible { opacity: 1; }
+
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .key-btn {
+            background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 18px; height: 56px; font-size: 1.35rem; font-weight: 700;
+            color: var(--primary-dark); cursor: pointer; transition: all 0.15s ease;
+            font-family: var(--font-english); display: flex; align-items: center; justify-content: center;
+        }
+        .key-btn:active { transform: scale(0.94); background: rgba(195, 139, 117, 0.2); }
+        .key-btn.clear-btn { font-size: 1rem; color: var(--text-muted); }
+        .key-btn.del-btn { font-size: 1.1rem; color: var(--text-muted); }
+
+        .shake { animation: shake 0.4s ease; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+
         .dashboard-container { max-width: 1100px; margin: 0 auto; }
         .admin-header {
             background: var(--card-bg); backdrop-filter: blur(30px) saturate(210%);
@@ -125,6 +171,38 @@
     </style>
 </head>
 <body>
+    <!-- PIN Code Overlay -->
+    <div id="pin-overlay" class="pin-overlay">
+        <div class="pin-card">
+            <img src="/handdown-logo.png" alt="Logo" class="pin-logo" onerror="this.src='/Asset 10@2x-8.png';">
+            <h2>تکایە PIN CODE داخیل بکە</h2>
+            <p>داخڵبوونی ئادمین پەنێڵ پارێزراوە</p>
+            
+            <div class="pin-dots" id="pin-dots">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+            <div id="pin-error" class="pin-error">PIN CODE هەڵەیە! دووبارە تاقی بکەرەوە.</div>
+
+            <div class="keypad">
+                <button class="key-btn" onclick="pressPin('1')">1</button>
+                <button class="key-btn" onclick="pressPin('2')">2</button>
+                <button class="key-btn" onclick="pressPin('3')">3</button>
+                <button class="key-btn" onclick="pressPin('4')">4</button>
+                <button class="key-btn" onclick="pressPin('5')">5</button>
+                <button class="key-btn" onclick="pressPin('6')">6</button>
+                <button class="key-btn" onclick="pressPin('7')">7</button>
+                <button class="key-btn" onclick="pressPin('8')">8</button>
+                <button class="key-btn" onclick="pressPin('9')">9</button>
+                <button class="key-btn clear-btn" onclick="clearPin()">C</button>
+                <button class="key-btn" onclick="pressPin('0')">0</button>
+                <button class="key-btn del-btn" onclick="deletePin()">⌫</button>
+            </div>
+        </div>
+    </div>
+
     <div class="dashboard-container">
         <!-- Header -->
         <div class="admin-header">
@@ -136,6 +214,7 @@
                 </div>
             </div>
             <div class="header-actions">
+                <button class="btn-glass" onclick="lockAdmin()">🔒 چوونەدەرەوە</button>
                 <button class="btn-glass" onclick="addMockData()">➕ زیاکردنی داتای تێست</button>
                 <button class="btn-glass" onclick="loadDashboardData()">🔄 نوێکردنەوەی داتا</button>
                 <button class="btn-glass btn-accent" onclick="exportCurrentCSV()">📥 داگرتنی Excel (CSV)</button>
@@ -219,6 +298,92 @@
     <!-- Appwrite SDK (Loaded safely) -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@26.2.0/dist/iife/sdk.min.js"></script>
     <script>
+        // ===== PIN Code Authentication =====
+        const CORRECT_PIN = '1234';
+        let currentPin = '';
+
+        function checkPinAuth() {
+            if (sessionStorage.getItem('handdown_admin_authenticated') === 'true') {
+                const overlay = document.getElementById('pin-overlay');
+                overlay.style.display = 'none';
+                overlay.style.opacity = '0';
+            }
+        }
+
+        function pressPin(digit) {
+            if (currentPin.length < 4) {
+                currentPin += digit;
+                updatePinDots();
+                if (currentPin.length === 4) {
+                    verifyPin();
+                }
+            }
+        }
+
+        function deletePin() {
+            if (currentPin.length > 0) {
+                currentPin = currentPin.slice(0, -1);
+                updatePinDots();
+            }
+        }
+
+        function clearPin() {
+            currentPin = '';
+            updatePinDots();
+        }
+
+        function updatePinDots() {
+            const dots = document.querySelectorAll('.pin-dots .dot');
+            dots.forEach((dot, index) => {
+                if (index < currentPin.length) {
+                    dot.classList.add('filled');
+                } else {
+                    dot.classList.remove('filled');
+                }
+            });
+            document.getElementById('pin-error').classList.remove('visible');
+        }
+
+        function verifyPin() {
+            if (currentPin === CORRECT_PIN) {
+                sessionStorage.setItem('handdown_admin_authenticated', 'true');
+                const overlay = document.getElementById('pin-overlay');
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 350);
+                loadDashboardData();
+            } else {
+                const card = document.querySelector('.pin-card');
+                card.classList.add('shake');
+                document.getElementById('pin-error').classList.add('visible');
+                setTimeout(() => {
+                    card.classList.remove('shake');
+                    clearPin();
+                }, 400);
+            }
+        }
+
+        function lockAdmin() {
+            sessionStorage.removeItem('handdown_admin_authenticated');
+            clearPin();
+            const overlay = document.getElementById('pin-overlay');
+            overlay.style.display = 'flex';
+            setTimeout(() => { overlay.style.opacity = '1'; }, 10);
+        }
+
+        // Support Physical Keyboard Input
+        window.addEventListener('keydown', (e) => {
+            if (sessionStorage.getItem('handdown_admin_authenticated') === 'true') return;
+            if (e.key >= '0' && e.key <= '9') {
+                pressPin(e.key);
+            } else if (e.key === 'Backspace') {
+                deletePin();
+            } else if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') {
+                clearPin();
+            }
+        });
+
         const storeList = [
             { slug: 'haji-omaran', name: 'Haji Omaran Shop', sub: 'IRAN BORDER', full: 'Haji Omaran Shop (Iran Border)' },
             { slug: 'turkish-border-1', name: 'Turkish Border Shop 1', sub: 'IBRAHIM KHALIL', full: 'Turkish Border Shop 1 (Ibrahim Khalil)' },
@@ -239,6 +404,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            checkPinAuth();
             loadDashboardData();
             renderQRCodes();
         });
@@ -324,7 +490,7 @@
             const container = document.getElementById('store-bars-container');
             container.innerHTML = '';
             const storeCounts = {};
-            allResponses.forEach(r => { const s = r.store || 'Main Portal / General'; storeCounts[s] = (storeCounts[s] || 0) + 1; });
+            allResponses.forEach(r => { const s = normalizeStoreName(r.store); storeCounts[s] = (storeCounts[s] || 0) + 1; });
             const total = allResponses.length || 1;
             storeList.forEach(s => {
                 const count = storeCounts[s.full] || 0;
@@ -378,7 +544,8 @@
             tbody.innerHTML = '';
 
             let filtered = allResponses.filter(r => {
-                if (selStore !== 'all' && (r.store || 'Main Portal / General') !== selStore) return false;
+                const sName = normalizeStoreName(r.store);
+                if (selStore !== 'all' && sName !== selStore) return false;
                 if (selLang !== 'all' && (r.language || '') !== selLang) return false;
                 return true;
             });
@@ -406,7 +573,7 @@
                 if (lang === 'Arabic') { langClass = 'ar'; langIcon = '🌙'; }
                 if (lang === 'English') { langClass = 'en'; langIcon = '🌍'; }
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td style="font-family:var(--font-english);font-size:0.85rem;">${r.timestamp || '-'}</td><td><span class="badge-store">🏬 ${r.store || 'Main Portal'}</span></td><td><span class="badge-lang ${langClass}">${langIcon} ${lang}</span></td><td><span class="badge-cat">🛍️ ${r.categories || '-'}</span></td>`;
+                tr.innerHTML = `<td style="font-family:var(--font-english);font-size:0.85rem;">${r.timestamp || '-'}</td><td><span class="badge-store">🏬 ${normalizeStoreName(r.store)}</span></td><td><span class="badge-lang ${langClass}">${langIcon} ${lang}</span></td><td><span class="badge-cat">🛍️ ${r.categories || '-'}</span></td>`;
                 tbody.appendChild(tr);
             });
         }
