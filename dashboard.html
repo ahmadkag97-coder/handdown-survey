@@ -168,6 +168,49 @@
         .loading-spinner { display: flex; align-items: center; justify-content: center; padding: 40px; gap: 10px; color: var(--text-muted); font-weight: 600; }
         .spinner { width: 24px; height: 24px; border: 3px solid rgba(195,139,117,0.2); border-top-color: var(--brand-accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Mobile UI/UX Responsive Optimizations for Admin Panel */
+        @media (max-width: 600px) {
+            body { padding: 12px 10px; font-size: 14px; }
+            .admin-header { padding: 16px 14px; flex-direction: column; align-items: stretch; gap: 14px; border-radius: 20px; }
+            .brand-info { flex-direction: column; align-items: center; text-align: center; gap: 10px; }
+            .admin-logo { max-height: 38px; }
+            .header-title h1 { font-size: 1.15rem; }
+            .header-title p { font-size: 0.8rem; }
+            
+            .header-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
+            .header-actions .btn-glass { justify-content: center; padding: 10px 8px; font-size: 0.82rem; border-radius: 12px; }
+
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+            .stat-card { padding: 14px 12px; border-radius: 18px; }
+            .stat-header { margin-bottom: 6px; }
+            .stat-title { font-size: 0.78rem; }
+            .stat-icon { width: 30px; height: 30px; font-size: 0.95rem; border-radius: 8px; }
+            .stat-value { font-size: 1.4rem; }
+            .stat-sub { font-size: 0.72rem; }
+
+            .glass-panel { padding: 16px 14px; border-radius: 20px; margin-bottom: 16px; }
+            .panel-title { font-size: 1rem; margin-bottom: 14px; flex-direction: column; align-items: flex-start; gap: 6px; }
+
+            .breakdown-grid { grid-template-columns: 1fr; gap: 14px; }
+
+            .filter-row { flex-direction: column; align-items: stretch; gap: 8px; }
+            .search-box, .filter-select { width: 100%; min-width: unset; font-size: 0.84rem; padding: 10px 12px; }
+
+            .table-container { -webkit-overflow-scrolling: touch; border-radius: 14px; }
+            th, td { padding: 10px 12px; font-size: 0.82rem; white-space: nowrap; }
+            .badge-store, .badge-lang, .badge-cat { padding: 4px 8px; font-size: 0.76rem; border-radius: 8px; }
+
+            .qr-grid { grid-template-columns: 1fr; gap: 14px; }
+            .qr-card { padding: 16px; border-radius: 18px; }
+            .qr-img { width: 180px; height: 180px; }
+
+            .pin-card { padding: 24px 18px; border-radius: 26px; }
+            .pin-logo { max-width: 140px; margin-bottom: 12px; }
+            .pin-card h2 { font-size: 1.1rem; }
+            .keypad { gap: 10px; }
+            .key-btn { height: 50px; font-size: 1.2rem; border-radius: 14px; }
+        }
     </style>
 </head>
 <body>
