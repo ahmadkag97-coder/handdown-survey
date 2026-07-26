@@ -751,13 +751,145 @@
             storeList.forEach(store => {
                 const targetUrl = `${baseUrl}/${store.slug}`;
                 const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(targetUrl)}`;
-                container.innerHTML += `<div class="qr-card"><div class="qr-card-subtitle">${store.sub}</div><div class="qr-card-title">${store.name}</div><img src="${qrImgUrl}" alt="${store.name} QR" class="qr-img"><div class="qr-actions"><a href="${qrImgUrl}" download="${store.slug}-qr.png" target="_blank" class="btn-glass btn-accent">📥 داگرتن</a><button class="btn-glass" onclick="printQR('${qrImgUrl}','${store.name}','${store.sub}')">🖨️ چاپ</button></div></div>`;
+                container.innerHTML += `<div class="qr-card"><div class="qr-card-subtitle">${store.sub}</div><div class="qr-card-title">${store.name}</div><img src="${qrImgUrl}" alt="${store.name} QR" class="qr-img"><div class="qr-actions"><button class="btn-glass btn-accent" onclick="downloadQRCard('${store.slug}','${store.name}','${store.sub}')">📥 داگرتن</button><button class="btn-glass" onclick="printQR('${store.slug}','${store.name}','${store.sub}')">🖨️ چاپ</button></div></div>`;
             });
         }
 
-        function printQR(qrUrl, name, sub) {
+        async function downloadQRCard(storeSlug, storeName, storeSub) {
+            const baseUrl = window.location.origin;
+            const targetUrl = `${baseUrl}/${storeSlug}`;
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(targetUrl)}`;
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 800;
+            canvas.height = 1000;
+            const ctx = canvas.getContext('2d');
+
+            // Draw luxury background gradient
+            const grad = ctx.createLinearGradient(0, 0, 0, 1000);
+            grad.addColorStop(0, '#FAF8F6');
+            grad.addColorStop(1, '#E8E3DD');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 800, 1000);
+
+            // Border & Gold Accent
+            ctx.strokeStyle = 'rgba(195, 139, 117, 0.5)';
+            ctx.lineWidth = 6;
+            ctx.strokeRect(30, 30, 740, 940);
+
+            ctx.fillStyle = '#C38B75';
+            ctx.fillRect(30, 30, 740, 14);
+
+            // Load Logo
+            const logo = new Image();
+            logo.crossOrigin = 'anonymous';
+            logo.src = '/handdown-logo.png';
+            logo.onload = () => {
+                ctx.drawImage(logo, 250, 70, 300, 75);
+
+                // Subtitle Badge
+                ctx.font = '600 20px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
+                ctx.fillStyle = '#C38B75';
+                ctx.textAlign = 'center';
+                ctx.fillText(storeSub.toUpperCase(), 400, 195);
+
+                // Store Title
+                ctx.font = 'bold 34px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
+                ctx.fillStyle = '#121A2F';
+                ctx.fillText(storeName, 400, 245);
+
+                // Load & Draw QR Code
+                const qrImg = new Image();
+                qrImg.crossOrigin = 'anonymous';
+                qrImg.src = qrApiUrl;
+                qrImg.onload = () => {
+                    // White QR background frame
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(170, 280, 460, 460);
+
+                    // Draw QR
+                    ctx.drawImage(qrImg, 200, 310, 400, 400);
+
+                    // URL Box
+                    ctx.fillStyle = 'rgba(195, 139, 117, 0.14)';
+                    ctx.fillRect(100, 775, 600, 52);
+                    ctx.font = '600 22px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
+                    ctx.fillStyle = '#C38B75';
+                    ctx.fillText(targetUrl, 400, 810);
+
+                    // Footer call to action
+                    ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
+                    ctx.fillStyle = '#121A2F';
+                    ctx.fillText('Scan QR Code to Start Survey', 400, 885);
+
+                    ctx.font = '18px -apple-system, BlinkMacSystemFont, "Poppins", sans-serif';
+                    ctx.fillStyle = '#8E8E93';
+                    ctx.fillText('Handdown Duty Free Survey System', 400, 925);
+
+                    // Trigger direct file download
+                    const link = document.createElement('a');
+                    link.download = `Handdown-QR-${storeSlug}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                };
+            };
+        }
+
+        function printQR(storeSlug, storeName, storeSub) {
+            const baseUrl = window.location.origin;
+            const targetUrl = `${baseUrl}/${storeSlug}`;
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=${encodeURIComponent(targetUrl)}`;
+
             const w = window.open('', '_blank');
-            w.document.write(`<html><head><title>QR - ${name}</title><style>body{font-family:sans-serif;text-align:center;padding:40px}.card{border:2px solid #121A2F;padding:30px;border-radius:20px;max-width:340px;margin:auto}h3{color:#C38B75;margin-bottom:4px;font-size:14px;text-transform:uppercase}h1{color:#121A2F;margin-top:0;font-size:22px}img{width:220px;height:220px;margin:15px 0}p{font-size:14px;color:#666}</style></head><body><div class="card"><h3>${sub}</h3><h1>${name}</h1><img src="${qrUrl}"><p>Scan to participate in Handdown Duty Free Survey</p></div><script>window.onload=function(){window.print();window.close()}<\/script></body></html>`);
+            w.document.write(`<!DOCTYPE html>
+<html>
+<head>
+    <title>Handdown QR - ${storeName}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background: #E8E3DD; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .print-card {
+            width: 100%; max-width: 480px; border: 2.5px solid #C38B75; border-radius: 28px; padding: 36px 28px;
+            text-align: center; background: #FAF8F6; box-shadow: 0 14px 40px rgba(0,0,0,0.08); position: relative; overflow: hidden;
+        }
+        .top-bar { height: 12px; background: #C38B75; position: absolute; top: 0; left: 0; right: 0; }
+        .logo { max-width: 220px; margin: 10px auto 20px; display: block; }
+        .sub { font-size: 0.85rem; font-weight: 700; color: #C38B75; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+        .title { font-size: 1.4rem; font-weight: 700; color: #121A2F; margin-bottom: 24px; }
+        .qr-box { background: #FFF; padding: 18px; border-radius: 22px; display: inline-block; box-shadow: 0 8px 24px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06); margin-bottom: 20px; }
+        .qr-img { width: 260px; height: 260px; display: block; }
+        .url-tag { background: rgba(195, 139, 117, 0.15); color: #C38B75; font-size: 0.92rem; font-weight: 600; padding: 10px 16px; border-radius: 14px; word-break: break-all; margin-bottom: 20px; display: inline-block; }
+        .cta { font-size: 1.1rem; font-weight: 700; color: #121A2F; margin-bottom: 4px; }
+        .footer-text { font-size: 0.8rem; color: #8E8E93; }
+        @media print {
+            body { padding: 0; background: none; }
+            .print-card { border: 2.5px solid #C38B75 !important; box-shadow: none !important; margin: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="print-card">
+        <div class="top-bar"></div>
+        <img src="/handdown-logo.png" alt="Handdown Duty Free" class="logo" onerror="this.src='/Asset 10@2x-8.png';">
+        <div class="sub">${storeSub}</div>
+        <div class="title">${storeName}</div>
+        <div class="qr-box">
+            <img src="${qrApiUrl}" class="qr-img">
+        </div>
+        <div class="url-tag">${targetUrl}</div>
+        <div class="cta">Scan QR Code to Start Survey</div>
+        <div class="footer-text">Handdown Duty Free Survey System</div>
+    </div>
+    <script>
+        window.onload = function() {
+            setTimeout(function() {
+                window.print();
+            }, 300);
+        };
+    <\/script>
+</body>
+</html>`);
             w.document.close();
         }
 
