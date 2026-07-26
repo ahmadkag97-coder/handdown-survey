@@ -2,7 +2,7 @@
 <html lang="ku">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Handdown Duty Free Survey - کوردی</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,23 +61,23 @@
             justify-content: center;
             align-items: center;
             margin: 0;
-            padding: 20px;
+            padding: 16px;
             direction: rtl;
             -webkit-font-smoothing: antialiased;
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.65);
+            background: rgba(255, 255, 255, 0.68);
             backdrop-filter: blur(30px) saturate(210%);
             -webkit-backdrop-filter: blur(30px) saturate(210%);
             width: 100%;
-            max-width: 460px;
+            max-width: 440px;
             border-radius: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.88);
             box-shadow: 0 24px 60px rgba(18, 26, 47, 0.09), 0 4px 16px rgba(0, 0, 0, 0.03), inset 0 1.5px 2.5px rgba(255, 255, 255, 1);
             overflow: hidden;
             position: relative;
-            min-height: 500px;
+            min-height: 520px;
             display: flex;
             flex-direction: column;
             margin: auto;
@@ -85,15 +85,15 @@
 
         header {
             text-align: center;
-            padding: 32px 24px 10px;
+            padding: 28px 20px 8px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .logo {
-            max-width: 220px;
-            width: 75%;
+            max-width: 200px;
+            width: 72%;
             height: auto;
             display: block;
             margin: 0 auto;
@@ -102,7 +102,7 @@
         }
 
         .step-container {
-            padding: 28px 24px;
+            padding: 20px 20px 24px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -123,45 +123,61 @@
         }
 
         h2 {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: var(--primary-dark);
             text-align: center;
-            margin-bottom: 24px;
-            line-height: 1.6;
+            margin-bottom: 20px;
+            line-height: 1.5;
         }
 
         .options-grid {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
         }
 
         .option-label {
             display: flex;
             align-items: center;
-            padding: 15px 18px;
-            border: 1px solid rgba(255, 255, 255, 0.75);
-            border-radius: 18px;
+            padding: 14px 18px;
+            border: 1.5px solid rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
             cursor: pointer;
             transition: var(--transition);
-            font-size: 1.05rem;
+            font-size: 1.02rem;
             font-weight: 600;
             color: var(--text-main);
-            background: rgba(255, 255, 255, 0.58);
+            background: rgba(255, 255, 255, 0.62);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03), inset 0 1px 1.5px rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03), inset 0 1px 1.5px rgba(255, 255, 255, 0.95);
+            gap: 12px;
         }
 
-        .option-label:hover {
+        .option-label:active {
+            transform: scale(0.985);
             background: rgba(255, 255, 255, 0.85);
-            border-color: rgba(255, 255, 255, 1);
-            transform: translateY(-1.5px);
         }
 
         .option-label input { display: none; }
+
+        .cat-icon {
+            font-size: 1.3rem;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: rgba(195, 139, 117, 0.12);
+            flex-shrink: 0;
+        }
+
+        .option-text {
+            flex-grow: 1;
+        }
 
         .custom-checkbox {
             width: 24px;
@@ -174,7 +190,6 @@
             transition: var(--transition);
             flex-shrink: 0;
             background: rgba(255, 255, 255, 0.9);
-            margin-left: 14px;
             position: relative;
         }
 
@@ -188,26 +203,28 @@
             display: none;
         }
 
-        .option-label input:checked + .custom-checkbox {
+        .option-label input:checked ~ .custom-checkbox {
             background-color: var(--brand-accent);
             border-color: var(--brand-accent);
             box-shadow: 0 3px 12px rgba(195, 139, 117, 0.45);
             transform: scale(1.05);
         }
 
-        .option-label input:checked + .custom-checkbox::after { display: block; }
+        .option-label input:checked ~ .custom-checkbox::after { display: block; }
 
         .option-label.selected {
-            border: 1.5px solid rgba(255, 255, 255, 0.95);
-            background: rgba(255, 255, 255, 0.88);
+            border: 2px solid var(--brand-accent);
+            background: rgba(255, 255, 255, 0.92);
             font-weight: 700;
+            box-shadow: 0 6px 20px rgba(195, 139, 117, 0.2);
         }
 
         .actions-row {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-top: 10px;
+            margin-top: auto;
+            padding-top: 8px;
             width: 100%;
         }
 
@@ -217,10 +234,14 @@
             font-weight: 700;
             font-family: inherit;
             padding: 16px 18px;
-            border-radius: 18px;
+            border-radius: 20px;
             cursor: pointer;
             transition: var(--transition);
             border: 1px solid rgba(255, 255, 255, 0.6);
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .submit-btn:disabled {
@@ -235,13 +256,18 @@
             box-shadow: 0 8px 25px rgba(195, 139, 117, 0.4);
         }
 
+        .submit-btn:not(:disabled):active {
+            transform: scale(0.98);
+        }
+
         .back-btn {
             flex: 1;
-            max-width: 135px;
+            max-width: 130px;
+            height: 54px;
             background: rgba(255, 255, 255, 0.58);
             border: 1px solid rgba(255, 255, 255, 0.75);
-            padding: 16px 14px;
-            border-radius: 18px;
+            padding: 14px;
+            border-radius: 20px;
             color: var(--text-muted);
             font-family: inherit;
             font-size: 1rem;
@@ -253,18 +279,23 @@
             gap: 6px;
         }
 
+        .back-btn:active {
+            transform: scale(0.98);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
         .step-indicator {
-            background: rgba(255, 255, 255, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            padding: 4px 13px;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            padding: 5px 14px;
+            border-radius: 14px;
             color: var(--text-muted);
             font-size: 0.82rem;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin-top: 12px;
+            margin-top: 14px;
             align-self: center;
         }
 
@@ -275,35 +306,36 @@
             align-items: center;
             justify-content: center;
             flex-grow: 1;
-            padding: 20px 0;
+            padding: 24px 0;
         }
 
         .check-circle {
-            width: 80px;
-            height: 80px;
+            width: 84px;
+            height: 84px;
             background-color: var(--primary-gold);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 25px;
-            box-shadow: 0 8px 20px rgba(195, 139, 117, 0.3);
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px rgba(195, 139, 117, 0.35);
         }
 
-        .check-circle svg { width: 40px; height: 40px; fill: white; }
+        .check-circle svg { width: 44px; height: 44px; fill: white; }
 
         @media (max-width: 480px) {
-            body { padding: 18px 14px; }
-            .container { border-radius: 26px; width: 93%; max-width: 375px; }
-            header { padding: 20px 16px 4px; }
-            .logo { max-width: 165px; width: 65%; }
-            .step-container { padding: 16px 14px; }
-            h2 { font-size: 1.08rem; margin-bottom: 14px; }
-            .options-grid { gap: 9px; margin-bottom: 12px; }
-            .option-label { padding: 12px 13px; font-size: 0.92rem; border-radius: 15px; }
-            .actions-row { gap: 10px; margin-top: 8px; }
-            .back-btn { padding: 12px 10px; font-size: 0.92rem; border-radius: 15px; max-width: 115px; }
-            .submit-btn { padding: 12px 14px; font-size: 0.95rem; border-radius: 15px; }
+            body { padding: 12px 10px; }
+            .container { border-radius: 28px; width: 100%; min-height: 500px; }
+            header { padding: 22px 16px 4px; }
+            .logo { max-width: 170px; width: 68%; }
+            .step-container { padding: 16px 14px 18px; }
+            h2 { font-size: 1.15rem; margin-bottom: 16px; }
+            .options-grid { gap: 8px; margin-bottom: 12px; }
+            .option-label { padding: 12px 14px; font-size: 0.96rem; border-radius: 16px; gap: 10px; }
+            .cat-icon { width: 28px; height: 28px; font-size: 1.15rem; }
+            .actions-row { gap: 8px; }
+            .back-btn { height: 48px; padding: 10px; font-size: 0.92rem; border-radius: 16px; max-width: 110px; }
+            .submit-btn { height: 48px; padding: 12px; font-size: 0.98rem; border-radius: 16px; }
         }
     </style>
 </head>
@@ -337,10 +369,18 @@
         </div>
     </div>
 
-    <!-- FIRST: Render categories immediately (zero dependencies) -->
+    <!-- FIRST: Render categories immediately with icons -->
     <script>
-        const categories = ['تووتن (جگەرە)', 'خواردنەوەکان', 'بۆن و جوانکاری', 'کاتژمێر و ئێکسسوارات', 'زێڕینگەری', 'شیرینی', 'دیارییەکان'];
-        const categorySlugs = ['tobacco', 'spirits', 'perfumes', 'watches', 'jewelry', 'sweets', 'souvenirs'];
+        const categoriesWithIcons = [
+            { text: 'تووتن (جگەرە)', icon: '🚬', slug: 'tobacco' },
+            { text: 'خواردنەوەکان', icon: '🍾', slug: 'spirits' },
+            { text: 'بۆن و جوانکاری', icon: '💄', slug: 'perfumes' },
+            { text: 'کاتژمێر و ئێکسسوارات', icon: '⌚', slug: 'watches' },
+            { text: 'زێڕینگەری', icon: '💎', slug: 'jewelry' },
+            { text: 'شیرینی', icon: '🍬', slug: 'sweets' },
+            { text: 'دیارییەکان', icon: '🎁', slug: 'souvenirs' }
+        ];
+
         const optionsContainer = document.getElementById('options-container');
         const submitBtn = document.getElementById('submit-btn');
         let selectedCatIndex = -1;
@@ -373,31 +413,42 @@
             return id;
         }
 
-        // Render options immediately
-        categories.forEach((cat, index) => {
+        // Render options immediately with touch & icons
+        categoriesWithIcons.forEach((catObj, index) => {
             const label = document.createElement('label');
             label.className = 'option-label';
+            
             const radio = document.createElement('input');
             radio.type = 'radio';
             radio.name = 'category_selection';
-            radio.value = cat;
+            radio.value = catObj.text;
             radio.onchange = () => {
                 optionsContainer.querySelectorAll('.option-label').forEach(l => l.classList.remove('selected'));
                 label.classList.add('selected');
                 submitBtn.disabled = false;
                 selectedCatIndex = index;
-                const catSlug = categorySlugs[index];
                 const storeInfo = getStoreInfo();
                 try {
-                    if (storeInfo.slug !== 'general') { window.history.pushState({}, '', `/${storeInfo.slug}/ku/${catSlug}`); }
-                    else { window.history.pushState({}, '', `/ku/${catSlug}`); }
+                    if (storeInfo.slug !== 'general') { window.history.pushState({}, '', `/${storeInfo.slug}/ku/${catObj.slug}`); }
+                    else { window.history.pushState({}, '', `/ku/${catObj.slug}`); }
                 } catch(e) {}
             };
+
+            const iconSpan = document.createElement('span');
+            iconSpan.className = 'cat-icon';
+            iconSpan.innerText = catObj.icon;
+
+            const textSpan = document.createElement('span');
+            textSpan.className = 'option-text';
+            textSpan.innerText = catObj.text;
+
             const customCheck = document.createElement('div');
             customCheck.className = 'custom-checkbox';
+
             label.appendChild(radio);
+            label.appendChild(iconSpan);
+            label.appendChild(textSpan);
             label.appendChild(customCheck);
-            label.appendChild(document.createTextNode(cat));
             optionsContainer.appendChild(label);
         });
 
@@ -405,8 +456,8 @@
         (function() {
             const pathname = window.location.pathname.toLowerCase();
             const storeParam = (new URLSearchParams(window.location.search).get('store') || '');
-            categorySlugs.forEach((slug, i) => {
-                if (pathname.includes('/' + slug) || storeParam.includes('/' + slug)) {
+            categoriesWithIcons.forEach((catObj, i) => {
+                if (pathname.includes('/' + catObj.slug) || storeParam.includes('/' + catObj.slug)) {
                     const labels = optionsContainer.querySelectorAll('.option-label');
                     if (labels[i]) {
                         const r = labels[i].querySelector('input[type="radio"]');
@@ -435,7 +486,7 @@
             const selected = optionsContainer.querySelector('input[type="radio"]:checked');
             if (!selected) return;
             const storeInfo = getStoreInfo();
-            const catSlug = selectedCatIndex >= 0 ? categorySlugs[selectedCatIndex] : 'unknown';
+            const catSlug = selectedCatIndex >= 0 ? categoriesWithIcons[selectedCatIndex].slug : 'unknown';
 
             // Save to Appwrite Cloud (if SDK ready)
             if (window._appwriteDB && window.Appwrite) {
