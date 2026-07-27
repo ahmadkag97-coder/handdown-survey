@@ -693,17 +693,17 @@
             const catLower = String(catStr).toLowerCase();
             const map = {
                 'tobacco': '🚬 تووتن (جگەرە)',
+                'alcohol': '🍾 خواردنەوەکان',
                 'spirits': '🍾 خواردنەوەکان',
                 'perfumes': '💄 بۆن و جوانکاری',
                 'watches': '⌚ کاتژمێر و ئێکسسوارات',
-                'jewelry': '💎 زێڕینگەری',
                 'sweets': '🍬 شیرینی',
-                'souvenirs': '🎁 دیارییەکان'
+                'toys': '🧸 یارییەکان'
             };
             for (const key in map) {
                 if (catLower.includes(key)) return map[key];
             }
-            if (!catStr.startsWith('🚬') && !catStr.startsWith('🍾') && !catStr.startsWith('💄') && !catStr.startsWith('⌚') && !catStr.startsWith('💎') && !catStr.startsWith('🍬') && !catStr.startsWith('🎁')) {
+            if (!catStr.startsWith('🚬') && !catStr.startsWith('🍾') && !catStr.startsWith('💄') && !catStr.startsWith('⌚') && !catStr.startsWith('🍬') && !catStr.startsWith('🧸')) {
                 return '🛍️ ' + catStr;
             }
             return catStr;
