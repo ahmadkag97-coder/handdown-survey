@@ -305,9 +305,11 @@
                 </div>
             </div>
             <div class="header-actions">
+                <button class="btn-glass" onclick="toggleRateLimitSetting()" id="btn-toggle-rate-limit">🔒 قوفڵی ۲٤ کاتژمێری: چالاکە 🟢</button>
+                <button class="btn-glass btn-accent" style="background:rgba(211,47,47,0.18);border-color:#D32F2F;color:#D32F2F;" onclick="clearAllAnalyticsData()">🗑️ ڕەشکردنەوەی تەواوی داتاکان</button>
                 <button class="btn-glass" onclick="lockAdmin()">🔒 چوونەدەرەوە</button>
-                <button class="btn-glass" onclick="loadDashboardData()">🔄 نوێکردنەوەی داتا</button>
-                <button class="btn-glass btn-accent" onclick="exportCurrentCSV()">📥 داگرتنی Excel (CSV)</button>
+                <button class="btn-glass" onclick="loadDashboardData()">🔄 نوێکردنەوە</button>
+                <button class="btn-glass btn-accent" onclick="exportCurrentCSV()">📥 داگرتنی Excel</button>
             </div>
         </div>
 
@@ -559,8 +561,36 @@
             return data ? JSON.parse(data) : { visits: { ku: 0, ar: 0, en: 0, total: 0 }, responses: [] };
         }
 
+        function updateRateLimitButtonUI() {
+            const btn = document.getElementById('btn-toggle-rate-limit');
+            if (!btn) return;
+            const isEnabled = localStorage.getItem('handdown_rate_limit_enabled');
+            if (isEnabled === 'false') {
+                btn.innerHTML = '🔓 قوفڵی ۲٤ کاتژمێری: ناچالاکە 🔴';
+                btn.style.borderColor = 'rgba(211,47,47,0.4)';
+                btn.style.color = '#D32F2F';
+            } else {
+                btn.innerHTML = '🔒 قوفڵی ۲٤ کاتژمێری: چالاکە 🟢';
+                btn.style.borderColor = 'rgba(46,125,50,0.4)';
+                btn.style.color = '#2E7D32';
+            }
+        }
+
+        function toggleRateLimitSetting() {
+            const isEnabled = localStorage.getItem('handdown_rate_limit_enabled');
+            if (isEnabled === 'false') {
+                localStorage.setItem('handdown_rate_limit_enabled', 'true');
+                alert('🟢 قوفڵی ۲٤ کاتژمێری چالاککرایەوە!\n(بەکارهێنەر تەنها ۱ دەنگ لە ۲٤ کاتژمێردا دەتوانێت بنێرێت)');
+            } else {
+                localStorage.setItem('handdown_rate_limit_enabled', 'false');
+                alert('🔴 قوفڵی ۲٤ کاتژمێری ناچالاککرا!\n(بەکارهێنەران دەتوانن بەبێ قوفڵ زیاتر لە ۱ دەنگ بنێرن)');
+            }
+            updateRateLimitButtonUI();
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             checkPinAuth();
+            updateRateLimitButtonUI();
             loadDashboardData();
             renderQRCodes();
         });
