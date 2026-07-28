@@ -386,28 +386,6 @@
         const RATE_LIMIT_MS = RATE_LIMIT_HOURS * 60 * 60 * 1000;
 
         function getRemainingTimeInfo() {
-            const isEnabled = localStorage.getItem('handdown_rate_limit_enabled');
-            if (isEnabled === 'false') {
-                return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
-            }
-
-            let lastTimeStr = localStorage.getItem('handdown_last_survey_submission_time');
-            if (!lastTimeStr) {
-                const match = document.cookie.match(/(?:^|; )handdown_last_survey_submission_time=([^;]*)/);
-                if (match) lastTimeStr = match[1];
-            }
-            if (!lastTimeStr) return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
-            let lastTime = parseInt(lastTimeStr, 10);
-            if (isNaN(lastTime)) lastTime = new Date(lastTimeStr).getTime();
-            if (isNaN(lastTime)) return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
-            const now = Date.now();
-            const elapsed = now - lastTime;
-            if (elapsed < RATE_LIMIT_MS) {
-                const remainingMs = RATE_LIMIT_MS - elapsed;
-                const hoursLeft = Math.floor(remainingMs / (1000 * 60 * 60));
-                const minutesLeft = Math.ceil((remainingMs % (1000 * 60 * 60)) / (1000 * 60));
-                return { isLocked: true, remainingMs, hoursLeft, minutesLeft };
-            }
             return { isLocked: false, remainingMs: 0, hoursLeft: 0, minutesLeft: 0 };
         }
 
