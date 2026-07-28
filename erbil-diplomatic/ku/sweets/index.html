@@ -390,13 +390,6 @@
 
     <!-- FIRST: Render categories immediately with icons -->
     <script>
-        // Testing shortcut: ?reset_lock=1 unlocks the device for testing
-        if (window.location.search.includes('reset_lock=1')) {
-            try { localStorage.removeItem('handdown_last_survey_submission_time'); } catch(e){}
-            try { document.cookie = "handdown_last_survey_submission_time=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; } catch(e){}
-            try { window.history.replaceState({}, '', window.location.pathname); } catch(e){}
-        }
-
         // ===== Dual Storage 24-Hour Per Device Rate Limiter =====
         const RATE_LIMIT_HOURS = 24;
         const RATE_LIMIT_MS = RATE_LIMIT_HOURS * 60 * 60 * 1000;
