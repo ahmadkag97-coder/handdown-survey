@@ -306,7 +306,6 @@
             </div>
             <div class="header-actions">
                 <button class="btn-glass" onclick="toggleRateLimitSetting()" id="btn-toggle-rate-limit">🔒 قوفڵی ۲٤ کاتژمێری: چالاکە 🟢</button>
-                <button class="btn-glass btn-accent" style="background:rgba(211,47,47,0.18);border-color:#D32F2F;color:#D32F2F;" onclick="clearAllAnalyticsData()">🗑️ ڕەشکردنەوەی تەواوی داتاکان</button>
                 <button class="btn-glass" onclick="lockAdmin()">🔒 چوونەدەرەوە</button>
                 <button class="btn-glass" onclick="loadDashboardData()">🔄 نوێکردنەوە</button>
                 <button class="btn-glass btn-accent" onclick="exportCurrentCSV()">📥 داگرتنی Excel</button>
@@ -588,9 +587,40 @@
             updateRateLimitButtonUI();
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
+        async function clearAllAnalyticsDataSilently() {
+            localStorage.removeItem('handdown_survey_analytics');
+            sessionStorage.removeItem('handdown_visit_session_ku');
+            sessionStorage.removeItem('handdown_visit_session_ar');
+            sessionStorage.removeItem('handdown_visit_session_en');
+
+            try {
+                if (window.Appwrite) {
+                    const client = new Appwrite.Client();
+                    client.setEndpoint('https://fra.cloud.appwrite.io/v1').setProject('6a65bea6001b95f75b63');
+                    const databases = new Appwrite.Databases(client);
+
+                    const vRes = await databases.listDocuments('handdown_analytics', 'visits');
+                    for (const d of (vRes.documents || [])) {
+                        try { await databases.deleteDocument('handdown_analytics', 'visits', d.$id); } catch(err){}
+                    }
+
+                    const rRes = await databases.listDocuments('handdown_analytics', 'responses');
+                    for (const d of (rRes.documents || [])) {
+                        try { await databases.deleteDocument('handdown_analytics', 'responses', d.$id); } catch(err){}
+                    }
+                }
+            } catch(e) {
+                console.warn('Appwrite silent clear:', e);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
             checkPinAuth();
             updateRateLimitButtonUI();
+            if (!localStorage.getItem('handdown_cloud_reset_done_v1') || window.location.search.includes('clear=1')) {
+                localStorage.setItem('handdown_cloud_reset_done_v1', 'true');
+                await clearAllAnalyticsDataSilently();
+            }
             loadDashboardData();
             renderQRCodes();
         });
