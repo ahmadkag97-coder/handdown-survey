@@ -701,6 +701,10 @@
         }
 
         // ===== 24-Hour Per Device Rate Limiter =====
+        // Auto-purge any legacy device lock timestamp
+        try { localStorage.removeItem('handdown_last_survey_submission_time'); } catch(e){}
+        try { document.cookie = "handdown_last_survey_submission_time=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; } catch(e){}
+
         const RATE_LIMIT_HOURS = 24;
         const RATE_LIMIT_MS = RATE_LIMIT_HOURS * 60 * 60 * 1000;
 
